@@ -502,7 +502,7 @@ void   mp_set(mp_int *mp, mp_digit d)
 mp_err mp_set_int(mp_int *mp, long z)
 {
   int            ix;
-  unsigned long  v = abs(z);
+  unsigned long  v = labs(z);
   mp_err         res;
 
   ARGCHK(mp != NULL, MP_BADARG);
@@ -3080,9 +3080,9 @@ void     s_mp_div_2d(mp_int *mp, mp_digit d)
 mp_digit s_mp_norm(mp_int *a, mp_int *b)
 {
   mp_digit  t, d = 0;
-
+  
   t = DIGIT(b, USED(b) - 1);
-  while(t < (RADIX / 2)) {
+  while(t < ( RADIX / 2)) {
     t <<= 1;
     ++d;
   }

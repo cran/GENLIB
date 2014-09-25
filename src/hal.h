@@ -4,10 +4,12 @@
 #ifndef GENLIBHAL
 #define GENLIBHAL
 #define WIN32_LEAN_AND_MEAN 
-#include <R_ext/RS.h>
 
 #ifdef _WIN32
+ #include <Rcpp.h>
  #include <Windows.h>
+#else
+ #include <R_ext/RS.h>
 #endif
 /*FONCTION CLASSIQUE*/
 int processorCount();

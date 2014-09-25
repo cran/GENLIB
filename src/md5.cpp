@@ -4,8 +4,8 @@
  * this program is licensed under the GPL.
  */
 
-#include <string.h>
 #include "md5.h"
+#include <string.h>
 
 #define GET_UINT32(n,b,i)                                       \
 {                                                               \

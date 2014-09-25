@@ -7,25 +7,26 @@
 */ 
 #define ALLOWPRINTPROGRESS
 
-//Temporaire
-#include <fstream>
-using namespace std;
-// #include "windows.h"
-#include <cstdlib>
-#include<math.h>
-#define DIV 1024
-string divisor = "K";
-#define WIDTH 7
-
 #include "base.h"
 #include "outils.h"
 #include "apparentement.h"
-#include <limits.h>
-#include <Rcpp.h>
-
 #include "basemt.h"
 #include "userInterface.h"
 
+//Temporaire
+#include <fstream>
+// #include "windows.h"
+#include <cstdlib>
+#include <math.h>
+
+#include <limits.h>
+#include <Rcpp.h>
+
+using namespace std;
+
+#define DIV 1024
+string divisor = "K";
+#define WIDTH 7
 /*! 
 	\brief Donne la matrice Phi pour une profondeur fixe
 

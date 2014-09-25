@@ -21,7 +21,7 @@ typedef unsigned int       mp_size;
 typedef int                mp_err;
 
 #define MP_DIGIT_BIT       (CHAR_BIT*sizeof(mp_digit))
-#define MP_DIGIT_MAX       ULONG_MAX
+#define MP_DIGIT_MAX       USHRT_MAX //ULONG_MAX : RADIX being MP_DIGIT_MAX+1, it became 0 and the function <s_mp_norm> made no sense.
 #define MP_WORD_BIT        (CHAR_BIT*sizeof(mp_word))
 #define MP_WORD_MAX        MAX_XLONG
 

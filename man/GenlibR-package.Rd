@@ -5,7 +5,7 @@
 Genealogical Data Analysis
 }
 \description{
-Takes genealogical data frames and calculates different demographic variables such as genetic contribution, kinship, etc...
+Genealogical data analysis including descriptive statistics (e.g., kinship and inbreeding coefficients) and gene-dropping simulations.
 }
 \details{
 \tabular{ll}{

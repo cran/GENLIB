@@ -67,7 +67,7 @@
 	#define FASTCALL  	
 #endif
 
-#include<cstdlib>
+//#include<cstdlib>
 #include<stdio.h>
 #include<stdlib.h>
 #include<string.h>

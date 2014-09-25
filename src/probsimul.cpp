@@ -15,21 +15,23 @@
 
 
 /* POUR UTILISER LE PROGRAMME EN MODE CONSOLE SUR WINDOWS, IL FAUT DEFINIR MODETEST*/
+#include "base.h"
+#include "outils.h"
+#include "outilanal.h"
+#include "userInterface.h"
+
+#include <time.h>
+#include <string.h>
+#include <limits.h>
+#include <math.h>
+#include <vector>
+#include <algorithm>
+#include <iostream>
 #include <R.h>
 #include <Rdefines.h>
 #include <Rcpp.h>
 #include <Rcpp/as.h>
 #include <RcppCommon.h>
-#include "base.h"
-#include <time.h>
-#include <string.h>
-#include <limits.h>
-#include <math.h>
-#include "outils.h"
-#include "outilanal.h"
-#include <vector>
-#include <algorithm>
-#include "userInterface.h"
 
 typedef std::vector<Tuple> vecTuple_t;
 

@@ -15,14 +15,14 @@ Calcul et Analyse de diverse valeur dérivé de F et Fmoyen
 */
 #define ALLOWPRINTPROGRESS
 
-#include"base.h"
-#include"outils.h"
-#include"consanguinite.h"
-#include"apparentement.h"
-#include<limits.h>
-#include<math.h>
-#include <cstdlib>
+#include "base.h"
+#include "outils.h"
+#include "consanguinite.h"
+#include "apparentement.h"
 #include "userInterface.h"
+#include <limits.h>
+#include <math.h>
+#include <cstdlib>
 #include <Rcpp.h>
 
 // ********************************************************************

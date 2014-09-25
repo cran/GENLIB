@@ -4,13 +4,14 @@
 \author Sébastien Leclerc
 
 */ 
+#include "base.h"
+#include "hal.h"
+
 #include <Rcpp.h>
 
 #ifndef BLOCKALLOC
 #define BLOCKALLOC
 
-#include "base.h"
-#include "hal.h"
 
 template<class P> 
 class BlockAlloc
@@ -86,7 +87,7 @@ private:
 	P array[SIZE];
 	P* current;
 public:
-	inline SMPile() {current=array-1;}
+	inline SMPile() {current=array;}
 
 	inline P top() {return *current;}
 	inline P pop() {return *(current--);}

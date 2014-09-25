@@ -10,6 +10,8 @@ Interface de toutes les fonctions en rapport avec le gene fondateur
 #ifndef GENFOND
 #define GENFOND
 
+#include <RcppCommon.h>
+
 int simul(int* Genealogie, int* plProposant, int* plProEtat,int lNProposant, int* plAncetre, int* plAncEtat, int lNAncetre,
 		int lSimul, double* pdRetConj,double* pdRetSimul,double* pdRetProp,double* probRecomb,double probSurvieHomo,int printprogress);
 

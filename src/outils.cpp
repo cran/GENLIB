@@ -13,15 +13,16 @@ reordonnancement, creation d'ordre, ordre saut etc...
 #include "outils.h"
 #include "stdlib.h"
 #include "limits.h"
+#include "md5.h"
+
 #include <string.h>
 #include <math.h>
+#include <assert.h>
 #include <cmath>
 #include <cstdlib>
-#include "md5.h"
 #include <ctime>
-#include <assert.h>
-#include <Rcpp.h>
 #include <random>
+#include <Rcpp.h>
 using namespace std;
 // TransGenCum[p][m][a] : chances d'avoir a allèles si le père a p
 // allèles mutants et la mère m allèles mutants. (Cumulatif)

@@ -23,13 +23,11 @@
 \code{\link{gen.phiMean}}
 }
 \examples{
-data(genea140) 
-gen140<-gen.genealogy(genea140) 
-ge07<-gen.branching(gen140, pro=gen.pro(gen140)[c(1:7)])
-phiMat<-gen.phi(ge07) 
-gen.phiCI(phiMat)
-#ge15<-gen.branching(gen140, pro=gen.pro(gen140)[1:15])
-#phiMat<-gen.phi(ge15) 
+## please run code below for an example
+#data(genea140)
+#gen140<-gen.genealogy(genea140)
+#ge07<-gen.branching(gen140, pro=gen.pro(gen140)[c(1:7)])
+#phiMat<-gen.phi(ge07)
 #gen.phiCI(phiMat)
 }
 \keyword{manip}

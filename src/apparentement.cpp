@@ -14,6 +14,11 @@ Calcul et Analyse de diverse valeur dérivé de Phi et Phi moyen
 	indiquer leur niveau de progression sur la sortie standard stdout
 */
 #define ALLOWPRINTPROGRESS
+#include "base.h"
+#include "outils.h"
+#include "apparentement.h"
+#include "basemt.h"
+#include "userInterface.h"
  
 //Temporaire
 #include <fstream>
@@ -31,15 +36,10 @@ using namespace std;
 
 //Fichier de sortie pour le debuggage
 //#define TESTRACEFILE
-#include "base.h"
-#include "outils.h"
-#include "apparentement.h"
 #include <string.h>
 #include <math.h>
 #include <limits.h>
 
-#include "basemt.h"
-#include "userInterface.h"
 
 // ********************************************************************
 //

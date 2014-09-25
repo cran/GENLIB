@@ -4,7 +4,7 @@
 Calcul et Analyse de diverse valeur dérivé du gene fondateur
 
 \author Sébastien Leclerc 
-
+\contributor Jean-Francois Lefebvre
 */
 
 
@@ -14,31 +14,30 @@ Calcul et Analyse de diverse valeur dérivé du gene fondateur
 	indiquer leur niveau de progression sur la sortie standard stdout
 */
 #define ALLOWPRINTPROGRESS
-#include <R.h>
-#include <Rdefines.h>
-//#include <RInside.h>
-#include <Rcpp.h>
-#include <RcppCommon.h>
-#include <Rcpp/as.h>
-#include <Rcpp/Function.h>
-
 #include "base.h"
-#include "fondateur.h"
 #include "outils.h" 
+#include "cbignum.h"
+#include "hashtable.h"
+#include "userInterface.h"
+#include "fondateur.h"
+#include <iostream>
 #include <time.h>
 #include <string.h> 
 #include <math.h> 
 #include <limits.h>
-#include "cbignum.h"
-#include "hashtable.h"
-#include "userInterface.h"
-#include <iostream>
 #include <vector>
-//#include <random>
-
-//#include "spmatrix.h"
-using namespace std;
+#include <random>
 #include <cstdlib>
+#include <RcppCommon.h>
+#include <R.h>
+#include <Rdefines.h>
+
+#include <Rcpp.h>
+#include <Rcpp/as.h>
+#include <Rcpp/Function.h>
+
+//using namespace std;
+
 #ifdef NEG
 	#undef NEG
 #endif
@@ -189,7 +188,7 @@ int simul(int* Genealogie, int* plProposant, int* plProEtat,int lNProposant, int
 	for(i=0;i<lNAncetre;i++)		
 		StartSortPrioriteArbre(NoeudAnc[i],Ordre,&NOrdre,OrdreSaut);
 
-	random_device rd;		// **chgt IGES**
+	std::random_device rd;		// **chgt IGES**
  	int nbannulee = 0;		// **chgt IGES**
  	int nbCasHomo = 0;		// **chgt IGES**
 
@@ -362,7 +361,7 @@ int simulsingle(int* Genealogie, int* plProposant, int lNProposant, int* plAncet
 
 	//INITIALISATION
 	//initrand();
-	random_device rd;		// **chgt IGES**
+	std::random_device rd;		// **chgt IGES**
 	int ap,am;
 		
 	//Partie 3: SIMULATION
@@ -514,7 +513,7 @@ SEXP simulsingleProb(int* Genealogie, int* plProposant, int lNProposant, int* pl
 
 	//INITIALISATION
 	//initrand();
-	random_device rd;		// **chgt IGES**
+	std::random_device rd;		// **chgt IGES**
 	int ap,am;
 		
 	//Pointeur de retour
@@ -642,7 +641,7 @@ int simulsingleFreq(int* Genealogie, int* plProposant, int lNProposant, int* plA
 
 	//INITIALISATION
 	//initrand();
-	random_device rd;		// **chgt IGES**
+	std::random_device rd;		// **chgt IGES**
 	int ap,am;
 		
 	//Partie 3: SIMULATION
@@ -904,9 +903,9 @@ SEXP simulsingleFct(int * Genealogie, int * proposant, int lproposant, int * plA
 // *************************************************************************
 //	CALCUL DE LA PROBABILITE EXACTE
 // ************************************************************************* 
-const int PBARINTERVAL_PROB=9;
+//const int PBARINTERVAL_PROB=9;
 //100 devrais être plus que suffisant pour occupé un ordinateur moderne un bon bout de temps
-const int PROB_MAXIMUM_NORDRE = 100; //646 Taille maximale d'un double (utiliser numeric_limits<double>::max() ? )
+//const int PROB_MAXIMUM_NORDRE = 100; //646 Taille maximale d'un double (utiliser numeric_limits<double>::max() ? )
 
 /*! 
 	\brief Evalue la probabilite exacte de transfert d'un allele a une serie de proposant

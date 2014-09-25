@@ -20,9 +20,8 @@ Calcul et Analyse de diverse valeur dérivé de la contribution génétique
 #include "apparentement.h"
 #include "userInterface.h"
 
-#include <iostream>
+//#include <iostream>
 #include <vector>
-using namespace std;
 
 #include <stdlib.h>
 #include <limits.h>
@@ -33,6 +32,7 @@ using namespace std;
 #include <ctime>   //jfl
 #include <stdio.h> //jfl
 
+using namespace std;
 
 // ********************************************************************
 //

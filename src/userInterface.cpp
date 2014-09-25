@@ -1,13 +1,13 @@
 
-#include <Rcpp.h>
 #include "base.h"
 #include "userInterface.h"
 #include "hal.h"
 #include <float.h>
 #include <string.h>
-#include <cstdlib>
-using namespace std;
 #include <stdio.h> //jfl
+#include <cstdlib>
+#include <Rcpp.h>
+using namespace std;
 
 //Implementation d'un chronometre
 static int g_TimerStart=-1;
@@ -40,9 +40,9 @@ void getCurrentMaxTime(double* minute)
 
 //Implémentation d'une progress bar en mode texte...
 const char  ProgresBARLength=62;
-const char  sProgressMarge[]="   ";
-const char  sProgressBAR[]  ="0..........20..........40...........60..........80..........100";
-const char  sProgresSymbol[]="XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX";
+//const char  sProgressMarge[]="   ";
+//const char  sProgressBAR[]  ="0..........20..........40...........60..........80..........100";
+//const char  sProgresSymbol[]="XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX";
 const int  CTextProgressBar_Tampon = 2;
 
 CTextProgressBar::CTextProgressBar(SXLONG max,int affiche) 

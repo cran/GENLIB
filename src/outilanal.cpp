@@ -7,8 +7,8 @@
 */
 
 #include "stdlib.h"
-#include <string.h>
 #include "outilanal.h"
+#include <string.h>
 
 Tuple::Tuple()
 {

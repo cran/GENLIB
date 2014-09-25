@@ -266,7 +266,7 @@ gen.branching = function(gen, pro = 0, ancestors = gen.founder(gen), check = 1, 
 		ebranche.asc = ebranche.asc[(!(ebranche.asc$ind %in% pro.enTrop)),  ]
 		#ebranche.asc=data.frame(ind=ebranche.asc$ind,father=ebranche.asc$father,mother=ebranche.asc$mother) #*****
 		ebranche = gen.genealogy(ebranche.asc)
-	print(ebranche.asc)
+	#print(ebranche.asc)
 		pro.ebranche = gen.pro(ebranche)
 	}
 	#print("4")

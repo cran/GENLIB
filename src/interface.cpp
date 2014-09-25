@@ -7,7 +7,19 @@
 \author Sébastien Leclerc
 */
 
+#include "base.h"
+#include "userInterface.h"
+#include "probsimul.h"
+#include "apparentement.h"
+#include "congen.h"
+#include "consanguinite.h"
+#include "fondateur.h"
+#include "outils.h"
+#include "genphi.h"
+#include "statanal.h"
+#include "interface.h"
 
+#include <string>
 #define ALLOWPRINTPROGRESS
 #include <R.h>
 #include <Rdefines.h>
@@ -15,20 +27,6 @@
 #include <Rcpp.h>
 #include <Rcpp/as.h>
 #include <RcppCommon.h>
-#include <string>
-#include"base.h"
-#include"userInterface.h"
-
-#include"probsimul.h"
-#include"apparentement.h"
-#include"congen.h"
-#include"consanguinite.h"
-#include"fondateur.h"
-#include"outils.h"
-#include"genphi.h"
-#include"statanal.h"
-
-#include "interface.h"
 //#define EXPORTTYPE extern "C"  -> remplacer par RcppExport
 
 

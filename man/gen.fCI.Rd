@@ -20,7 +20,8 @@
 \examples{
 data(genea140) 
 gen140<-gen.genealogy(genea140) 
-fval<-gen.f(gen140)
+gen10 <-gen.branching(gen140, pro=gen.pro(gen140)[c(1:10)])
+fval<-gen.f(gen10)
 gen.fCI(fval)
 }
 \keyword{manip}

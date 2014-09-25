@@ -63,7 +63,7 @@ template<class T> inline HashDouble<T>::HashDouble(unsigned int nbElement, doubl
 	m_clef2=m_taille-1;
 
 	m_tab = new T[m_taille];
-	if ((m_tab==NULL) )
+	if(m_tab==NULL)
 	{
 		m_isError=(m_tab==NULL);
 		return;
@@ -142,7 +142,7 @@ template<> inline HashDouble<mp_int>::HashDouble(unsigned int nbElement, double 
 	
 	//Creation du tableau de MP_INT
 	m_tab = new mp_int[m_taille];
-	if ((m_tab==NULL) )
+	if(m_tab==NULL )
 	{
 		m_isError=(m_tab==NULL);
 		return;

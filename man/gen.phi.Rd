@@ -40,18 +40,6 @@ plot(1:7,kinship_allgenerations[1,2,], type="b", xlab="Generation", ylab="Kinshi
      ylim=c(0,0.6), pch=0)
 points(1:7,kinship_allgenerations[1,3,], type="b", lty=12, pch=1)
 legend("topright", legend=c("Individuals 1 and 2", "Individuals 2 and 29"),lty=c(1,12), pch=c(0,1))
-
-
-data(genea140) 
-gen140<-gen.genealogy(genea140) 
-phi6subjects<-gen.phi(gen140, pro=c(454422, 676521, 677273, 717537, 717634, 717709, 868572))
-phi6subjects
-
-#Not run 
-#phi140subjects<-gen.phi(gen140, MT=TRUE)  #All 140 subjects multi-threaded (MT) computation 
-#phi140subjects
-
-
 }
 \references{
 Malecot G. (1948) Les mathematiques de l'heredite. Paris: Masson, p 65.

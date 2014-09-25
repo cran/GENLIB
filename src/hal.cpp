@@ -5,7 +5,7 @@
 
   ***********************************/
 #include "hal.h"
-#include<time.h>	
+#include <time.h>	
 
 /* VERSION WINDOWS  */
 #ifdef _WIN32
@@ -14,7 +14,7 @@
 	#include<stdlib.h>
 	#include<crtdbg.h> */
 	#include <cstdlib>
-	#include<unistd.h>
+	#include <unistd.h>
 	
 	int thetime()
 	{
@@ -144,8 +144,8 @@
 /*VERSION UNIX */
 #else
 
-	#include<stdlib.h>
-	#include <iostream>
+	#include <stdlib.h>
+//	#include <iostream>
 	#include <unistd.h>
 	#include <sys/unistd.h> 
 	//#include <sys/processor.h> 
