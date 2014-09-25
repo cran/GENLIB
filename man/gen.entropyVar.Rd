@@ -30,8 +30,10 @@ gen.entropy(gen140, pro=c(454422, 676521, 677273, 717537, 717634, 717709, 868572
 gen.entropyVar(gen140, pro=c(454422, 676521, 677273, 717537, 717634, 717709, 868572))
 gen.entropyVar(gen140, pro=c(454422, 676521, 677273, 717537, 717634, 717709, 868572), type="MEAN")
 
-#gen.entropy(gen140, pro=c(454422, 676521, 677273, 717537, 717634, 717709, 868572), type="IND")
-#gen.entropyVar(gen140, pro=c(454422, 676521, 677273, 717537, 717634, 717709, 868572), type="IND")
+ \donttest{
+  gen.entropy(gen140, pro=c(454422, 676521, 677273, 717537, 717634, 717709, 868572), type="IND")
+  gen.entropyVar(gen140, pro=c(454422, 676521, 677273, 717537, 717634, 717709, 868572), type="IND")
+ }
 }
 \references{
 Cazes P, Cazes MH. (1996) Comment mesurer la profondeur genealogique d'une ascendance? Population (French Ed) 51:117-140.

@@ -26,18 +26,23 @@ data(geneaJi)
 genJi<-gen.genealogy(geneaJi) 
 simu_1000<-gen.simuSample(genJi, pro=c(1,29), ancestors=c(20,25), stateAncestors=c(2,1),
                           simulNo=1000)
-table(simu_1000) #Number of alleles received by proposants
-table(colSums(simu_1000)) #Number of alleles received by simulation
-table(simu_1000[1,],simu_1000[2,]) #Number of alleles received by each proposant
-
+\dontrun{Number of alleles received by proposants}
+table(simu_1000)
+\dontrun{Number of alleles received by simulation}
+table(colSums(simu_1000))
+\dontrun{Number of alleles received by each proposant}
+table(simu_1000[1,],simu_1000[2,])
 
 data(geneaJi) 
 genJi<-gen.genealogy(geneaJi) 
 simu_5000<-gen.simuSample(genJi, pro=c(1,29), ancestors=c(20,25), stateAncestors=c(2,1),
                           simulNo=5000)
-table(simu_5000) #Number of alleles received by proposants
-table(colSums(simu_5000)) #Number of alleles received by simulation
-table(simu_5000[1,],simu_5000[2,]) #Number of alleles received by each proposant
+\dontrun{Number of alleles received by proposants}
+table(simu_5000)
+\dontrun{Number of alleles received by simulation}
+table(colSums(simu_5000))
+\dontrun{Number of alleles received by each proposant}
+table(simu_5000[1,],simu_5000[2,])
 
 }
 \keyword{datagen}

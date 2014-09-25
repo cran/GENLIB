@@ -35,16 +35,18 @@
 \examples{
 data(geneaJi) 
 genJi<-gen.genealogy(geneaJi) 
-#Probability that subjects 1 and 29 get 1 and 2 alleles from ancestors 20 and 25, 
-# that have themselves 2 and 1. 
+\dontrun{Probability that subjects 1 and 29 get 1 and 2 alleles from ancestors 20 and 25,}
+\dontrun{ that have themselves 2 and 1.}
 gen.simuProb(genJi, pro=c(1,29), statePro=c(1,2), ancestors=c(20,25), stateAncestors=c(2,1),
              simulNo=10000)
-#Probability that subjects 1 and 29 get 1 segment from ancestors 25 knowing the segment has a male 
-# recombination rate of 0.02 and a female recombination rate of 0.04.
+\dontrun{Probability that subjects 1 and 29 get 1 segment from ancestors 25, }
+\dontrun{ knowing the segment has a male }
+\dontrun{ recombination rate of 0.02 and a female recombination rate of 0.04.}
 gen.simuProb(genJi, pro=c(1,29), statePro=c(1,1), ancestors=c(25), stateAncestors=c(1),
              simulNo=10000, probRecomb = c(0.02, 0.04))
-#Probability that subjects 1 and 29 get 1 and 2 alleles from ancestors 20 and 25, 
-# that have themselves 2 and 1 and knowing that homozygous people have a survival rate of 0.50.
+\dontrun{Probability that subjects 1 and 29 get 1 and 2 alleles from ancestors 20 and 25, }
+\dontrun{ that have themselves 2 and 1 and knowing that homozygous people have a survival rate }
+\dontrun{ of 0.50.}
 gen.simuProb(genJi, pro=c(1,29), statePro=c(1,2), ancestors=c(20,25), stateAncestors=c(2,1),
              simulNo=10000, probSurvival=0.5)
 

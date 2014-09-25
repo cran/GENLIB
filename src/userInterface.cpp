@@ -8,6 +8,7 @@
 #include <cstdlib>
 #include <Rcpp.h>
 using namespace std;
+#define R_NO_REMAP
 
 //Implementation d'un chronometre
 static int g_TimerStart=-1;
@@ -83,9 +84,12 @@ void CTextProgressBar::operator++()
 				const double testime=(double(m_max)/double(m_cur))*((tst-m_tempsdebut)+g_tempsEchantillon+1); //1 marge
 				m_tempsdebut=-1;			
 				if (testime>g_maxEstimatedProcessingTime){
-					GENError("Execution time exceeded maximum allowed: ESTIMATED: %d min MAXIMUM: %d min\nSee gen.maxexetime() definition",
+//					GENError("Execution time exceeded maximum allowed: ESTIMATED: %d min MAXIMUM: %d min\nSee gen.maxexetime() definition",
+//							int(testime/60),int(g_maxEstimatedProcessingTime/60));
+					char erreur[TAILLEDESCRIPTION];
+					sprintf(erreur, "Execution time exceeded maximum allowed: ESTIMATED: %d min MAXIMUM: %d min\nSee gen.maxexetime() definition",
 							int(testime/60),int(g_maxEstimatedProcessingTime/60));
-					throw std::exception();
+					throw std::range_error(erreur);
 					//GENError("Le temps d'execution estimé est trop long: ESTIME: %d min   MAXIMUM: %d min"\n Regarde la definition de la fonction gen.maxexetime()",
 				}
 			}
@@ -161,10 +165,13 @@ void CTextProgressBarFloat::operator++()
 				const double testime=m_max/ (*m_pcur) * ((tst-m_tempsdebut)+g_tempsEchantillon+1); //1 marge
 				m_tempsdebut=-1;			
 				if (testime>g_maxEstimatedProcessingTime){			
-					GENError("Execution time exceeded maximum allowed: ESTIMATED: %.10G min MAXIMUM: %.10G min\nSee gen.maxexetime() definition",
-						testime/60.,g_maxEstimatedProcessingTime/60.);
+//					GENError("Execution time exceeded maximum allowed: ESTIMATED: %.10G min MAXIMUM: %.10G min\nSee gen.maxexetime() definition",
+//						testime/60.,g_maxEstimatedProcessingTime/60.);
 					//GENError("Le temps d'execution estimé est trop long: ESTIME: %.10G min   MAXIMUM: %.10G min\n Regarde la definition de la fonction gen.maxexetime()",
-					throw std::exception();
+					char erreur[TAILLEDESCRIPTION];
+					sprintf(erreur, "Execution time exceeded maximum allowed: ESTIMATED: %.10G min MAXIMUM: %.10G min\nSee gen.maxexetime() definition",
+								  testime/60.,g_maxEstimatedProcessingTime/60.);
+					throw std::range_error(erreur);
 				}
 			}
 			if (m_afficheBar)

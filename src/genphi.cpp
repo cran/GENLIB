@@ -24,6 +24,8 @@
 
 using namespace std;
 
+#define R_NO_REMAP
+
 #define DIV 1024
 string divisor = "K";
 #define WIDTH 7
@@ -73,8 +75,10 @@ int PhiMatrix(int* Genealogie, int* proposant, int NProposant,int Niveau, double
 		Niveau=SHRT_MAX;
 
 	if (Niveau>SHRT_MAX){
-		GENError("Niveau must be smaller than %d", SHRT_MAX);
-		throw std::exception();
+//		GENError("Niveau must be smaller than %d", SHRT_MAX);
+		char erreur[TAILLEDESCRIPTION];
+		sprintf(erreur, "depthmin must be smaller than %d",SHRT_MAX);
+		throw std::range_error(erreur);
 		//GENError("Le niveau doit-être inférieur à %d",SHRT_MAX);
 	}
 	const short niveauMax = short(Niveau);
@@ -151,8 +155,10 @@ int PhiMatrixMT(int* Genealogie, int* proposant, int NProposant,int Niveau, doub
 		Niveau=SHRT_MAX;	
 
 	if (Niveau>SHRT_MAX){
-		GENError("Niveau must be smaller than %d", SHRT_MAX);
-		throw std::exception();
+//		GENError("Niveau must be smaller than %d", SHRT_MAX);
+		char erreur[TAILLEDESCRIPTION];
+		sprintf(erreur, "depthmin must be smaller than %d",SHRT_MAX);
+		throw std::range_error(erreur);
 		//GENError("Le niveau doit-être inférieur à %d",SHRT_MAX);
 	}
 	const short niveauMax = short(Niveau);

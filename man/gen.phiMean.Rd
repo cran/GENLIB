@@ -21,10 +21,11 @@ genJi<-gen.genealogy(geneaJi)
 kinship<-gen.phi(genJi)
 gen.phiMean(kinship)
 
-## Another example
-#data(genea140) 
-#gen140<-gen.genealogy(genea140) 
-#phi6subjects<-gen.phi(gen140, pro=c(454422, 676521, 677273, 717537, 717634, 717709, 868572))
-#gen.phiMean(phi6subjects)
+ \donttest{
+  data(genea140) 
+  gen140<-gen.genealogy(genea140) 
+  phi6subjects<-gen.phi(gen140, pro=c(454422, 676521, 677273, 717537, 717634, 717709, 868572))
+  gen.phiMean(phi6subjects)
+ }
 }
 \keyword{manip}

@@ -7,13 +7,14 @@
   }
 \usage{pop140}
 \format{
-A data frame with 32 observations on 11 variables.
-[, 1] 	ind 	An individual's ID number
-[, 2] 	pop 	This indidividual's population
+  [, 1]  ind:  An individual's ID number
+  
+  [, 2]  pop:  This indidividual's population
 }
 \source{Balsac}
 \references{
- http://www.quebecgenpop.ca
- Roy-Gagnon, M.-H., Moreau, C., Bherer, C., St-Onge, P., Sinnett, D., Laprise, C., Vezina, H., Labuda, D. (2011). Genomic and genealogical investigation of the French Canadian founder population structure. Human Genetics, 129(5), 521-31.
+  http://www.quebecgenpop.ca/home.html
+  
+  Roy-Gagnon, M.-H., Moreau, C., Bherer, C., St-Onge, P., Sinnett, D., Laprise, C., Vezina, H., Labuda, D. (2011). Genomic and genealogical investigation of the French Canadian founder population structure. Human Genetics, 129(5), 521-31.
 }
 \keyword{datasets}

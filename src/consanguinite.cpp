@@ -24,7 +24,7 @@ Calcul et Analyse de diverse valeur dérivé de F et Fmoyen
 #include <math.h>
 #include <cstdlib>
 #include <Rcpp.h>
-
+#define R_NO_REMAP
 // ********************************************************************
 //
 //			PUBLIC 
@@ -76,8 +76,10 @@ int consan(int* Genealogie, int* proposant, int NProposant,int Niveau, double* p
 		Niveau=SHRT_MAX;
 
 	if (Niveau>SHRT_MAX) {
-		GENError("Niveau must be smaller than %d",SHRT_MAX);
-		throw std::exception();
+//		GENError("Niveau must be smaller than %d",SHRT_MAX);
+		char erreur[TAILLEDESCRIPTION];
+		sprintf(erreur, "Niveau must be smaller than %d",SHRT_MAX);
+		throw std::range_error(erreur);
 		//GENError("Le niveau doit-être inférieur à %d",SHRT_MAX);
 	}
 	const short niveauMax = short(Niveau);
@@ -133,31 +135,32 @@ int consan(int* Genealogie, int* proposant, int NProposant,int Niveau, double* p
     \return 0 si la fonction est executé avec succès
 
 */
-int consanFs(int* Genealogie,
-	int* proposant, int NProposant,int NiveauMin,int NiveauMax,
-	double* pdDeepConsan, int printprogress)
+int consanFs(int* Genealogie, int* proposant, int NProposant,int NiveauMin,int NiveauMax,
+		   double* pdDeepConsan, int printprogress)
 {
 	try{
 	//TEST D'ERREUR DE BASE
-	if (NProposant<2){
-		GENError("At least two probands are required for this function");
-		throw std::exception();
+	if (NProposant<1){
+//		GENError("At least two probands are required for this function");
+		throw std::range_error("At least one proband is required for this function");
 		//GENError("Il faut au minimum 2 proposant pour utilise cette fonction");
 	}
 	if (NiveauMin<1){
-		GENError("NiveauMax and NiveauMin must be greater than one.");
-		throw std::exception();
+//		GENError("depthmax and depthmin must be greater than one.");
+		throw std::range_error("depthmax and depthmin must be greater than one.");
 		//GENError("Le niveau minimum et le niveau maximum doivent-être supérieur à un");
 	}
 	if (NiveauMax<NiveauMin){
-		GENError("NiveauMax must be greater or equal to NiveauMin");
-		throw std::exception();
+//		GENError("depthmax must be greater or equal to depthmin");
+		throw std::range_error("depthmax must be greater or equal to depthmin");
 		//GENError("Le niveau maximum doit-être supérieur ou égal au niveau minimum");
 	}
 	//Mise en place du niveau maximal
 	if (NiveauMax>SHRT_MAX){
-		GENError("NiveauMax must be smaller than %d",SHRT_MAX);
-		throw std::exception();
+//		GENError("depthmax must be smaller than %d",SHRT_MAX);
+		char erreur[TAILLEDESCRIPTION];
+		sprintf(erreur, "depthmax must be smaller than %d",SHRT_MAX);
+		throw std::range_error(erreur);
 		//GENError("Le NiveauMax doit-être inférieur à %d",SHRT_MAX);
 	}
 	const short trueNiveauMax = NiveauMax-1;
@@ -189,7 +192,7 @@ int consanFs(int* Genealogie,
 	Kinship4Struct Element(trueNiveauMax,Phideep);	
 	
 	//Pour chaque proposant
-	CREATE_PROGRESS_BAR(NProposant,printprogress)
+//	CREATE_PROGRESS_BAR(NProposant,printprogress)
 	for(int cPro=0;cPro<NProposant;++cPro)
     {
 			
@@ -212,17 +215,17 @@ int consanFs(int* Genealogie,
 		}
 
 		//Affichage des progress
-		INCREMENT_PROGRESS_BAR();
+//		INCREMENT_PROGRESS_BAR();
 
 	}//Fin chaque proposant
 
 	return 0;
- 			} catch(std::exception &ex) {
- 				forward_exception_to_r(ex);
- 			}
- 			  catch(...){
- 				::Rf_error("c++ exception (unknown reason)"); 
- 			} 
- 			return 0;
+ 	} catch(std::exception &ex) {
+ 		forward_exception_to_r(ex);
+ 	}
+ 	  catch(...){
+ 		::Rf_error("c++ exception (unknown reason)"); 
+ 	} 
+ 	return 0;
 }
 

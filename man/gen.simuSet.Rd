@@ -37,7 +37,7 @@
 \code{\link{gen.simuSample}}
 }
 \examples{
-#A case where only male subjects can receive alleles 
+\dontrun{A case where only male subjects can receive alleles}
 data(geneaJi) 
 genJi<-gen.genealogy(geneaJi) 
 onlyThroughMale<-matrix(c(c(1,0.5,0,0.5,0.25,0,0,0,0,1,1,1,1,0.75,0.5,1,0.5,0), rep(1,18)), 
@@ -45,25 +45,27 @@ onlyThroughMale<-matrix(c(c(1,0.5,0,0.5,0.25,0,0,0,0,1,1,1,1,0.75,0.5,1,0.5,0), 
 gen.graph(genJi, indVarAffected=c(28,27,25,17,12,8,4,1), varAffected=c(28,27,25,17,12,8,4,1))
 simu_1000a<-gen.simuSet(genJi, pro=c(1,28), ancestors=c(17,25), stateAncestors=c(1,1), 
                         simulNo = 1000,probMatrix=onlyThroughMale)
-table(simu_1000a) #Number of alleles received by proposants
-table(colSums(simu_1000a)) #Number of alleles received by all proposants at each simulation
-table(simu_1000a[1,],simu_1000a[2,]) #Number of alleles received by each proposant
+\dontrun{Number of alleles received by proposants}
+table(simu_1000a)
+\dontrun{Number of alleles received by all proposants at each simulation}
+table(colSums(simu_1000a))
+\dontrun{Number of alleles received by each proposant}
+table(simu_1000a[1,],simu_1000a[2,])
 
-
-#A case where subjects are limited to one copy compared to what is normally expected
+\dontrun{A case where subjects are limited to one copy compared to what is normally expected}
 max1Allreceived<-matrix(rep(c(1,0.5,0,0.5,0.25,0,0,0,0,1,1,1,1,1,1,1,1,1), 2) , nrow=3, ncol=12)  
 gen.graph(genJi)
 simu_1000b<-gen.simuSet(genJi, pro=c(1,29), ancestors=25, stateAncestors=1, simulNo=10000,
                         probMatrix=max1Allreceived)
-#Normal case matrix not changed
+\dontrun{Normal case matrix not changed}
 simu_1000original<-gen.simuSet(genJi, pro=c(1,29), ancestors=25, stateAncestors=1, simulNo=10000)
-#Number of alleles received by each proposant
+\dontrun{Number of alleles received by each proposant}
 table(simu_1000b) 
 table(simu_1000original) 
-#Number of alleles received by all proposants at each simulation
+\dontrun{Number of alleles received by all proposants at each simulation}
 table(colSums(simu_1000b)) 
 table(colSums(simu_1000original)) 
-#Number of alleles received by each proposant
+\dontrun{Number of alleles received by each proposant}
 table(simu_1000b[1,],simu_1000b[2,])
 table(simu_1000original[1,],simu_1000original[2,]) 
 }

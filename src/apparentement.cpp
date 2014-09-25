@@ -28,6 +28,9 @@ Calcul et Analyse de diverse valeur dérivé de Phi et Phi moyen
 #include <Rcpp.h>
 using namespace std;
 //#include "windows.h"
+
+#define R_NO_REMAP
+
 #define DIV 1024
 
 #define WIDTH 7
@@ -103,20 +106,22 @@ int Phis(int* Genealogie, int* proposant, int NProposant,int NiveauMin,int Nivea
  	try{
 	//TEST D'ERREUR DE BASE
 	if (NProposant<2){
-		GENError("At least two probands are required for this function");
-		throw std::exception();
+//		GENError("At least two probands are required for this function");
+		throw std::range_error("At least two probands are required for this function");
 	}
 	if (NiveauMin<0){
-		GENError("NiveauMax and NiveauMin must be greater than zero.");
-		throw std::exception();
+//		GENError("depthmax and depthmin must be greater than zero.");
+		throw std::range_error("depthmax and depthmin must be greater than zero.");
 	}
 	if (NiveauMax<NiveauMin){
-		GENError("NiveauMax must be greater or equal to NiveauMin");
-		throw std::exception();
+//		GENError("depthmax must be greater or equal to depthmin");
+		throw std::range_error("depthmax must be greater or equal to depthmin");
 	}
 	if (NiveauMax>SHRT_MAX){
-		GENError("NiveauMax must be smaller than %d",SHRT_MAX);
-		throw std::exception();
+//		GENError("depthmax must be smaller than %d",SHRT_MAX);
+		char erreur[TAILLEDESCRIPTION];
+		sprintf(erreur, "depthmax must be smaller than %d\n", SHRT_MAX);
+		throw std::range_error(erreur);
 	}
 	//CREATION DU TABLEAU D'INDIVIDU
 	int lNIndividu;
@@ -149,7 +154,7 @@ int Phis(int* Genealogie, int* proposant, int NProposant,int NiveauMin,int Nivea
 	Kinship4Struct Element(niveauMax,Phideep);	
 
 	//Barre de progression
-	CREATE_PROGRESS_BAR_MATRIX(NProposant,printprogress)
+//	CREATE_PROGRESS_BAR_MATRIX(NProposant,printprogress)
 	for(int cPro1=0;cPro1<NProposant;++cPro1)
 	{
 		for(int cPro2=cPro1;cPro2<NProposant;++cPro2)
@@ -166,8 +171,7 @@ int Phis(int* Genealogie, int* proposant, int NProposant,int NiveauMin,int Nivea
   				//Calcul de la valeur de retours
 				 
 				//remise à zero de phi deep
-				for(int a=0;a<=niveauMax;a++)
-					Phideep[a]=0.0;
+				for(int a=0;a<=niveauMax;a++)	Phideep[a]=0.0;
 
 				//calcul de phi				
 				Kinship4(NoeudPro[cPro1],NoeudPro[cPro2],niveauMax,niveauMax,Element);				
@@ -182,7 +186,7 @@ int Phis(int* Genealogie, int* proposant, int NProposant,int NiveauMin,int Nivea
 				}	
 
 				//Affichage des progress
-				INCREMENT_PROGRESS_BAR()
+//				INCREMENT_PROGRESS_BAR()
 			//}			
 
 		}//Fin itérateur proposant 2
@@ -234,30 +238,31 @@ BASEMT_DEBUT_HELPERFCT(CBASEMTPhisMT,1)
 				 BASEMT_HLPMES.niveauMax,BASEMT_HLPMES.niveauMax,BASEMT_HLPMES.elem); 
 BASEMT_FIN_HELPERFCT() 
 
-int PhisMT(int* Genealogie,
-	int* proposant, int NProposant,int NiveauMin,int NiveauMax,
+int PhisMT(int* Genealogie, int* proposant, int NProposant,int NiveauMin,int NiveauMax,
 	double* pdMoyenne, double *MatrixArray,int printprogress)
 {
 	try{
 	//TEST D'ERREUR DE BASE
 	if (NProposant<2){
-		GENError("At least two probands are required for this function");
-		throw std::exception();
+//		GENError("At least two probands are required for this function");
+		throw std::range_error("At least two probands are required for this function");
 		//GENError("Il faut au minimum 2 proposant pour utilise cette fonction");
 	}
 	if (NiveauMin<0){
-		GENError("NiveauMax and NiveauMin must be greater than zero.");
-		throw std::exception();
+//		GENError("depthmax and depthmin must be greater than zero.");
+		throw std::range_error("depthmin and depthmin must be greater than zero.");
 		//GENError("Le niveau minimum et le niveau maximum doivent-être supérieur à zéro");
 	}
 	if (NiveauMax<NiveauMin){
-		GENError("NiveauMax must be greater or equal to NiveauMin");
-		throw std::exception();
+//		GENError("depthmax must be greater or equal to depthmin");
+		throw std::range_error("depthmax must be greater or equal to depthmin");
 		//GENError("Le niveau maximum doit-être supérieur ou égal au niveau minimum");
 	}
 	if (NiveauMax>SHRT_MAX){
-		GENError("NiveauMax must be smaller than %d",SHRT_MAX);
-		throw std::exception();
+//		GENError("depthmax must be smaller than %d",SHRT_MAX);
+		char erreur[TAILLEDESCRIPTION];
+		sprintf(erreur, "depthmin must be smaller than %d",SHRT_MAX);
+		throw std::range_error(erreur);
 		//GENError("Le niveau maximum doit-être inférieur à %d",SHRT_MAX);
 	}
 	//CREATION DU TABLEAU D'INDIVIDU

@@ -233,12 +233,15 @@ gen.branching = function(gen, pro = 0, ancestors = gen.founder(gen), check = 1, 
 	
 	#}
 	#Structure necessaire pour emmagasiner le resultat la fonction de la dll
+	#print(paste("taille alloue:",length(gen@.Data)))
 	tmpgen <- integer(length(gen@.Data))
 	tmpNelem <- integer(1)
 
 	#print(".C(SPLUSebranche,.. commence")
 	.Call("SPLUSebranche", gen@.Data, pro, length(pro), ancestors, length(ancestors), tmpgen, tmpNelem, specialsok = T)
 	#print(".C(SPLUSebranche,.. fait:")
+	#print(paste(length(tmpgen),tmpgen[1],tmpgen[2],tmpgen[3] ))
+	#print(paste(length(gen@.Data),gen@.Data[1],gen@.Data[2],gen@.Data[3]))
 	length(tmpgen) <- tmpNelem
 	tmpNelem <- length(tmpgen)
 	#print(length(tmpgen))
@@ -532,7 +535,6 @@ gen.f = function(gen, pro, depthmin= (gen.depth(gen)-1), depthmax= (gen.depth(ge
 	pro = retour$pro
 	depthmin = retour$depthmin
 	depthmax = retour$depthmax
-#	print.it = retour$print.it
 	named = retour$named
 
 	#Structure necessaire pour emmagasiner le resultat la fonction de la dll
@@ -545,12 +547,6 @@ gen.f = function(gen, pro, depthmin= (gen.depth(gen)-1), depthmax= (gen.depth(ge
 	dim(tmp) <- c(length(pro), ecart)
 	dimnames(tmp) <- list(pro, NULL)
 	tmp = drop(tmp)
-#	if(print.it) {
-#		base <- c(deparse(substitute(gen)), deparse(substitute(pro)), depthmin, depthmax)
-#		header.txt <- paste("\n\t***   Calls : gen.FS (", base[1], ",", base[2], ",", base[3], ",", base[4], 
-#			")  ***\n\n")
-#		cat(header.txt, "\n")
-#	}
 	return(invisible(GLmulti(tmp, depth = as.integer(depthmin:depthmax))))
 }
 
@@ -927,6 +923,8 @@ gen.occ = function(gen, pro = 0, ancestors = 0, typeOcc = "IND", check = 1, ...)
 			dimnames(dfResult.occtot)[[2]] <- c("nb.occ")
 			return(dfResult.occtot)
 		}
+		else
+			print("Please choose between \"IND\" and \"TOTAL\" for the variable typeOcc.")
 	}
 }
 

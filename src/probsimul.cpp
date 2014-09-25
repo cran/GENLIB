@@ -28,10 +28,12 @@
 #include <algorithm>
 #include <iostream>
 #include <R.h>
-#include <Rdefines.h>
+//#include <Rdefines.h>
 #include <Rcpp.h>
 #include <Rcpp/as.h>
 #include <RcppCommon.h>
+
+#define R_NO_REMAP
 
 typedef std::vector<Tuple> vecTuple_t;
 
@@ -89,110 +91,6 @@ int CountChild(int* Genealogie, int* plProposant,int NProposant, int* retour)
 
 	return 0;
 } 
-/*
-int testEbranche(int* Genealogie, int* plProposant, int lNProposant, int* plAncetre, int lNAncetre, int* NouvelGenealogie, int* tailleNouvelGenealogie)
-{
-	int lNIndividu;
-	CIndSimul *Noeud=NULL;
-	LoadGenealogie(Genealogie,GTRUE,&lNIndividu,&Noeud); //Avec enfants
-	
-	CIndSimul **NoeudPro=NULL;
-	int allProposant=0;
-
-	if (plProposant[0]==0) //Conserve tous les descendants des ancetres
-		allProposant=1;
-	else
-		LoadProposant(plProposant,lNProposant,&NoeudPro);	
-	
-	//CREATION D'UN VECTEUR D'ANCETRE
-	CIndSimul **NoeudAnc=NULL;
-	LoadAncetre(plAncetre,lNAncetre,&NoeudAnc);
-	
-	//VARIABLE OPERATIONNEL 	
-	INITGESTIONMEMOIRE;	
-	int* plRetIndividu	=(int*)memalloc(lNIndividu,sizeof(int));	
-	int* plRetPere		=(int*)memalloc(lNIndividu,sizeof(int));
-	int* plRetMere		=(int*)memalloc(lNIndividu,sizeof(int));
-	int* plRetSexe		= NULL;		
-	if (LoadNIndMasc()>=0)
-		plRetSexe		=(int*)memalloc(lNIndividu,sizeof(int));
-	//RÉINITIALISE LES CHAMPS UTILE DE LA GENEALOGIE
-	for(int i=0;i<lNIndividu;i++)
-	{		
-		Noeud[i].etat=GENNONEXPLORER;
-		Noeud[i].bFlagSort=0;	   		
-	}
-	
-	//ETIQUETER LES PROPOSANT 
-	if (!allProposant) //Pas tous les proposants qui sont valide alors
-	{
-		for(int i=0;i<lNProposant;i++) 
-			NoeudPro[i]->etat=GENPROPOSANTINUTILE;					 
-	}
-	
-	//IDENTIFIER ET ETIQUETER LES POINTS DE DEPARTS
-	for(int i=0;i<lNAncetre;i++) 	
-		NoeudAnc[i]->etat=GENDEPART; 
-
-	for(int i=0;i<lNAncetre;i++) 				
-		if (allProposant)
-			ExploreArbreTousDescendant(NoeudAnc[i]);				
-		else
-			ExploreArbre(NoeudAnc[i]);			
-
-	//CREATION D'UN ORDRE D'EXECUTION ET CALCUL DES SAUTS 
-	int countInd=0;
-	int NombreEnfant=0;
-	for(int i=0;i<lNIndividu;i++)  
-	{ 
-		const typenoeud_t et=Noeud[i].etat;
-		if(et==GENNOEUD || et==GENDEPART || et==GENPROPOSANT || et==GENPROPOSANTINUTILE) 
-		{
-			plRetIndividu[countInd]=Noeud[i].nom; 
-			if(plRetSexe)
-				plRetSexe[countInd]=Noeud[i].sex; 
-			if(Noeud[i].pere!=NULL) 
-			{ 
-				const typenoeud_t petat = Noeud[i].pere->etat; 
-				if(petat==GENNOEUD || petat==GENDEPART || petat==GENPROPOSANT || petat==GENPROPOSANTINUTILE) 
-				{
-					plRetPere[countInd]=Noeud[i].pere->nom;++NombreEnfant;
-				}
-				else 
-					plRetPere[countInd]=0; 
-			}
-			else 
-				plRetPere[countInd]=0;
-
-			if(Noeud[i].mere!=NULL) 
-			{ 
-				const typenoeud_t metat = Noeud[i].mere->etat; 
-				if (metat==GENNOEUD || metat==GENDEPART || metat==GENPROPOSANT || metat==GENPROPOSANTINUTILE) 
-				{
-					plRetMere[countInd]=Noeud[i].mere->nom;++NombreEnfant;
-				}
-				else 
-					plRetMere[countInd]=0; 
-			}
-			else 
-				plRetMere[countInd]=0; 
-			++countInd;				
-		}
-	}
-	//CREATION DE LA GENEALOGIE
-	*tailleNouvelGenealogie = TAILLEGENVERSION7(countInd,NombreEnfant);
-
-	//Rcpp::IntegerVector NouvelGenTmp(*tailleNouvelGenealogie);
-	//NouvelGenealogie = INTEGER_POINTER(NouvelGenTmp);
-	//int * newObj = new int[*tailleNouvelGenealogie];
-	//int * newPtr = newObj;
-
-	//#Utilise CompleteGenealogie... je me pose sérieusement la question...
-	CreerGenealogie(plRetIndividu,plRetPere,plRetMere,plRetSexe,countInd,NouvelGenealogie);
-	
-	//FIN
-	return 0; 
-}*/
 /*! 
 	\brief Creer une nouvelle genealogie ne contenant que les noeuds ayant un entre au moins un proposant et un ancetre
 	
@@ -224,12 +122,14 @@ int testEbranche(int* Genealogie, int* plProposant, int lNProposant, int* plAnce
 	\return 0 si la fonction est executé avec succès
 */
 
-int ebranche(int* Genealogie, int* plProposant, int lNProposant, int* plAncetre, int lNAncetre, int* NouvelGenealogie, int* tailleNouvelGenealogie)
+int ebranche(int* Genealogie, int* plProposant, int lNProposant, int* plAncetre, int lNAncetre, int* NouvelGenealogie, 
+		   int* tailleNouvelGenealogie)
 { 
 	//CREATION DE TABLEAU D'INDIVIDU
 	int lNIndividu;
 	CIndSimul *Noeud=NULL;
 	LoadGenealogie(Genealogie,GTRUE,&lNIndividu,&Noeud); //Avec enfants
+
 	//CREATION D'UN VECTEUR DE PROPOSANT
 	CIndSimul **NoeudPro=NULL;
 	int allProposant=0;
@@ -249,13 +149,14 @@ int ebranche(int* Genealogie, int* plProposant, int lNProposant, int* plAncetre,
 	int* plRetSexe		= NULL;		
 	if (LoadNIndMasc()>=0)
 		plRetSexe		=(int*)memalloc(lNIndividu,sizeof(int));
+
 	//RÉINITIALISE LES CHAMPS UTILE DE LA GENEALOGIE
 	for(int i=0;i<lNIndividu;i++)
 	{		
 		Noeud[i].etat=GENNONEXPLORER;
 		Noeud[i].bFlagSort=0;	   		
 	}
-	
+
 	//ETIQUETER LES PROPOSANT 
 	if (!allProposant) //Pas tous les proposants qui sont valide alors
 	{
@@ -312,13 +213,9 @@ int ebranche(int* Genealogie, int* plProposant, int lNProposant, int* plAncetre,
 			++countInd;				
 		}
 	}
+
 	//CREATION DE LA GENEALOGIE
 	*tailleNouvelGenealogie = TAILLEGENVERSION7(countInd,NombreEnfant);
-
-	//Rcpp::IntegerVector NouvelGenTmp(*tailleNouvelGenealogie);
-	//NouvelGenealogie = INTEGER_POINTER(NouvelGenTmp);
-	//int	* newObj = new int[*tailleNouvelGenealogie];
-	//int * newPtr = newObj;
 
 	//#Utilise CompleteGenealogie... je me pose sérieusement la question...
 	CreerGenealogie(plRetIndividu,plRetPere,plRetMere,plRetSexe,countInd,NouvelGenealogie);

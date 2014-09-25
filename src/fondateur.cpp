@@ -30,12 +30,13 @@ Calcul et Analyse de diverse valeur dérivé du gene fondateur
 #include <cstdlib>
 #include <RcppCommon.h>
 #include <R.h>
-#include <Rdefines.h>
+//#include <Rdefines.h>
 
 #include <Rcpp.h>
 #include <Rcpp/as.h>
 #include <Rcpp/Function.h>
 
+#define R_NO_REMAP
 //using namespace std;
 
 #ifdef NEG
@@ -119,8 +120,8 @@ int simul(int* Genealogie, int* plProposant, int* plProEtat,int lNProposant, int
 	try{
 	//Validation genealogie
 	if (lSimul<=0){
-		GENError("Number of simulation must be greater than zero");
-		throw std::exception();
+//		GENError("Number of simulation must be greater than zero");
+		throw std::range_error("Number of simulation must be greater than zero");
 		//GENError("Le nombre de simulation doit-être supérieur à zero");
 	}
 	//CREATION DE TABLEAU D'INDIVIDU
@@ -323,8 +324,8 @@ int simulsingle(int* Genealogie, int* plProposant, int lNProposant, int* plAncet
 	try{
 	//VALIDATION GENEALOGIE
 	if (lSimul<=0){
-		GENError("Number of simulation must be greater than zero");
-		throw std::exception();
+//		GENError("Number of simulation must be greater than zero");
+		throw std::range_error("Number of simulation must be greater than zero");
 		//GENError("Le nombre de simulation doit-être supérieur à zero");
 	}
 	//CREATION DE TABLEAU D'INDIVIDU
@@ -439,44 +440,12 @@ SEXP simulsingleProb(int* Genealogie, int* plProposant, int lNProposant, int* pl
 {
 	try{
 	//Conversion des paramètres
-	//int* Genealogie	= INTEGER_POINTER(AS_INTEGER(SGenealogie));
-	//int* plProposant	= INTEGER_POINTER(AS_INTEGER(SplProposant)); 
-	//int* plAncetre	= INTEGER_POINTER(AS_INTEGER(SplAncetre)); 
-	//int* plAncEtat	= INTEGER_POINTER(AS_INTEGER(SplAncEtat));
-	/*Rcpp::IntegerVector genTmp  (SGenealogie);
-	Rcpp::IntegerVector lProTmp (SplProposant);
-	Rcpp::IntegerVector lAncTmp (SplAncetre);
-	Rcpp::IntegerVector lEtaTmp (SplAncEtat);
-	int * Genealogie, * plProposant, * plAncetre, * plAncEtat;
-	Genealogie  = INTEGER_POINTER(genTmp);
-	plProposant = INTEGER_POINTER(lProTmp);
-	plAncetre   = INTEGER_POINTER(lAncTmp);
-	plAncEtat   = INTEGER_POINTER(lEtaTmp);
-	*/
-	// long* Genealogie; *Genealogie = Rcpp::as<int>(*SGenealogie); <- ça compile mais pas sur que ça marche ....
-	/*long* Genealogie =NULL; long* plProposant =NULL; long* plAncetre =NULL; long* plAncEtat =NULL;
-	*Genealogie	= genTmp[0];
-	*plProposant	= plProTmp[0];
-	*plAncetre 	= plAncTmp[0];
-	*plAncEtat	= plEtaTmp[0];
-	*/
-	//long  lNProposant	= *(INTEGER_POINTER(AS_INTEGER(SlNProposant)));
-	//long  lNAncetre	= *(INTEGER_POINTER(AS_INTEGER(SlNAncetre)));
-	//long  lSimul		= *(INTEGER_POINTER(AS_INTEGER(SlSimul)));
-	//long  printprogress	= *(INTEGER_POINTER(AS_INTEGER(Sprintprogress)));
-	/*int  lNProposant	= Rcpp::as<int>(SlNProposant);
-	int  lNAncetre		= Rcpp::as<int>(SlNAncetre);
-	int  lSimul		= Rcpp::as<int>(SlSimul);
-	int  printprogress  = Rcpp::as<int>(Sprintprogress);*/
-    //l'object SEXP* est casté en CSPmatrix
-	//CSPmatrix matprob(mtProb);
-	Rcpp::NumericMatrix matprob(mtProb); // ??
-	//Rcpp::IntegerMatrix matprob(mtProb); // ??
+	Rcpp::NumericMatrix matprob(mtProb);
 
 	//VALIDATION GENEALOGIE
 	if (lSimul<=0){
-		GENError("Number of simulation must be greater than zero");
-		throw std::exception();
+//		GENError("Number of simulation must be greater than zero");
+		throw std::range_error("Number of simulation must be greater than zero");
 		//GENError("Le nombre de simulations doit-être supérieur à zero");
 	}
 	//CREATION DE TABLEAU D'INDIVIDU
@@ -598,8 +567,8 @@ int simulsingleFreq(int* Genealogie, int* plProposant, int lNProposant, int* plA
 	try{
 	//VALIDATION GENEALOGIE
 	if (lSimul<=0) {
-		GENError("Number of simulation must be greater than zero");
-		throw std::exception();
+//		GENError("Number of simulation must be greater than zero");
+		throw std::range_error("Number of simulation must be greater than zero");
 		//GENError("Le nombre de simulation doit-être supérieur à zero");
 	}
 	//CREATION DE TABLEAU D'INDIVIDU
@@ -717,8 +686,8 @@ SEXP simulsingleFct(int * Genealogie, int * proposant, int lproposant, int * plA
 	try{
 	//VALIDATION GENEALOGIE
 	if (lSimul<=0){
-		GENError("Number of simulation must be greater than zero");
-		throw std::exception();
+//		GENError("Number of simulation must be greater than zero");
+		throw std::range_error("Number of simulation must be greater than zero");
 		//GENError("Le nombre de simulation doit-être supérieur à zero");
 	}
 	//CREATION DE TABLEAU D'INDIVIDU
@@ -726,35 +695,6 @@ SEXP simulsingleFct(int * Genealogie, int * proposant, int lproposant, int * plA
 	CIndSimul *Noeud=NULL;
 	LoadGenealogie(Genealogie,GTRUE,&lNIndividu,&Noeud);
 
-	/*
-	//l'object SEXP* est casté en CPSlist
-	//CSPlist indSelect(Sindividus);
-	Rcpp::List indSelect(Sindividus);
-
-	//Permet de savoir combien il y a de groupes
-	//long igrp = indSelect.length();
-	int igrp = indSelect.size();
-	
-	//Tableau de CIndSimul** qui permettra d'extraire la structure 
-	//de noeud de chaque groupe de sujets
-	CIndSimul ***NoeudPro=(CIndSimul***)malloc(igrp*sizeof(CIndSimul**));
-
-	//Pour chaque groupes
-	for (int i=0;i<igrp;i++)
-	{	
-		//long* proposant = INTEGER_POINTER(AS_INTEGER(grp));
-		//CSPnumeric lind(grp);
-		Rcpp::IntegerVector lind = Rcpp::as<Rcpp::IntegerVector>(indSelect[i]);
-		int* proposant = NULL; *proposant = lind[0];
-		int lproposant = lind.length();//Nombre de ind dans le groupe
-		NoeudPro[i]=NULL;
-		LoadProposant(proposant,lproposant,&NoeudPro[i]);
-		
-		//IDENTIFIER ET ETIQUETER LES PROPOSANT
-			for(int j=0;j<lproposant;j++)
-				NoeudPro[i][j]->etat=GENPROPOSANTINUTILE;
-	}	
-	*/
 	//CREATION D'UN VECTEUR DE PROPOSANT
 	CIndSimul ** NoeudPro=NULL; //[i]
 	LoadProposant(proposant,lproposant,&NoeudPro); //[i]
@@ -1004,8 +944,8 @@ SEXP prob( int* Genealogie, int* plProposant, int* plProEtat,int lNProposant, in
 		StartSortPrioriteArbre(NoeudAnc[i],Ordre,&NOrdre,OrdreSaut);
 
 	if (NOrdre==-1){		
-		GENError("There is no link between any ancetres and any probands");
-		throw std::exception();
+//		GENError("There is no link between any ancetres and any probands");
+		throw std::range_error("There is no link between any ancetres and any probands");
 		//GENError("Il n'y a pas de lien entre aucun des ancetres et aucun proposant");
 	}
 	//Liste de tableau dépendante de l'ordre
@@ -1359,18 +1299,21 @@ int CoefApparentement(int* Genealogie,	int* plProposant, int NProposant, int* pl
 		if (dnbposs>COAPPMOD_NBPOSSMAX_DUPP)
 		{
 			PathDestruction(Path,NProposant);
-			GENError("Number of combination to evaluate is too great for duplicata detection\nDeactivate it if you want to continue.");
-			throw std::exception();
+//			GENError("Number of combination to evaluate is too great for duplicata detection\nDeactivate it if you want to continue.");
+			throw std::range_error("Number of combination to evaluate is too great for duplicata detection\nDeactivate it if you want to continue.");
 			//GENError("Le nombre de combinaison a évaluer est trop grand pour pouvoir utilisé la détection de dupplicata\n Déactivé la détection de dupplication si vous désiré continuer"); 
 		}
 
 		if (MaxMemoryUsed>COAPPMOD_MAXMEMORY_USABLE)
 		{
 			PathDestruction(Path,NProposant);
-			GENError("Memory usage is too great for duplicata detection\nDeactivate it if you want to continue\n"
-				    "Maximum memory allowed: %lG Mo  memory needed: %lG Mo\n\n", 
-					COAPPMOD_MAXMEMORY_USABLE/MEGAOCTET,MaxMemoryUsed/MEGAOCTET);
-			throw std::exception();
+//			GENError("Memory usage is too great for duplicata detection\nDeactivate it if you want to continue\n"
+//				    "Maximum memory allowed: %lG Mo  memory needed: %lG Mo\n\n", 
+//					COAPPMOD_MAXMEMORY_USABLE/MEGAOCTET,MaxMemoryUsed/MEGAOCTET);
+			char erreur[TAILLEDESCRIPTION];
+			sprintf(erreur, "Memory usage is too great for duplicata detection\nDeactivate it if you want to continue\nMaximum memory allowed: %Lf Mo  memory needed: %Lf Mo\n\n",
+				   COAPPMOD_MAXMEMORY_USABLE/MEGAOCTET,MaxMemoryUsed/MEGAOCTET);
+			throw std::range_error(erreur);
 			//GENError("La quantite de mémoire utilisé par la détection de dupplicata est trop importante\n Déactivé la détection de dupplication si vous désiré continuer"
 					 //"\nTaille maximal permise : %lG Mo   Mémoire demandé : %lG Mo\n\n",	 COAPPMOD_MAXMEMORY_USABLE/MEGAOCTET,MaxMemoryUsed/MEGAOCTET);
 		}
@@ -1380,8 +1323,8 @@ int CoefApparentement(int* Genealogie,	int* plProposant, int NProposant, int* pl
 		if (dnbposs>COAPPMOD_NBPOSSMAX_NODUPP)
 		{
 			PathDestruction(Path,NProposant);
-			GENError("Execution time of this function call is too great");
-			throw std::exception();
+//			GENError("Execution time of this function call is too great");
+			throw std::range_error("Execution time of this function call is too great");
 			//GENError("La durée d'exécution de cet appel de fonction serait surement comparable à l'âge de l'univers");
 		}
 	}
@@ -1403,9 +1346,12 @@ int CoefApparentement(int* Genealogie,	int* plProposant, int NProposant, int* pl
 	if (ptrHashTable==NULL || ptrHashTable->Error())
 	{
 		//PathDestruction(Path,NProposant);
-		GENError( "Insufficient memory to create an anti-duplicata table\n Deactivate duplicata detection if you want to continue\n"
-				"Memory needed: %lG Mo\n", MaxMemoryUsed/MEGAOCTET);
-		throw std::exception();
+//		GENError( "Insufficient memory to create an anti-duplicata table\n Deactivate duplicata detection if you want to continue\n"
+//				"Memory needed: %lG Mo\n", MaxMemoryUsed/MEGAOCTET);
+		char erreur[TAILLEDESCRIPTION];
+		sprintf(erreur, "Insufficient memory to create an anti-duplicata table\n Deactivate duplicata detection if you want to continue\nMemory needed: %Lf Mo\n",
+			 MaxMemoryUsed/MEGAOCTET);
+		throw std::range_error(erreur);
 		//GENError("Mémoire insuffisante pour utilisé créer une table anti-dupplicata\n Déactivé la détection de dupplication si vous désiré continuer"
 				 //"\nMémoire nécessaire : %lG Mo\n",MaxMemoryUsed/MEGAOCTET);
 	}

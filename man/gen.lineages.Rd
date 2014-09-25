@@ -28,7 +28,7 @@ genJi <- gen.genealogy(geneaJi)
 genJi_MaLi<-gen.lineages(geneaJi, maternal = TRUE) 
 genJi_FaLi<-gen.lineages(geneaJi, maternal = FALSE) 
 
-#Plots of original genealogy and maternal and paternal lineages
+\dontrun{Plots of original genealogy and maternal and paternal lineages}
 layout(matrix(1:3,c(1,3),byrow=TRUE), widths =c(3,1,1), heights = 1)
 gen.graph(genJi) 
 mtext("Original", line=2)

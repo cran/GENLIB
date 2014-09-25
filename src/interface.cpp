@@ -22,13 +22,15 @@
 #include <string>
 #define ALLOWPRINTPROGRESS
 #include <R.h>
-#include <Rdefines.h>
+//#include <Rdefines.h>
 #include <Rmath.h> 
 #include <Rcpp.h>
 #include <Rcpp/as.h>
 #include <RcppCommon.h>
 //#define EXPORTTYPE extern "C"  -> remplacer par RcppExport
 
+#define R_NO_REMAP
+#define R_NO_REMAP_RMATH
 
 /// Valeur textuel de l'enumeration typenoeud_t
 /** \sa typenoeud_t*/
@@ -57,7 +59,9 @@ RcppExport void SPLUSGetTimer(SEXP sTimeInSec)
 {
 	//Flush la cache de la genealogie et autre
 	int * TimeInSec;
-	TimeInSec = INTEGER_POINTER( sTimeInSec );
+	//std::vector<int> dat = Rcpp::as<std::vector<int>> (sTimeInSec);
+	Rcpp::IntegerVector dat(sTimeInSec);
+	TimeInSec = &dat[0];
 	*TimeInSec = getLastTimer();
 	return;		
 }
@@ -67,8 +71,12 @@ RcppExport SEXP SPLUSValidateGenealogie(SEXP RGenealogie, SEXP RisValid)
 	STARTTIMER;
 	int * Genealogie, * tmp;
 	Rcpp::IntegerVector gen(RGenealogie);
-	Genealogie = INTEGER_POINTER(gen);
-	tmp = INTEGER_POINTER(RisValid);
+//	std::vector<int> genT = Rcpp::as<std::vector<int>>(gen);
+	Genealogie = INTEGER(gen); //&gen[0]; // genT
+	
+	//std::vector<int> isV = Rcpp::as<std::vector<int>>(RisValid);
+	Rcpp::IntegerVector isV(RisValid);
+	tmp = INTEGER(isV);//&isV[0];
 
 	*tmp = ValidateGenealogie(Genealogie);
 	//for(int i=0; i<gen.size(); i++) gen[i] = Genealogie[i];
@@ -82,8 +90,13 @@ RcppExport SEXP SPLUSValidateGenealogie(SEXP RGenealogie, SEXP RisValid)
 RcppExport void SPLUSChangeMaxProcessingTime(SEXP snewMaximum,SEXP soldMaximum)
 {	
 	double * newMaximum, * oldMaximum;
-	newMaximum = NUMERIC_POINTER(snewMaximum);
-	oldMaximum = NUMERIC_POINTER(soldMaximum);
+	//newMaximum = NUMERIC_POINTER(snewMaximum);
+	//Rcpp::NumericVector v_snewMaximum (snewMaximum);
+	newMaximum = REAL(snewMaximum); //&v_snewMaximum[0];
+
+	//Rcpp::NumericVector v_soldMaximum(soldMaximum);
+	//oldMaximum = REAL(soldMaximum) //&v_soldMaximum[0];
+	oldMaximum = REAL(soldMaximum); //NUMERIC_POINTER(soldMaximum);
 	getCurrentMaxTime(oldMaximum);
 	if (*newMaximum>=0)
 		setCurrentMaxTime(*newMaximum);
@@ -102,18 +115,24 @@ RcppExport void SPLUSPhiMatrix(SEXP sGenealogie, SEXP sProposant, SEXP sNProposa
 	STARTTIMER;
 	int * Genealogie, * proposant, * NProposant, * Niveau, * printit ;
 	double * pdRetour;
+
 	Rcpp::IntegerVector lGenealogie(sGenealogie);
 	Rcpp::IntegerVector lproposant(sProposant);
+	Rcpp::NumericVector lpdRetour(sPDRetour);
 
-	Genealogie = INTEGER_POINTER( lGenealogie );
-	proposant  = INTEGER_POINTER( lproposant );
+	Genealogie = INTEGER(lGenealogie); //&lGenealogie[0];
+	proposant = INTEGER(lproposant); //&lproposant[0];
+	pdRetour	= REAL(lpdRetour);
 	
-	NProposant = INTEGER_POINTER(sNProposant);
-	Niveau	 = INTEGER_POINTER(sNiveau);
-	pdRetour	 = NUMERIC_POINTER(sPDRetour);
-	printit	 = INTEGER_POINTER(sPrintit);
+	//int NProposant = Rcpp::as<int>(sNProposant);
+	NProposant = INTEGER(sNProposant); //INTEGER_POINTER(sNProposant);
+	//int Niveau	= Rcpp::as<int>(sNiveau);
+	Niveau	= INTEGER(sNiveau); //INTEGER_POINTER(sNiveau);
+	//int printit	= Rcpp::as<int>(sPrintit);
+	printit	= INTEGER(sPrintit); //INTEGER_POINTER(sPrintit);
 	
 	PhiMatrix(Genealogie, proposant,*NProposant,*Niveau, pdRetour,*printit);
+//	PhiMatrix(Genealogie, proposant, NProposant, Niveau, pdR, printit);
 	STOPTIMER;
 	return;
 }
@@ -125,17 +144,25 @@ RcppExport void SPLUSPhiMatrixMT(SEXP sGenealogie, SEXP sproposant, SEXP sNPropo
 	STARTTIMER;
 	int * Genealogie, * proposant, * NProposant, * Niveau, * printit;
 	double * pdRetour;
+
 	Rcpp::IntegerVector lGenealogie(sGenealogie);
 	Rcpp::IntegerVector lproposant(sproposant);
+	Rcpp::NumericVector lpdRetour(spdRetour);
 	
-	Genealogie = INTEGER_POINTER(lGenealogie);
-	proposant  = INTEGER_POINTER(lproposant);
-	NProposant = INTEGER_POINTER(sNProposant);
-	Niveau	 = INTEGER_POINTER(sNiveau);
-	pdRetour	 = NUMERIC_POINTER(spdRetour);
-	printit	 = INTEGER_POINTER(sprintit);
+	Genealogie= INTEGER(lGenealogie); //&lGenealogie[0];
+	proposant = INTEGER(lproposant); //&lproposant[0];
+	pdRetour	= REAL(lpdRetour);
+	
+	//int NProposant = Rcpp::as<int>(sNProposant);
+	NProposant = INTEGER(sNProposant); //INTEGER_POINTER(sNProposant);
+	//int Niveau	= Rcpp::as<int>(sNiveau);
+	Niveau	= INTEGER(sNiveau); //INTEGER_POINTER(sNiveau);
+	///int printit	= Rcpp::as<int>(sprintit);
+	printit	= INTEGER(sprintit); //INTEGER_POINTER(sprintit);
 	
 	PhiMatrixMT(Genealogie, proposant, *NProposant, *Niveau, pdRetour,*printit);
+	//NProposant, Niveau, pdR,printit);
+	
 	STOPTIMER;
 	return;
 }
@@ -151,18 +178,26 @@ RcppExport void SPLUSPhis(SEXP sGenealogie, SEXP sproposant, SEXP sNProposant,SE
 	
 	Rcpp::IntegerVector lGenealogie(sGenealogie);
 	Rcpp::IntegerVector lproposant(sproposant);
+	Rcpp::NumericVector lpdRetour(spdRetour);
+	Rcpp::NumericVector lMatrixArray(sMatrixArray);
 	
-	Genealogie  = INTEGER_POINTER(lGenealogie);
-	proposant   = INTEGER_POINTER(lproposant);
-	NProposant  = INTEGER_POINTER(sNProposant);
-	NiveauMin	  = INTEGER_POINTER(sNiveauMin);
-	NiveauMax	  = INTEGER_POINTER(sNiveauMax);
-	pdRetour	  = NUMERIC_POINTER(spdRetour);
-	MatrixArray = NUMERIC_POINTER(sMatrixArray);
-	printit	 = INTEGER_POINTER(sprintit);
+	Genealogie = INTEGER(lGenealogie); //&lGenealogie[0];
+	proposant  = INTEGER(lproposant); //&lproposant[0];
+	pdRetour	 = REAL(spdRetour);
+	MatrixArray= REAL(sMatrixArray);
+
+	//int NProposant		= Rcpp::as<int>(sNProposant); 
+	NProposant	= INTEGER(sNProposant); //INTEGER_POINTER(sNProposant);
+	//int NiveauMin		= Rcpp::as<int>(sNiveauMin);  
+	NiveauMin		= INTEGER(sNiveauMin); //INTEGER_POINTER(sNiveauMin);
+	//int NiveauMax		= Rcpp::as<int>(sNiveauMax);  
+	NiveauMax		= INTEGER(sNiveauMax); //INTEGER_POINTER(sNiveauMax);
+	//int printit		= Rcpp::as<int>(sprintit); 	
+	printit		= INTEGER(sprintit); //INTEGER_POINTER(sprintit);
 	
 	//Peut utilise Phis en guise de comparaison  
-	Phis(Genealogie, proposant,*NProposant,*NiveauMin,*NiveauMax,pdRetour,MatrixArray,*printit);
+	Phis(Genealogie, proposant, *NProposant,*NiveauMin,*NiveauMax,pdRetour,MatrixArray,*printit);
+	//NProposant,NiveauMin,NiveauMax,pdR,MArray,printit);
 	STOPTIMER;
 
 	return;
@@ -177,19 +212,27 @@ RcppExport void SPLUSPhisMT(	SEXP sGenealogie , SEXP sproposant, SEXP sNProposan
 	
 	Rcpp::IntegerVector lGenealogie(sGenealogie);
 	Rcpp::IntegerVector lproposant(sproposant);
+	Rcpp::NumericVector lpdRetour(spdRetour);
+	Rcpp::NumericVector lMatrixArray(sMatrixArray);
 	
-	Genealogie  = INTEGER_POINTER(lGenealogie);
-	proposant   = INTEGER_POINTER(lproposant);
-	NProposant  = INTEGER_POINTER(sNProposant);
-	NiveauMin	  = INTEGER_POINTER(sNiveauMin);
-	NiveauMax	  = INTEGER_POINTER(sNiveauMax);
-	pdRetour	  = NUMERIC_POINTER(spdRetour);
-	MatrixArray = NUMERIC_POINTER(sMatrixArray);
-	printit	 = INTEGER_POINTER(sprintit);
-		//Peut utilise Phis en guise de comparaison  
-		PhisMT(Genealogie,
-		proposant,*NProposant,*NiveauMin,*NiveauMax,
-		pdRetour,MatrixArray,*printit);
+	Genealogie = INTEGER(lGenealogie); //&lGenealogie[0];
+	proposant  = INTEGER(lproposant); //&lproposant[0];
+	pdRetour	 = REAL(spdRetour);
+	MatrixArray= REAL(sMatrixArray);
+
+	//int NProposant	= Rcpp::as<int>(sNProposant);
+	NProposant  = INTEGER(sNProposant); //INTEGER_POINTER(sNProposant);
+	//int NiveauMin	= Rcpp::as<int>(sNiveauMin); 
+	NiveauMin	  = INTEGER(sNiveauMin); //INTEGER_POINTER(sNiveauMin);
+	//int NiveauMax	= Rcpp::as<int>(sNiveauMax);
+	NiveauMax	  = INTEGER(sNiveauMax); //INTEGER_POINTER(sNiveauMax);
+	//int printit	= Rcpp::as<int>(sprintit);
+	printit	  = INTEGER(sprintit); //INTEGER_POINTER(sprintit);
+	
+
+	//Peut utilise Phis en guise de comparaison  
+	PhisMT(Genealogie, proposant,*NProposant,*NiveauMin,*NiveauMax, pdRetour,MatrixArray,*printit);
+	//NProposant,NiveauMin,NiveauMax, pdR,MArray,printit);
 	STOPTIMER;
 
 	return;
@@ -212,14 +255,19 @@ RcppExport void SPLUSF(SEXP sGenealogie, SEXP sproposant, SEXP sNProposant, SEXP
 	Rcpp::IntegerVector lproposant(sproposant);
 	Rcpp::NumericVector lpdRetour(spdRetour);
 	
-	Genealogie = INTEGER_POINTER(lGenealogie);
-	proposant  = INTEGER_POINTER(lproposant);
-	NProposant = INTEGER_POINTER(sNProposant);
-	Niveau	 = NUMERIC_POINTER(sNiveau);
-	pdRetour	 = NUMERIC_POINTER(lpdRetour);
-	printit	 = INTEGER_POINTER(sprintit);
+	Genealogie = INTEGER(lGenealogie); //&lGenealogie[0];
+	proposant  = INTEGER(lproposant); //&lproposant[0];
+	pdRetour   = REAL(lpdRetour); //&lpdRetour[0];
+
+	//int NProposant	= Rcpp::as<int>(sNProposant);
+	NProposant = INTEGER(sNProposant); //INTEGER_POINTER(sNProposant);
+	//int Niveau	= Rcpp::as<int>(sNiveau);
+	Niveau	 = REAL(sNiveau); //NUMERIC_POINTER(sNiveau);
+	//int printit	= Rcpp::as<int>(sprintit);
+	printit	 = INTEGER(sprintit); //INTEGER_POINTER(sprintit);
 	
 	consan(Genealogie, proposant,*NProposant,*Niveau, pdRetour,*printit);
+	//,NProposant,Niveau, pdRetour,printit);
 	STOPTIMER;
 	return;
 }
@@ -236,15 +284,21 @@ RcppExport void SPLUSFS(SEXP sGenealogie, SEXP sproposant, SEXP sNProposant, SEX
 	Rcpp::IntegerVector lproposant(sproposant);
 	Rcpp::NumericVector lpdRetour(spdRetour);
 	
-	Genealogie  = INTEGER_POINTER(lGenealogie);
-	proposant   = INTEGER_POINTER(lproposant);
-	NProposant  = INTEGER_POINTER(sNProposant);
-	NiveauMin	  = NUMERIC_POINTER(sNiveauMin);
-	NiveauMax	  = NUMERIC_POINTER(sNiveauMax);
-	pdRetour	  = NUMERIC_POINTER(lpdRetour);
-	printit	  = INTEGER_POINTER(sprintit);
+	Genealogie = INTEGER(lGenealogie); //&lGenealogie[0];
+	proposant = INTEGER(lproposant); //&lproposant[0];
+	pdRetour = REAL(lpdRetour); //&lpdRetour[0];
+
+	//int NProposant	= Rcpp::as<int>(sNProposant);
+	NProposant  = INTEGER(sNProposant); //INTEGER_POINTER(sNProposant);
+	//int NiveauMin	= Rcpp::as<int>(sNiveauMin);
+	NiveauMin	  = REAL(sNiveauMin); //NUMERIC_POINTER(sNiveauMin);
+	//int NiveauMax	= Rcpp::as<int>(sNiveauMax);
+	NiveauMax	  = REAL(sNiveauMax); //NUMERIC_POINTER(sNiveauMax);
+	//int printit	= Rcpp::as<int>(sprintit);
+	printit	  = INTEGER(sprintit); //INTEGER_POINTER(sprintit);
 	
 	consanFs(Genealogie, proposant,*NProposant,*NiveauMin,*NiveauMax, pdRetour,*printit);
+	//NProposant,NiveauMin,NiveauMax, pdRetour,printit);
 	STOPTIMER;	
 	return;
 }
@@ -258,84 +312,50 @@ RcppExport void SPLUSFS(SEXP sGenealogie, SEXP sproposant, SEXP sNProposant, SEX
 RcppExport void SPLUSChild(SEXP sGenealogie, SEXP splProposant,SEXP slNProposant, SEXP sretour)
 {
 	STARTTIMER;
-	int * Genealogie, * plProposant, * lNProposant, * retour;
+	int * Genealogie, * plProposant, * retour, * lNProposant;
 	
 	Rcpp::IntegerVector lGenealogie(sGenealogie);
 	Rcpp::IntegerVector lplProposant(splProposant);
+	Rcpp::IntegerVector lretour(sretour);
 	
-	Genealogie  = INTEGER_POINTER(lGenealogie);
-	plProposant = INTEGER_POINTER(lplProposant);
-	lNProposant = INTEGER_POINTER(slNProposant);
-	retour	  = INTEGER_POINTER(sretour);
+	Genealogie  = INTEGER(lGenealogie); //&lGenealogie[0];
+	plProposant = INTEGER(lplProposant); //&lplProposant[0];
+	retour	  = INTEGER(lretour);
 
+	//int lNProposant= Rcpp::as<int>(slNProposant);
+	lNProposant = INTEGER(slNProposant); //INTEGER_POINTER(slNProposant);
+	
 	CountChild(Genealogie, plProposant, *lNProposant, retour);
+	//, lNProposant, retour);
 	STOPTIMER;
 	return;
 } 
 
-/*
-RcppExport  void  SPLUSTestEbranche(SEXP sGenealogie, SEXP sProposant, SEXP sNProposant, SEXP sAncetre, SEXP sNAncetre, SEXP sRetour, SEXP sTaille)
-{
- Rcpp::IntegerVector lGenealogie(sGenealogie);
- Rcpp::IntegerVector lproposant(sProposant);
- Rcpp::IntegerVector lancetre(sAncetre);
- Rcpp::IntegerVector lretour(sRetour);
- 
- int * Genealogie, * proposant, * ancetre, * retour, * nproposant, * nancetre, * taille ;
- Genealogie = INTEGER_POINTER( lGenealogie );
- proposant  = INTEGER_POINTER( lproposant );
- ancetre	  = INTEGER_POINTER( lancetre );
- retour	  = INTEGER_POINTER( lretour );
- 
- //int lNProposant = Rcpp::as<int>(sNProposant);
- //int lNAncetre   = Rcpp::as<int>(sNAncetre);
- //int lTaille     = Rcpp::as<int>(sTaille);
- //nproposant	= &lNProposant;
- //nancetre		= &lNAncetre;
- nproposant	= INTEGER_POINTER(sNProposant);
- nancetre		= INTEGER_POINTER(sNAncetre);
- taille		= INTEGER_POINTER(sTaille); 		//&lTaille;
-
- int res = testEbranche(Genealogie, proposant, *nproposant, ancetre, *nancetre, retour, taille);
- return (Rcpp::List::create(	  Rcpp::Named("Data")   = lGenealogie
-						, Rcpp::Named("prop")   = lproposant
-						, Rcpp::Named("nProp")  = Rcpp::wrap(*nproposant)
-						, Rcpp::Named("anc")    = lancetre
-						, Rcpp::Named("nAnc")   = Rcpp::wrap(*nancetre)
-						, Rcpp::Named("retour") = lretour
-						, Rcpp::Named("taille") = Rcpp::wrap(*taille)
-						));//
- return ;
-}*/
 
 /// Fonction d'interface Splus pour ebranche
 /** \sa ebranche()*/
-RcppExport  void  SPLUSebranche(SEXP sGenealogie, SEXP sProposant, SEXP sNProposant, SEXP sAncetre, SEXP sNAncetre, SEXP sRetour, SEXP sTaille)
+RcppExport  void  SPLUSebranche(SEXP sGenealogie, SEXP sProposant, SEXP sNProposant, SEXP sAncetre, SEXP sNAncetre, 
+						  SEXP sRetour, SEXP sTaille)
 {
 	STARTTIMER;
-	int * Genealogie, * proposant, * ancetre, * retour, * nproposant, * nancetre, * taille ;
+	int * Genealogie, * proposant, * ancetre, * retour, * taille, * nproposant, * nancetre ;
 
 	Rcpp::IntegerVector lGenealogie(sGenealogie);
 	Rcpp::IntegerVector lproposant(sProposant);
 	Rcpp::IntegerVector lancetre(sAncetre);
 	Rcpp::IntegerVector lretour(sRetour);
+	
+	Genealogie = INTEGER(lGenealogie);
+	proposant  = INTEGER(lproposant);
+	ancetre    = INTEGER(lancetre);
+	retour     = INTEGER(lretour);
 
-	Genealogie = INTEGER_POINTER( lGenealogie );
-	proposant  = INTEGER_POINTER( lproposant );
-	ancetre	 = INTEGER_POINTER( lancetre );
-	retour	 = INTEGER_POINTER( lretour );
-	
-	//int lNProposant = Rcpp::as<int>(sNProposant);
-	//int lNAncetre   = Rcpp::as<int>(sNAncetre);
-	//int lTaille     = Rcpp::as<int>(sTaille);
-	//nproposant      = &lNProposant;
-	//nancetre  	 = &lNAncetre;
-	//taille		 = &lTaille;
-	nproposant	= INTEGER_POINTER(sNProposant);
-	nancetre	= INTEGER_POINTER(sNAncetre);
-	taille		= INTEGER_POINTER(sTaille);
-	
+	nproposant= INTEGER(sNProposant); // INTEGER_POINTER(sNProposant);
+	nancetre	= INTEGER(sNAncetre); // INTEGER_POINTER(sNAncetre);
+	taille    = INTEGER(sTaille);// INTEGER_POINTER(sTaille);
+
 	ebranche(Genealogie, proposant, *nproposant, ancetre, *nancetre, retour, taille);
+	//nproposant, ancetre, nancetre, retour, taille);
 	STOPTIMER;
 	return ;
 }
@@ -347,17 +367,21 @@ RcppExport  void  SPLUSnumeroGen(SEXP sGenealogie, SEXP splProposant, SEXP sNPro
 {
 
 	STARTTIMER;
-	int * Genealogie, * plProposant, * NProposant, * retour;
+	int * Genealogie, * plProposant, * retour, * NProposant;
+
 	Rcpp::IntegerVector lGenealogie (sGenealogie);
 	Rcpp::IntegerVector lplProposant(splProposant);
 	Rcpp::IntegerVector lretour     (sretour);
 
-	Genealogie  = INTEGER_POINTER( lGenealogie );
-	plProposant = INTEGER_POINTER( splProposant );
-	retour 	  = INTEGER_POINTER( sretour );
-	NProposant  = INTEGER_POINTER(sNProposant);
+	Genealogie  = INTEGER(lGenealogie); //&lGenealogie[0];
+	plProposant = INTEGER(lplProposant); //&lplProposant[0];
+	retour 	  = INTEGER(lretour); //&lretour[0];
+
+	//int NProposant	= Rcpp::as<int>(sNProposant);
+	NProposant  = INTEGER(sNProposant); //INTEGER_POINTER(sNProposant);
 	
 	numeroGen(Genealogie, plProposant,*NProposant, retour);
+	//NProposant, retour);
 	STOPTIMER;
 	return ;
 }
@@ -367,17 +391,21 @@ RcppExport  void  SPLUSnumGenMin(SEXP sGenealogie, SEXP splProposant,SEXP sNProp
 {
 
 	STARTTIMER;
-	int * Genealogie, * plProposant, * NProposant, * retour;
+	int * Genealogie, * plProposant, * retour, * NProposant;
+
 	Rcpp::IntegerVector lGenealogie (sGenealogie);
 	Rcpp::IntegerVector lplProposant(splProposant);
 	Rcpp::IntegerVector lretour     (sretour);
 
-	Genealogie  = INTEGER_POINTER( lGenealogie );
-	plProposant = INTEGER_POINTER( splProposant );
-	retour 	  = INTEGER_POINTER( sretour );
-	NProposant  = INTEGER_POINTER(sNProposant);
+	Genealogie  = INTEGER(lGenealogie); //&lGenealogie[0];
+	plProposant = INTEGER(lplProposant); //&lplProposant[0];
+	retour 	  = INTEGER(lretour); //&lretour[0];
+
+	//int NProposant	= Rcpp::as<int>(sNProposant);
+	NProposant  = INTEGER(sNProposant); //INTEGER_POINTER(sNProposant);
 	
-		numeroGenMin(Genealogie, plProposant,*NProposant, retour);
+	numeroGenMin(Genealogie, plProposant,*NProposant, retour);
+	//NProposant, retour);
 	STOPTIMER;
 
 	return ;
@@ -391,16 +419,20 @@ RcppExport  void  SPLUSnumGenMoy(SEXP sGenealogie, SEXP splProposant,SEXP sNProp
 	STARTTIMER;
 	int * Genealogie, * plProposant, * NProposant;
 	double * retour;
+
 	Rcpp::IntegerVector lGenealogie (sGenealogie);
 	Rcpp::IntegerVector lplProposant(splProposant);
-	Rcpp::IntegerVector lretour     (sretour);
+	Rcpp::NumericVector lretour     (sretour);
 
-	Genealogie  = INTEGER_POINTER( lGenealogie );
-	plProposant = INTEGER_POINTER( splProposant );
-	NProposant  = INTEGER_POINTER(sNProposant);
-	retour 	  = NUMERIC_POINTER(sretour);
+	Genealogie  = INTEGER(lGenealogie); //&lGenealogie[0];
+	plProposant = INTEGER(lplProposant); //&lplProposant[0];
+	retour	  = REAL(sretour);
+
+	//int NProposant	= Rcpp::as<int>(sNProposant);
+	NProposant  = INTEGER(sNProposant); //INTEGER_POINTER(sNProposant);
 	
 	numeroGenMoy(Genealogie, plProposant,*NProposant, retour);
+	//NProposant, retour);
 	STOPTIMER;
 
 	return ;
@@ -411,25 +443,32 @@ RcppExport  void  SPLUSnumGenMoy(SEXP sGenealogie, SEXP splProposant,SEXP sNProp
 
 /// Fonction d'interface Splus pour Congen
 /** \sa Congen()*/
-RcppExport void SPLUSConGen(SEXP sGenealogie, SEXP slProposant, SEXP sNProposant, SEXP slAncetre, SEXP sNAncetre, SEXP sdRetour, SEXP sprintit)
+RcppExport void SPLUSConGen(SEXP sGenealogie, SEXP slProposant, SEXP sNProposant, SEXP slAncetre, SEXP sNAncetre, SEXP sdRetour, 
+					   SEXP sprintit)
 {
 	STARTTIMER;
 	int * Genealogie , * plProposant, * plAncetre, * NProposant, * NAncetre, * printit ;
 	double * dRetour;
+	
 	Rcpp::IntegerVector lGenealogie(sGenealogie); // conversion automatique avec Rcpp
 	Rcpp::IntegerVector lProposant(slProposant);
 	Rcpp::IntegerVector lAncetre(slAncetre);
+	Rcpp::NumericVector ldRetour(sdRetour);
 	
-	Genealogie	= INTEGER_POINTER(lGenealogie);
-	plProposant	= INTEGER_POINTER(lProposant);
-	plAncetre		= INTEGER_POINTER(lAncetre);
+	Genealogie  = INTEGER(lGenealogie); //&lGenealogie[0];
+	plProposant = INTEGER(lProposant); //&lProposant[0];
+	plAncetre   = INTEGER(lAncetre); //&lAncetre[0];
+	dRetour	  = REAL(ldRetour);
 	
-	NProposant	= INTEGER_POINTER(sNProposant);
-	NAncetre		= INTEGER_POINTER(sNAncetre);
-	dRetour		= NUMERIC_POINTER(sdRetour);
-	printit		= INTEGER_POINTER(sprintit);
+	//int NProposant	= Rcpp::as<int>(sNProposant); //	
+	NProposant	= INTEGER(sNProposant); //INTEGER_POINTER(sNProposant);
+	//int NAncetre	= Rcpp::as<int>(sNAncetre); //	
+	NAncetre		= INTEGER(sNAncetre); //INTEGER_POINTER(sNAncetre);
+	//int printit	= Rcpp::as<int>(sprintit); //	
+	printit		= INTEGER(sprintit); //INTEGER_POINTER(sprintit);
 	
 	Congen(Genealogie, plProposant , *NProposant, plAncetre, *NAncetre, dRetour, *printit);
+	//NProposant, plAncetre, NAncetre, dRetour, printit);
 	STOPTIMER;
 	return;
 }
@@ -442,21 +481,28 @@ RcppExport void SPLUSConGenPLUS(SEXP sGenealogie, SEXP splProposant,SEXP slNProp
 	STARTTIMER;
 	int * Genealogie , * plProposant, * plAncetre, * lNProposant, * lNAncetre, * printit ;
 	double * pdRetour, * pdSexe;
+	
 	Rcpp::IntegerVector lGenealogie(sGenealogie); // conversion automatique avec Rcpp
 	Rcpp::IntegerVector lProposant (splProposant);
 	Rcpp::IntegerVector lAncetre   (splAncetre);
+	Rcpp::NumericVector lpdSexe	 (spdSexe);
+	Rcpp::NumericVector lpdRetour  (spdRetour);
 	
-	Genealogie	= INTEGER_POINTER(lGenealogie);
-	plProposant	= INTEGER_POINTER(lProposant);
-	plAncetre		= INTEGER_POINTER(lAncetre);
+	Genealogie	= INTEGER(lGenealogie); //&lGenealogie[0]; // INTEGER_POINTER(
+	plProposant	= INTEGER(lProposant); //&lProposant[0]; // INTEGER_POINTER(
+	plAncetre		= INTEGER(lAncetre); //&lAncetre[0]; // INTEGER_POINTER(
+	pdRetour	 	= REAL(lpdRetour);
+	pdSexe		= REAL(lpdSexe);
 	
-	lNProposant	= INTEGER_POINTER(slNProposant);
-	lNAncetre		= INTEGER_POINTER(slNAncetre);
-	pdSexe		= NUMERIC_POINTER(spdSexe);
-	pdRetour		= NUMERIC_POINTER(spdRetour);
-	printit		= INTEGER_POINTER(sprintit);
+	//int lNProposant= Rcpp::as<int>(slNProposant);
+	lNProposant	= INTEGER(slNProposant); //INTEGER_POINTER(slNProposant);
+	//int lNAncetre	= Rcpp::as<int>(slNAncetre);
+	lNAncetre		= INTEGER(slNAncetre); //INTEGER_POINTER(slNAncetre);
+	//int printit	= Rcpp::as<int>(sprintit);
+	printit		= INTEGER(sprintit); //INTEGER_POINTER(sprintit);
 	
 	CongenPLUS(Genealogie, plProposant, *lNProposant, plAncetre, *lNAncetre, pdSexe, pdRetour, *printit);
+	// lNProposant, plAncetre, lNAncetre, pdSexe, pdRetour, printit);
 	STOPTIMER;
 	return;
 }
@@ -467,47 +513,61 @@ RcppExport void SPLUSCGCumul(	SEXP sGenealogie, SEXP splProposant,SEXP slNPropos
 						SEXP spdRetour, SEXP spdRetourCumul, SEXP sprintit)
 {
 	STARTTIMER;
-	int * Genealogie , * plProposant, * plAncetre, * lNProposant, * lNAncetre, * AncRet, * printit ;
+	int * Genealogie , * plProposant, * plAncetre, * AncRet, * lNProposant, * lNAncetre, * printit ;
 	double * pdRetour, * pdRetourCumul;
+	
 	Rcpp::IntegerVector lGenealogie(sGenealogie); // conversion automatique avec Rcpp
 	Rcpp::IntegerVector lProposant(splProposant);
 	Rcpp::IntegerVector lAncetre(splAncetre);
+	Rcpp::NumericVector lpdRetour(spdRetour);
+	Rcpp::NumericVector lpdRetourCumul(spdRetourCumul);
 	
-	Genealogie	= INTEGER_POINTER(lGenealogie);
-	plProposant	= INTEGER_POINTER(lProposant);
-	plAncetre	= INTEGER_POINTER(lAncetre);
+	Genealogie  = INTEGER(lGenealogie); //&lGenealogie[0];
+	plProposant = INTEGER(lProposant); //&lProposant[0];
+	plAncetre	  = INTEGER(lAncetre); //&lAncetre[0];
+	pdRetour      = REAL(lpdRetour);
+	pdRetourCumul = REAL(lpdRetourCumul);
+
 	AncRet		= NULL;
-	lNProposant	= INTEGER_POINTER(slNProposant);
-	lNAncetre	= INTEGER_POINTER(slNAncetre);
-	pdRetour	= NUMERIC_POINTER(spdRetour);
-	pdRetourCumul	= NUMERIC_POINTER(spdRetourCumul);
-	printit		= INTEGER_POINTER(sprintit);
+	//int lNProposant= Rcpp::as<int>(slNProposant);
+	lNProposant= INTEGER(slNProposant); //INTEGER_POINTER(slNProposant);
+	//int lNAncetre	= Rcpp::as<int>(slNAncetre);
+	lNAncetre	 = INTEGER(slNAncetre); //INTEGER_POINTER(slNAncetre);
+	//int printit	= Rcpp::as<int>(sprintit);
+	printit	 = INTEGER(sprintit); //INTEGER_POINTER(sprintit);
 
 	CongenCumul(Genealogie, plProposant, *lNProposant, plAncetre, *lNAncetre, AncRet, pdRetour, pdRetourCumul, *printit);
+	//lNProposant, plAncetre, lNAncetre, AncRet, pdRetour, pdRetourCumul, printit);
 	STOPTIMER
 	return;
 }
 
 /// Fonction d'interface Splus pour CongenCumul
 /** \sa CongenCumuldirect()*/
-RcppExport void SPLUSCGCumuldirect(SEXP smatriceCG, SEXP slNProposant, SEXP splAncetre, SEXP slNAncetre, SEXP sAncRet, SEXP spdSomAnc, SEXP spdSomCumul)
+RcppExport void SPLUSCGCumuldirect(SEXP smatriceCG, SEXP slNProposant, SEXP splAncetre, SEXP slNAncetre, SEXP sAncRet, 
+							SEXP spdSomAnc, SEXP spdSomCumul)
 {
 	STARTTIMER;
-	int * matriceCG, * lNProposant, * plAncetre, * lNAncetre, * AncRet;
+	int * matriceCG, * plAncetre, * AncRet, * lNProposant, * lNAncetre;
 	double * pdSomAnc, * pdSomCumul;
 	Rcpp::IntegerVector lmatriceCG ( smatriceCG );
 	Rcpp::IntegerVector lplAncetre ( splAncetre );
 	Rcpp::IntegerVector lAncRet    ( sAncRet );
 	
-	matriceCG		= INTEGER_POINTER( lmatriceCG );
-	plAncetre		= INTEGER_POINTER( lplAncetre );
-	AncRet		= INTEGER_POINTER( lAncRet );
-	lNProposant	= INTEGER_POINTER( slNProposant );
-	lNAncetre		= INTEGER_POINTER( slNAncetre );
-	pdSomAnc		= NUMERIC_POINTER( spdSomAnc );
-	pdSomCumul	= NUMERIC_POINTER( spdSomCumul );
-	 
+	matriceCG		= INTEGER(lmatriceCG); //&lmatriceCG[0]; // INTEGER_POINTER( lmatriceCG );
+	plAncetre		= INTEGER(lplAncetre); //&lplAncetre[0]; // INTEGER_POINTER( lplAncetre );
+	AncRet		= INTEGER(lAncRet); //&lAncRet[0]; // INTEGER_POINTER( lAncRet );
+	
+	//int lNProposant= Rcpp::as<int>(slNProposant);
+	lNProposant	= INTEGER(slNProposant); //INTEGER_POINTER( slNProposant );
+	//int lNAncetre= Rcpp::as<int>(slNAncetre);
+	lNAncetre		= INTEGER(slNAncetre); //INTEGER_POINTER( slNAncetre );
+	
+	pdSomAnc   = REAL(spdSomAnc);
+	pdSomCumul = REAL(spdSomCumul);
+	
 	CongenCumuldirect(matriceCG, *lNProposant, plAncetre, *lNAncetre, AncRet,pdSomAnc,pdSomCumul);
+	//lNProposant, plAncetre, lNAncetre, AncRet, pdSomAnc, pdSomCumul);
 	STOPTIMER
 	return;
 }
@@ -526,7 +586,7 @@ RcppExport SEXP SPLUSSimul(SEXP sGenealogie, SEXP sproposant, SEXP setatproposan
 					  SEXP sprobSurvieHomo, SEXP sPrintProgress)
 {
 	STARTTIMER;
-	int * Genealogie, * proposant, * etatproposant, * nproposant, * ancetre, * etatancetre, * nancetre, * nSimul, * PrintProgress;
+	int * Genealogie, * proposant, * etatproposant, * ancetre, * etatancetre, * nproposant, * nancetre, * nSimul, * PrintProgress;
 	double * pdRetConj, * pdRetSimul, * pdRetProp, * probRecomb;
 	
 	Rcpp::IntegerVector lGenealogie	( sGenealogie );
@@ -538,24 +598,31 @@ RcppExport SEXP SPLUSSimul(SEXP sGenealogie, SEXP sproposant, SEXP setatproposan
 	Rcpp::NumericVector lpdRetProp	( spdRetProp );
 	Rcpp::NumericVector lprobRecomb	( sprobRecomb );
 	
-	Genealogie	= INTEGER_POINTER( lGenealogie );
-	proposant		= INTEGER_POINTER( lproposant );
-	etatproposant	= INTEGER_POINTER( letatproposant );
-	ancetre		= INTEGER_POINTER( lancetre );
-	etatancetre	= INTEGER_POINTER( letatancetre );
-	nproposant	= INTEGER_POINTER( snproposant );
-	nancetre		= INTEGER_POINTER( snancetre );
-	nSimul		= INTEGER_POINTER( snSimul );
-	PrintProgress	= INTEGER_POINTER( sPrintProgress );
+	Genealogie	= INTEGER(lGenealogie); //&lGenealogie[0]; // INTEGER_POINTER( lGenealogie );
+	proposant		= INTEGER(lproposant); //&lproposant[0]; // INTEGER_POINTER( lproposant );
+	etatproposant	= INTEGER(letatproposant); //&letatproposant[0]; // INTEGER_POINTER( letatproposant );
+	ancetre		= INTEGER(lancetre); //&lancetre[0]; // INTEGER_POINTER( lancetre );
+	etatancetre	= INTEGER(letatancetre); //&letatancetre[0]; // INTEGER_POINTER( letatancetre );
+	pdRetSimul = REAL(lpdRetSimul); //&lpdRetSimul[0]; // NUMERIC_POINTER( lpdRetSimul );
+	pdRetProp	 = REAL(lpdRetProp); //&lpdRetProp[0]; // NUMERIC_POINTER( lpdRetProp );
+	probRecomb = REAL(lprobRecomb); //&lprobRecomb[0]; // NUMERIC_POINTER( lprobRecomb );
 
-	pdRetConj	 = NUMERIC_POINTER( spdRetConj );
-	pdRetSimul = NUMERIC_POINTER( lpdRetSimul );
-	pdRetProp	 = NUMERIC_POINTER( lpdRetProp );
-	probRecomb = NUMERIC_POINTER( lprobRecomb );
+	//int nproposant	= Rcpp::as<int>( snproposant ); 
+	nproposant	= INTEGER(snproposant);// INTEGER_POINTER( snproposant );
+	//int nancetre		= Rcpp::as<int>( snancetre );
+	nancetre		= INTEGER(snancetre);// INTEGER_POINTER( snancetre );
+	//int nSimul		= Rcpp::as<int>( snSimul ); 
+	nSimul		= INTEGER(snSimul);// INTEGER_POINTER( snSimul );
+	//int PrintProgress	= Rcpp::as<int>( sPrintProgress ); 
+	PrintProgress	= INTEGER(sPrintProgress);// INTEGER_POINTER( sPrintProgress );
+
+	pdRetConj = REAL(spdRetConj);
+	
 	double probSurvieHomo  = Rcpp::as<double>(sprobSurvieHomo);
-
+	
 	simul(Genealogie, proposant, etatproposant, *nproposant, ancetre, etatancetre, *nancetre, *nSimul, pdRetConj, pdRetSimul,
-		pdRetProp,  probRecomb, probSurvieHomo, *PrintProgress);
+		 pdRetProp,  probRecomb, probSurvieHomo, *PrintProgress);
+	//nproposant, ancetre, etatancetre, nancetre, nSimul, pdRetConj, pdRetSimul, pdRetProp,  probRecomb, probSurvieHomo, PrintProgress);
 	STOPTIMER;
 	//return;
 	return Rcpp::wrap(getLastTimer());
@@ -567,25 +634,31 @@ RcppExport void SPLUSSimulSingle(SEXP sGenealogie, SEXP sproposant, SEXP snpropo
 						   SEXP sNSimul, SEXP spdRetour, SEXP sPrintProgress)
 {
 	STARTTIMER;
-	int * Genealogie, * proposant, * nproposant, * ancetre, * etatancetre, * nancetre, * NSimul, * PrintProgress;
+	int * Genealogie, * proposant, * ancetre, * etatancetre, * nproposant, * nancetre, * NSimul, * PrintProgress;
 	double * pdRetour;
-	Rcpp::IntegerVector lGenealogie	( sGenealogie );
-	Rcpp::IntegerVector lproposant	( sproposant );
-	Rcpp::IntegerVector lancetre	( sancetre );
+	Rcpp::IntegerVector lGenealogie ( sGenealogie );
+	Rcpp::IntegerVector lproposant  ( sproposant );
+	Rcpp::IntegerVector lancetre	  ( sancetre );
 	Rcpp::IntegerVector letatancetre( setatancetre );
 	
-	Genealogie	= INTEGER_POINTER( lGenealogie );
-	proposant		= INTEGER_POINTER( lproposant );
-	nproposant	= INTEGER_POINTER( snproposant );
-	ancetre		= INTEGER_POINTER( lancetre );
-	etatancetre	= INTEGER_POINTER( letatancetre );
-	nancetre		= INTEGER_POINTER( snancetre );
-	NSimul		= INTEGER_POINTER( sNSimul );
-	PrintProgress	= INTEGER_POINTER( sPrintProgress );
+	Genealogie	= INTEGER(lGenealogie); //&lGenealogie[0]; // INTEGER_POINTER( lGenealogie );
+	proposant		= INTEGER(lproposant); //&lproposant[0];  // INTEGER_POINTER( lproposant );
+	ancetre		= INTEGER(lancetre); //&lancetre[0];    // INTEGER_POINTER( lancetre );
+	etatancetre	= INTEGER(letatancetre); //&letatancetre[0]; // INTEGER_POINTER( letatancetre );
+
+	//int nproposant	= Rcpp::as<int>( snproposant );
+	nproposant	= INTEGER(snproposant); //INTEGER_POINTER( snproposant );
+	//int nancetre		= Rcpp::as<int>( snancetre );
+	nancetre		= INTEGER(snancetre); //INTEGER_POINTER( snancetre );
+	//int NSimul		= Rcpp::as<int>( sNSimul );
+	NSimul		= INTEGER(sNSimul); //INTEGER_POINTER( sNSimul );
+	//int PrintProgress	= Rcpp::as<int>( sPrintProgress );
+	PrintProgress	= INTEGER(sPrintProgress); //INTEGER_POINTER( sPrintProgress );
 	
-	pdRetour		= NUMERIC_POINTER( spdRetour );
+	pdRetour		= REAL(spdRetour);
 	
 	simulsingle(Genealogie, proposant, *nproposant, ancetre, etatancetre, *nancetre, *NSimul, pdRetour, *PrintProgress);
+	//nproposant, ancetre, etatancetre, nancetre, NSimul, pdRetour, PrintProgress);
 	STOPTIMER;
 	return;
 }
@@ -596,24 +669,32 @@ RcppExport void SPLUSSimulSingleFreq(SEXP sGenealogie, SEXP sproposant, SEXP snp
 							  SEXP sNSimul, SEXP spdRetour,SEXP sPrintProgress)
 {
 	STARTTIMER;
-	int * Genealogie, * proposant, * nproposant, * ancetre, * etatancetre, * nancetre, * NSimul, * PrintProgress;
+	int * Genealogie, * proposant, * ancetre, * etatancetre, * nproposant , * nancetre, * NSimul, * PrintProgress;
 	double * pdRetour;
 	Rcpp::IntegerVector lGenealogie	( sGenealogie );
 	Rcpp::IntegerVector lproposant	( sproposant );
 	Rcpp::IntegerVector lancetre		( sancetre );
 	Rcpp::IntegerVector letatancetre	( setatancetre );
+	Rcpp::NumericVector lpdRetour	( spdRetour );
 	
-	Genealogie	= INTEGER_POINTER( lGenealogie );
-	proposant		= INTEGER_POINTER( lproposant );
-	nproposant	= INTEGER_POINTER( snproposant );
-	ancetre		= INTEGER_POINTER( lancetre );
-	etatancetre	= INTEGER_POINTER( letatancetre );
-	nancetre		= INTEGER_POINTER( snancetre );
-	NSimul		= INTEGER_POINTER( sNSimul );
-	PrintProgress	= INTEGER_POINTER( sPrintProgress );
-	pdRetour		= NUMERIC_POINTER( spdRetour );
+	Genealogie	= INTEGER(lGenealogie); //&lGenealogie[0]; // INTEGER_POINTER( lGenealogie );
+	proposant		= INTEGER(lproposant); //&lproposant[0]; // INTEGER_POINTER( lproposant );
+	ancetre		= INTEGER(lancetre); //&lancetre[0]; // INTEGER_POINTER( lancetre );
+	etatancetre	= INTEGER(letatancetre); //&letatancetre[0]; // INTEGER_POINTER( letatancetre );
+	pdRetour		= REAL(lpdRetour);
+
+	//int nproposant	= Rcpp::as<int>( snproposant );
+	nproposant	= INTEGER(snproposant); //INTEGER_POINTER( snproposant );
+	//int nancetre		= Rcpp::as<int>( snancetre );
+	nancetre		= INTEGER(snancetre); //INTEGER_POINTER( snancetre );
+	//int NSimul		= Rcpp::as<int>( sNSimul );
+	NSimul		= INTEGER(sNSimul); //INTEGER_POINTER( sNSimul );
+	//int PrintProgress	= Rcpp::as<int>( sPrintProgress );
+	PrintProgress	= INTEGER(sPrintProgress); //INTEGER_POINTER( sPrintProgress );
+
 	
 	simulsingleFreq(Genealogie, proposant, *nproposant, ancetre, etatancetre, *nancetre, *NSimul, pdRetour, *PrintProgress);
+	//nproposant, ancetre, etatancetre, nancetre, NSimul, pdRetour, PrintProgress);
 	STOPTIMER;
 	return;
 }
@@ -624,23 +705,29 @@ RcppExport SEXP SPLUSSimulSingleProb( SEXP sGenealogie,SEXP sproposant, SEXP snp
 							   SEXP setatancetre,SEXP smtProb, SEXP sNSimul, SEXP sPrintProgress)
 {
 	STARTTIMER;
-	int * Genealogie, * proposant, * nproposant, * ancetre, * etatancetre, * nancetre, * NSimul, * PrintProgress; //* mtProb, 
+	int * Genealogie, * proposant, * ancetre, * etatancetre, * nproposant, * nancetre, * NSimul, * PrintProgress; //* mtProb, 
 	
 	Rcpp::IntegerVector lGenealogie	( sGenealogie );
 	Rcpp::IntegerVector lproposant	( sproposant );
 	Rcpp::IntegerVector lancetre		( sancetre );
 	Rcpp::IntegerVector letatancetre	( setatancetre );
-	Genealogie	= INTEGER_POINTER( lGenealogie );
-	proposant		= INTEGER_POINTER( lproposant );
-	ancetre		= INTEGER_POINTER( lancetre );
-	etatancetre	= INTEGER_POINTER( letatancetre );
+	
+	Genealogie	= INTEGER(lGenealogie); //&lGenealogie[0]; // INTEGER_POINTER( lGenealogie );
+	proposant		= INTEGER(lproposant); //&lproposant[0]; // INTEGER_POINTER( lproposant );
+	ancetre		= INTEGER(lancetre); //&lancetre[0]; // INTEGER_POINTER( lancetre );
+	etatancetre	= INTEGER(letatancetre); //&letatancetre[0]; // INTEGER_POINTER( letatancetre );
 
-	nproposant	= INTEGER_POINTER( snproposant );
-	nancetre		= INTEGER_POINTER( snancetre );
-	NSimul		= INTEGER_POINTER( sNSimul );
-	PrintProgress	= INTEGER_POINTER( sPrintProgress );
+	//int nproposant	= Rcpp::as<int>( snproposant );
+	nproposant	= INTEGER(snproposant); //INTEGER_POINTER( snproposant );
+	//int nancetre		= Rcpp::as<int>( snancetre );
+	nancetre		= INTEGER(snancetre); //INTEGER_POINTER( snancetre );
+	//int NSimul		= Rcpp::as<int>( sNSimul );
+	NSimul		= INTEGER(sNSimul); //INTEGER_POINTER( sNSimul );
+	//int PrintProgress	= Rcpp::as<int>( sPrintProgress );
+	PrintProgress	= INTEGER(sPrintProgress); //INTEGER_POINTER( sPrintProgress );
 	
 	SEXP ret = simulsingleProb(Genealogie, proposant, *nproposant, ancetre, *nancetre, etatancetre, smtProb, *NSimul, *PrintProgress );
+	//nproposant, ancetre, nancetre, etatancetre, smtProb, NSimul, PrintProgress );
 	STOPTIMER; 
 	return ret;
 }
@@ -651,24 +738,30 @@ RcppExport SEXP SPLUSSimulSingleFct(SEXP sGenealogie, SEXP sproposant, SEXP sanc
 							 SEXP snancetre, SEXP sNSimul, SEXP sfctSousGrp, SEXP sPrintProgress)
 {
 	STARTTIMER;
-	int * Genealogie,  * proposant, * ancetre, * ancEtatAll1, * ancEtatAll2, * nancetre, * NSimul, /* * fctSousGrp,*/ * PrintProgress;
+	int * Genealogie,  * proposant, * ancetre, * ancEtatAll1, * ancEtatAll2, * nancetre, * NSimul, * PrintProgress;
+
 	Rcpp::IntegerVector lGenealogie	( sGenealogie );
 	Rcpp::IntegerVector lproposant	( sproposant );
 	Rcpp::IntegerVector lancetre		( sancetre );
-	Rcpp::IntegerVector lancEtatAll1	( sancEtatAll1 );
-	Rcpp::IntegerVector lancEtatAll2	( sancEtatAll2 );
 	
-	Genealogie	= INTEGER_POINTER( lGenealogie );
-	proposant		= INTEGER_POINTER( lproposant );
-	ancetre		= INTEGER_POINTER( lancetre );
-	ancEtatAll1	= INTEGER_POINTER( sancEtatAll1 );
-	ancEtatAll2	= INTEGER_POINTER( sancEtatAll2 );
-	nancetre		= INTEGER_POINTER( snancetre );
-	NSimul		= INTEGER_POINTER( sNSimul );
-	PrintProgress	= INTEGER_POINTER( sPrintProgress );
+	Genealogie	= INTEGER(lGenealogie); //&lGenealogie[0]; // INTEGER_POINTER( lGenealogie );
+	proposant		= INTEGER(lproposant); //&lproposant[0]; // INTEGER_POINTER( lproposant );
+	ancetre		= INTEGER(lancetre); //&lancetre[0]; // INTEGER_POINTER( lancetre );
+
+	//int nancetre		= Rcpp::as<int>( snancetre );
+	nancetre		= INTEGER(snancetre); //INTEGER_POINTER( snancetre );
+	//int NSimul		= Rcpp::as<int>( sNSimul );
+	NSimul		= INTEGER(sNSimul); //INTEGER_POINTER( sNSimul );
+	//int PrintProgress	= Rcpp::as<int>( sPrintProgress );
+	PrintProgress	= INTEGER(sPrintProgress); //INTEGER_POINTER( sPrintProgress );
+
+	ancEtatAll1	= INTEGER(sancEtatAll1);// INTEGER_POINTER( sancEtatAll1 );
+	ancEtatAll2	= INTEGER(sancEtatAll2);// INTEGER_POINTER( sancEtatAll2 );
 	int nproposant = lproposant.size();
 	
-	SEXP ret = simulsingleFct(Genealogie, proposant, nproposant, ancetre, ancEtatAll1, ancEtatAll2, *nancetre, *NSimul, sfctSousGrp, *PrintProgress);
+	SEXP ret = simulsingleFct(Genealogie, proposant, nproposant, ancetre, ancEtatAll1, ancEtatAll2, *nancetre, *NSimul,
+						 sfctSousGrp, *PrintProgress);
+	//ancEtatAll1, ancEtatAll2, nancetre, NSimul, sfctSousGrp, PrintProgress);
 	STOPTIMER;
 	return ret;
 }
@@ -679,8 +772,9 @@ RcppExport SEXP SPLUSProb(SEXP sGenealogie, SEXP sproposant, SEXP setatproposant
 					 SEXP spdRetConj, SEXP spdRetSimul,SEXP sPrintProgress,SEXP sonlyConj)
 {
 	STARTTIMER;
-	int * Genealogie, * proposant, * etatproposant, * nproposant, * ancetre, * etatancetre, * nancetre, * PrintProgress, * onlyConj;
+	int * Genealogie, * proposant, * etatproposant, * ancetre, * etatancetre, * nproposant, * nancetre, * PrintProgress, * onlyConj;
 	double * pdRetConj, * pdRetSimul;
+	
 	Rcpp::IntegerVector lGenealogie	( sGenealogie );
 	Rcpp::IntegerVector lproposant	( sproposant );
 	Rcpp::IntegerVector letatproposant	( setatproposant );
@@ -688,20 +782,27 @@ RcppExport SEXP SPLUSProb(SEXP sGenealogie, SEXP sproposant, SEXP setatproposant
 	Rcpp::IntegerVector letatancetre	( setatancetre );
 	Rcpp::NumericVector lpdRetSimul	( spdRetSimul );
 	
-	Genealogie	= INTEGER_POINTER( lGenealogie );
-	proposant		= INTEGER_POINTER( lproposant );
-	etatproposant	= INTEGER_POINTER( letatproposant );
-	nproposant	= INTEGER_POINTER( snproposant );
-	ancetre		= INTEGER_POINTER( lancetre );
-	etatancetre	= INTEGER_POINTER( letatancetre );
-	nancetre		= INTEGER_POINTER( snancetre );
-	PrintProgress	= INTEGER_POINTER( sPrintProgress );
-	onlyConj		= INTEGER_POINTER( sonlyConj );
-	pdRetConj		= NUMERIC_POINTER( spdRetConj );
-	pdRetSimul	= NUMERIC_POINTER( lpdRetSimul );
+	Genealogie	= INTEGER(lGenealogie); //&lGenealogie[0]; // INTEGER_POINTER( lGenealogie );
+	proposant		= INTEGER(lproposant); //&lproposant[0]; // INTEGER_POINTER( lproposant );
+	etatproposant	= INTEGER(letatproposant); //&letatproposant[0]; // INTEGER_POINTER( letatproposant );
+	ancetre		= INTEGER(lancetre); //&lancetre[0]; // INTEGER_POINTER( lancetre );
+	etatancetre	= INTEGER(letatancetre); //&letatancetre[0]; // INTEGER_POINTER( letatancetre );
+	pdRetSimul	= REAL(lpdRetSimul); //&lpdRetSimul[0]; // NUMERIC_POINTER( lpdRetSimul );
 	
-	SEXP ret = prob(Genealogie, proposant, etatproposant, *nproposant, ancetre, etatancetre, *nancetre, pdRetConj, pdRetSimul,
-					*PrintProgress, *onlyConj);
+	//int nproposant		= Rcpp::as<int>( snproposant );
+	nproposant	= INTEGER(snproposant); //INTEGER_POINTER( snproposant );
+	//int nancetre		= Rcpp::as<int>( snancetre );
+	nancetre		= INTEGER(snancetre); //INTEGER_POINTER( snancetre );
+	//int PrintProgress	= Rcpp::as<int>( sPrintProgress );
+	PrintProgress	= INTEGER(sPrintProgress); //INTEGER_POINTER( sPrintProgress );
+	//int onlyConj		= Rcpp::as<int>( sonlyConj );
+	onlyConj		= INTEGER(sonlyConj); //INTEGER_POINTER( sonlyConj );
+
+	pdRetConj = REAL(spdRetConj);
+	
+	SEXP ret = prob(Genealogie, proposant, etatproposant, *nproposant, ancetre, etatancetre, *nancetre, pdRetConj, 
+				 pdRetSimul,*PrintProgress, *onlyConj);
+	//nproposant, ancetre, etatancetre, nancetre, pdRetConj, pdRetSimul, PrintProgress, onlyConj);
 	STOPTIMER;	
 	return ret;
 }
@@ -710,26 +811,32 @@ RcppExport SEXP SPLUSProb(SEXP sGenealogie, SEXP sproposant, SEXP setatproposant
 /// Fonction d'interface Splus pour CoefApparentement
 /** \sa CoefApparentement()*/
 
-RcppExport void SPLUSCoeffApparentement(SEXP sGenealogie, SEXP sproposant, SEXP snproposant, SEXP sancetre, SEXP sretour, SEXP sDuppDetection,
-								SEXP sprintprogress)
+RcppExport void SPLUSCoeffApparentement(SEXP sGenealogie, SEXP sproposant, SEXP snproposant, SEXP sancetre, SEXP sretour, 
+								SEXP sDuppDetection, SEXP sprintprogress)
 {
 	STARTTIMER
-	int * Genealogie, * proposant, * nproposant, * ancetre, * DuppDetection, * printprogress;
+	int * Genealogie, * proposant, * ancetre, * nproposant, * DuppDetection, * printprogress;
 	double * retour;
+	
 	Rcpp::IntegerVector lGenealogie	( sGenealogie );
 	Rcpp::IntegerVector lproposant	( sproposant );
 	Rcpp::IntegerVector lancetre		( sancetre );
 	Rcpp::NumericVector lretour		( sretour );
 	
-	Genealogie	= INTEGER_POINTER( lGenealogie );
-	proposant		= INTEGER_POINTER( lproposant );
-	nproposant	= INTEGER_POINTER( snproposant );
-	ancetre		= INTEGER_POINTER( lancetre );
-	retour		= NUMERIC_POINTER( lretour );
-	DuppDetection	= INTEGER_POINTER( sDuppDetection );
-	printprogress	= INTEGER_POINTER( sprintprogress );
+	Genealogie	= INTEGER(lGenealogie); //&lGenealogie[0]; // INTEGER_POINTER( lGenealogie );
+	proposant		= INTEGER(lproposant); //&lproposant[0]; // INTEGER_POINTER( lproposant );
+	ancetre		= INTEGER(lancetre); //&lancetre[0]; // INTEGER_POINTER( lancetre );
+	retour		= REAL(lretour); //&lretour[0]; // NUMERIC_POINTER( lretour );
+	
+	//int nproposant	= Rcpp::as<int>( snproposant );
+	nproposant	= INTEGER(snproposant); //INTEGER_POINTER( snproposant );
+	//int DuppDetection	= Rcpp::as<int>( sDuppDetection );
+	DuppDetection	= INTEGER(sDuppDetection); //INTEGER_POINTER( sDuppDetection );
+	//int printprogress	= Rcpp::as<int>( sprintprogress );
+	printprogress	= INTEGER(sprintprogress); //INTEGER_POINTER( sprintprogress );
 	
 	CoefApparentement(Genealogie, proposant, *nproposant, ancetre, retour, *DuppDetection, *printprogress);
+	//nproposant, ancetre, retour, DuppDetection, printprogress);
 	STOPTIMER;
 	return; 
 } 
@@ -765,21 +872,17 @@ RcppExport SEXP SPLUSCALLCreerObjetGenealogie(SEXP SIndividu,SEXP SPere, SEXP SM
 	STARTTIMER
 	//VARIABLE OPERATIONNEL		   conversion automatique avec Rcpp
 	int * plIndividu, * plPere, * plMere, * plSexe;
-//	Rcpp::IntegerVector lIndividu(SIndividu);
-//	Rcpp::IntegerVector lPere(SPere);
-//	Rcpp::IntegerVector lMere(SMere);
-//	Rcpp::IntegerVector lSexe(0);
+
+	Rcpp::IntegerVector lIndividu(SIndividu);
+	Rcpp::IntegerVector lPere(SPere);
+	Rcpp::IntegerVector lMere(SMere);
+	Rcpp::IntegerVector lSexe(SSexe);
 //	try{ lSexe = Rcpp::as<Rcpp::IntegerVector>(SSexe); } catch(std::exception &ex) { }
 	
-	Rcpp::IntegerVector lIndividu = Rcpp::as<Rcpp::IntegerVector>(SIndividu);
-	Rcpp::IntegerVector lPere = Rcpp::as<Rcpp::IntegerVector>(SPere);
-	Rcpp::IntegerVector lMere = Rcpp::as<Rcpp::IntegerVector>(SMere);
-	Rcpp::IntegerVector lSexe = Rcpp::as<Rcpp::IntegerVector>(SSexe);
-	
-	plIndividu = INTEGER_POINTER(lIndividu);
-	plPere     = INTEGER_POINTER(lPere);
-	plMere     = INTEGER_POINTER(lMere);
-	plSexe     = INTEGER_POINTER(lSexe);
+	plIndividu = INTEGER(lIndividu); //&lIndividu[0]; // INTEGER_POINTER(lIndividu);
+	plPere     = INTEGER(lPere); //&lPere[0]; // INTEGER_POINTER(lPere);
+	plMere     = INTEGER(lMere); //&lMere[0]; // INTEGER_POINTER(lMere);
+	plSexe     = INTEGER(lSexe); //&lSexe[0]; // INTEGER_POINTER(lSexe);
 	int lNIndividu = lIndividu.size();
 	
 	//Trois vecteur de meme taille
@@ -815,14 +918,16 @@ RcppExport SEXP SPLUSCALLCreerObjetGenealogie(SEXP SIndividu,SEXP SPere, SEXP SM
 
 	//CREER UN OBJET XPLUS QUI CONTIENT TOUTE LES DONNEES
 	const int TAILLESAUVEGARDE=TAILLEGENVERSION7(lNIndividu,NombreEnfant);
-	int	* saveobj = new int[TAILLESAUVEGARDE];
-	int * saveptr = saveobj;
+//	int	* saveobj = new int[TAILLESAUVEGARDE];		  /*chgt JFL*/
+//	int * saveptr = saveobj;		  					/*chgt JFL*/
+	int * saveptr = new int[TAILLESAUVEGARDE];		  /*chgt JFL*/
 //return (Rcpp::wrap( TAILLESAUVEGARDE ));
 
 	//Creation de la genealogie
 	CreerGenealogie(fInd,fpere,fmere,fsexe,lNIndividu,saveptr);
 	Rcpp::IntegerVector retour(TAILLESAUVEGARDE);
-	for(int i=0;i<TAILLESAUVEGARDE;i++) retour[i] = saveobj[i];
+//	for(int i=0;i<TAILLESAUVEGARDE;i++) retour[i] = saveobj[i];		  /*chgt JFL*/
+	for(int i=0;i<TAILLESAUVEGARDE;i++) retour[i] = saveptr[i];		  /*chgt JFL*/
 	STOPTIMER;
 	for(int i=0;i<lNIndividu;i++) 
 	{
@@ -830,6 +935,7 @@ RcppExport SEXP SPLUSCALLCreerObjetGenealogie(SEXP SIndividu,SEXP SPere, SEXP SM
 		plPere[i] = fpere[i];
 		plMere[i] = fmere[i];
 	}
+	if(saveptr) { delete [] saveptr; }		  /*chgt JFL*/
 	return (Rcpp::wrap( retour )); //saveobj;
 } 
 
@@ -863,20 +969,21 @@ RcppExport SEXP SPLUSCALLCreerObjetGenealogie(SEXP SIndividu,SEXP SPere, SEXP SM
 RcppExport SEXP SPLUSOutgen(SEXP Rgenealogie, SEXP RplRetIndividu, SEXP RplRetPere, SEXP RplRetMere, SEXP RplRetSexe, SEXP Rmustsort)
 {
 	STARTTIMER;
-	//Rcpp::List par(params);
+	int * genealogie, * plRetIndividu, * plRetPere, * plRetMere, * plRetSexe, * mustsort;
+
 	Rcpp::IntegerVector a(Rgenealogie);
 	Rcpp::IntegerVector b(RplRetIndividu);
 	Rcpp::IntegerVector c(RplRetPere);
 	Rcpp::IntegerVector d(RplRetMere);
 	Rcpp::IntegerVector e(RplRetSexe);
 	
-	int * genealogie, * plRetIndividu, * plRetPere, * plRetMere, * plRetSexe, * mustsort;
-	genealogie    = INTEGER_POINTER(a); //par["Data"]);
-	plRetIndividu = INTEGER_POINTER(b); //par["ind"]);
-	plRetPere     = INTEGER_POINTER(c); //par["pere"]);
-	plRetMere     = INTEGER_POINTER(d); //par["mere"]);
-	plRetSexe     = INTEGER_POINTER(e); //par["sexe"]);
-	mustsort      = INTEGER_POINTER(Rmustsort);	
+	genealogie    = INTEGER(a); //&a[0]; // INTEGER_POINTER(a); //par["Data"]);
+	plRetIndividu = INTEGER(b); //&b[0]; // INTEGER_POINTER(b); //par["ind"]);
+	plRetPere     = INTEGER(c); //&c[0]; // INTEGER_POINTER(c); //par["pere"]);
+	plRetMere     = INTEGER(d); //&d[0]; // INTEGER_POINTER(d); //par["mere"]);
+	plRetSexe     = INTEGER(e); //&e[0]; // INTEGER_POINTER(e); //par["sexe"]);
+
+	mustsort = INTEGER(Rmustsort);
 	
 	//CREATION DU TABLEAU D'INDIVIDU
 	int lNIndividu;
@@ -934,18 +1041,20 @@ RcppExport void SPLUSOutIndice(SEXP sgenealogie, SEXP splRetIndividu, SEXP splRe
 
 	STARTTIMER;			
 	int * genealogie, * plRetIndividu, * plRetPere, * plRetMere, * plRetSexe, * mustsort;
+	
 	Rcpp::IntegerVector lgenealogie	( sgenealogie );
 	Rcpp::IntegerVector lplRetIndividu	( splRetIndividu );
 	Rcpp::IntegerVector lplRetPere	( splRetPere );
 	Rcpp::IntegerVector lplRetMere	( splRetMere );
 	Rcpp::IntegerVector lplRetSexe	( splRetSexe );
 	
-	genealogie	= INTEGER_POINTER( lgenealogie );
-	plRetIndividu	= INTEGER_POINTER( lplRetIndividu );
-	plRetPere 	= INTEGER_POINTER( lplRetPere );
-	plRetMere 	= INTEGER_POINTER( lplRetMere );
-	plRetSexe 	= INTEGER_POINTER( lplRetSexe );
-	mustsort		= INTEGER_POINTER( smustsort );
+	genealogie	= INTEGER(lgenealogie); //&lgenealogie[0]; // INTEGER_POINTER( lgenealogie );
+	plRetIndividu	= INTEGER(lplRetIndividu); //&lplRetIndividu[0]; // INTEGER_POINTER( lplRetIndividu );
+	plRetPere 	= INTEGER(lplRetPere); //&lplRetPere[0]; // INTEGER_POINTER( lplRetPere );
+	plRetMere 	= INTEGER(lplRetMere); //&lplRetMere[0]; // INTEGER_POINTER( lplRetMere );
+	plRetSexe 	= INTEGER(lplRetSexe); //&lplRetSexe[0]; // INTEGER_POINTER( lplRetSexe );
+
+	mustsort = INTEGER(smustsort);
 	
 	//CREATION DU TABLEAU D'INDIVIDU
 	int lNIndividu;
@@ -987,17 +1096,20 @@ RcppExport void SPLUSOutIndice(SEXP sgenealogie, SEXP splRetIndividu, SEXP splRe
 RcppExport void SPLUSFondParGen(SEXP sgenealogie, SEXP sprop, SEXP snbProp, SEXP sretour)
 {
 	STARTTIMER;
-	int * genealogie, * prop, * nbProp, * retour;
+	int * genealogie, * prop, * retour, *nbProp;
+	
 	Rcpp::IntegerVector lgenealogie	( sgenealogie );
 	Rcpp::IntegerVector lprop		( sprop );
 	Rcpp::IntegerVector lretour		( sretour );
 	
-	genealogie = INTEGER_POINTER( lgenealogie );
-	prop		 = INTEGER_POINTER( lprop );
-	nbProp	 = INTEGER_POINTER( snbProp );
-	retour 	 = INTEGER_POINTER( lretour );
+	genealogie = INTEGER(lgenealogie); //&lgenealogie[0]; // INTEGER_POINTER( lgenealogie );
+	prop		 = INTEGER(lprop); //&lprop[0]; // INTEGER_POINTER( lprop );
+	retour 	 = INTEGER(lretour); //&lretour[0]; // INTEGER_POINTER( lretour );
 
-	FondParGen(genealogie, prop, *nbProp, retour);
+	//int nbProp = Rcpp::as<int>( snbProp );
+	nbProp = INTEGER(snbProp); //INTEGER_POINTER( snbProp );
+
+	FondParGen(genealogie, prop, *nbProp, retour); //nbProp, 
 	STOPTIMER;
 
 	return ;

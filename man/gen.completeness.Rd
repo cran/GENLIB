@@ -26,7 +26,8 @@
 data(geneaJi) 
 genJi<-gen.genealogy(geneaJi) 
 gen.completeness(genJi, type="IND")
-gen.completeness(genJi, type="IND", genNo=4) # For the 4th generation
+\dontrun{For the 4th generation}
+gen.completeness(genJi, type="IND", genNo=4)
 
 data(genea140) 
 gen140<-gen.genealogy(genea140) 

@@ -8,6 +8,7 @@
 #include "hal.h"
 
 #include <Rcpp.h>
+#define R_NO_REMAP
 
 #ifndef BLOCKALLOC
 #define BLOCKALLOC
@@ -49,8 +50,8 @@ public:
 		try{
 		if (!m_used){
 			//GENError("Utilisation de BlockAlloc invalide, doit-être initialisé avant");
-			GENError("Invalid use of BlockAlloc, must be initialized first.");
-			throw std::exception();
+//			GENError("Invalid use of BlockAlloc, must be initialized first.");
+			throw std::range_error("Invalid use of BlockAlloc, must be initialized first.");
 		}
 		if (m_count==0)
 		{
@@ -68,9 +69,11 @@ public:
 		--m_count;
 
 		return tmp;
-		} catch(...){
-			::Rf_error("c++ exception (unknown reason)"); 
-		} 
+ 		} catch(std::exception &ex) {
+ 			forward_exception_to_r(ex);
+ 		}catch(...){
+ 			::Rf_error("c++ exception (unknown reason)"); 
+ 		} 
  		return 0;
 	}
 

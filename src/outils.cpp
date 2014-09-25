@@ -24,6 +24,9 @@ reordonnancement, creation d'ordre, ordre saut etc...
 #include <random>
 #include <Rcpp.h>
 using namespace std;
+
+#define R_NO_REMAP
+
 // TransGenCum[p][m][a] : chances d'avoir a allèles si le père a p
 // allèles mutants et la mère m allèles mutants. (Cumulatif)
 double TransGenCum[3][3][3] =
@@ -160,11 +163,16 @@ GestionMemoire::GestionMemoire(char UseStdMalloc)
 	try{
 	n=-1;
 	UseMalloc		= (UseStdMalloc==1);	
-	startblock		= (GestionMemoireBlock*) malloc( sizeof(GestionMemoireBlock) );	
-	if (!startblock){ GENError("Insufficient memory"); throw std::exception(); }
+	startblock	= (GestionMemoireBlock*) malloc( sizeof(GestionMemoireBlock) );	
+	if (!startblock){
+//	 GENError("Insufficient memory"); 
+	 throw std::range_error("Insufficient memory");
+	}
 	startblock->tableau	= (void**) malloc(  MAXALLOCINGESTIONMEMOIRE * sizeof(void*) );	
 	startblock->next	= NULL;
 	tableaublock		= startblock;
+ 	} catch(std::exception &ex) {
+ 		forward_exception_to_r(ex);
 	} catch(...){
 		::Rf_error("c++ exception (unknown reason)"); 
 	}
@@ -190,10 +198,10 @@ void* GestionMemoire::alloc(int nelement, size_t size)
 {
 	try{
 	void* tmp;
-	if (UseMalloc)
+	//if (UseMalloc)
 		tmp= (void*) malloc((nelement)*(size));		
-	else
-		tmp= (void*) memallocIN(nelement,size);	
+	//else
+	//	tmp= (void*) memallocIN(nelement,size);
 	if (tmp!=NULL)
 	{
 		if ((++n)==MAXALLOCINGESTIONMEMOIRE)
@@ -207,16 +215,16 @@ void* GestionMemoire::alloc(int nelement, size_t size)
 		tableaublock->tableau[n]	=tmp;
 	}
 	else{		
-		GENError("Insufficient memory"); //GENError("Memoire insuffisante");
-		throw std::exception();
+//		GENError("Insufficient memory"); //GENError("Memoire insuffisante");
+		throw std::range_error("Insufficient memory");
 	}
 	return tmp;
-			} catch(std::exception &ex) {
- 				forward_exception_to_r(ex);
- 			} catch(...){
- 				::Rf_error("c++ exception (unknown reason)"); 
- 			} 
- 			return 0;
+	} catch(std::exception &ex) {
+		forward_exception_to_r(ex);
+	} catch(...){
+		::Rf_error("c++ exception (unknown reason)"); 
+	} 
+	return 0;
 }
 
 /*! 
@@ -268,14 +276,14 @@ GestionMemoire::~GestionMemoire()
 		{
 			if (current->tableau[i]!=NULL)
 			{
-				if (UseMalloc)
-				{
+				//if (UseMalloc)
+				//{
 					free(current->tableau[i]);				
-				}
-				else
+				//}
+				//else
 					//SI SA BUG A CETTE LIGNE CI REGARDE LE CONTENU DE current->noligne[i]
 					//Pour connaitre a quel ligne de code c'est fait l'affectation qui cause probleme
-					memfreeIN(current->tableau[i]);
+				//	memfreeIN(current->tableau[i]);
 			}
 		}
 		
@@ -284,8 +292,8 @@ GestionMemoire::~GestionMemoire()
 
 		//Avance au suivant
 		current=current->next;
-
 	}
+	free(startblock);
 }
 
 
@@ -1070,8 +1078,11 @@ int OrdonneStructure(CIndSimul* Noeud, CIndSimul** Ordre, int iNind, int SensInv
 	  }//fin while chaque indice
 	  
 	  if (itemchange==0){ //La combinaison est invalide.. (existe des cycles)
-		GENError("The genealogy has at least one cycle (Number of individuals involved: %d    Number of an individual: %d )",iNind-n,indiceBoucle);
-		throw std::exception();
+//		GENError("The genealogy has at least one cycle (Number of individuals involved: %d    Number of an individual: %d )",iNind-n,indiceBoucle);
+		char erreur[TAILLEDESCRIPTION];
+		sprintf(erreur, "The genealogy has at least one cycle (Number of individuals involved: %d    Number of an individual: %d )",
+				iNind-n,indiceBoucle);
+		throw std::range_error(erreur);
 		//GENError("LA GÉNÉALOGIE COMPORTE AU MOINS UN CYCLE (Nombre d'individus impliqués: %d    No d'un individu: %d )",iNind-n,indiceBoucle);
 	  }
 	}//jusqu'a la fin de la recherche
@@ -1535,9 +1546,9 @@ int CompleteGenealogie(int* plIndividu,int* plPere,int* plMere,int* plSexe,int* 
 	{
 		//Positionne au premiers element plus grand que l'element courant
 		int SPot = 2; //Sexe du candidat
-		while(plMere[posmere]<=minimum && posmere < numelem)
+		while(posmere < numelem && plMere[posmere]<=minimum)
 		      ++posmere;		
-		while(plPere[pospere]<=minimum && pospere < numelem)
+		while( pospere < numelem && plPere[pospere]<=minimum)
 		      ++pospere;
 		minimum=MIN(
 			    (posmere<numelem?plMere[posmere]:INT_MAX),
@@ -1545,7 +1556,7 @@ int CompleteGenealogie(int* plIndividu,int* plPere,int* plMere,int* plSexe,int* 
 		if(posmere<numelem)SPot=2;
 		if(pospere<numelem)SPot=1;
 		//Avance l'element du vecteur individu
-		while(plIndividu[posind]<minimum && posind < numelem)
+		while(posind < numelem && plIndividu[posind]<minimum)
 		      ++posind;
 		const int valind = (posind<numelem?plIndividu[posind]:INT_MAX);
 		if (minimum<valind)  // Si egale, il est deja dans la liste
@@ -1635,23 +1646,29 @@ int CreerGenealogie(int* plIndividu, int* plPere, int* plMere, int* plSexe, int 
 
 	    //VERIFICATION AU PASSAGE SI LES NO PERE ET NO MERE SONT VALIDE
 	    if (plIndividu[i]<=0){
-			GENError("The index of an individual must be greater than zero.");
-			throw std::exception();
+//			GENError("The index of an individual must be greater than zero.");
+			throw std::range_error("The index of an individual must be greater than zero.");
 			//GENError("L'indice d'un individu doit-être plus grand que zero");		
 		}
 		if (plPere[i]<0){
-			GENError("The father of individual %d must be greater than or equal to zero",plIndividu[i]);
-			throw std::exception();
+//			GENError("The father of individual %d must be greater than or equal to zero",plIndividu[i]);
+			char erreur[TAILLEDESCRIPTION];
+			sprintf(erreur, "The father of individual %d must be greater than or equal to zero",plIndividu[i]);
+			throw std::range_error(erreur);
 			//GENError("Le pere de l'individu %d doit être plus grand ou égal à zero",plIndividu[i]);			
 		}
 	    if (plMere[i]<0){
-			GENError("The mother of individual %d must be greater than or equal to zero",plIndividu[i]);
-			throw std::exception();
+//			GENError("The mother of individual %d must be greater than or equal to zero",plIndividu[i]);
+			char erreur[TAILLEDESCRIPTION];
+			sprintf(erreur, "The mother of individual %d must be greater than or equal to zero",plIndividu[i]);
+			throw std::range_error(erreur);
 			//GENError("La mere de l'individu %d doit être plus grand ou égal à zero",plIndividu[i]);
 		}
 	    if (plPere[i]==plMere[i] && plPere[i]!=0){
-			GENError("Individual %d must have different mother and father",plIndividu[i]);
-			throw std::exception();
+//			GENError("Individual %d must have different mother and father",plIndividu[i]);
+			char erreur[TAILLEDESCRIPTION];
+			sprintf(erreur, "Individual %d must have different mother and father",plIndividu[i]);
+			throw std::range_error(erreur);
 			//GENError("L'individu %d doit avoir un pere et une mere différent",plIndividu[i]);
 		}
 	}
@@ -1664,15 +1681,19 @@ int CreerGenealogie(int* plIndividu, int* plPere, int* plMere, int* plSexe, int 
 	for(i=0;i<lNIndividu;i++) 
 	{		
 		if (Noeud[i].sex<GEN_INCONNU || Noeud[i].sex>GEN_FEM){
-				GENError("The sexe of individual %d is not valid (0=SEXE UNKNOWN, 1=MAN, 2=WOMAN)",plIndividu[i]);
-				throw std::exception();
+//				GENError("The sexe of individual %d is not valid (0=SEXE UNKNOWN, 1=MAN, 2=WOMAN)",plIndividu[i]);
+				char erreur[TAILLEDESCRIPTION];
+				sprintf(erreur, "The sexe of individual %d is not valid (0=SEXE UNKNOWN, 1=MAN, 2=WOMAN)",plIndividu[i]);
+				throw std::range_error(erreur);
 				//GENError("Le sexe de l'individu %d n'est pas une valeur valide (0=SEXE INCONNU, 1=HOMME, 2=FEMME)",plIndividu[i]);
 		}
 		if (Noeud[i].pere!=NULL) 
 		{
 			if (Noeud[Noeud[i].pere->noind].sex==GEN_FEM){
-				GENError("Individual %d is both mother and father to two different individuals\n\n",Noeud[i].pere->nom);
-				throw std::exception();
+//				GENError("Individual %d is both mother and father to two different individuals\n\n",Noeud[i].pere->nom);
+				char erreur[TAILLEDESCRIPTION];
+				sprintf(erreur, "Individual %d is both mother and father to two different individuals\n\n",Noeud[i].pere->nom);
+				throw std::range_error(erreur);
 				//GENError("L'individu %d est a la fois un pere et une mere pour deux individu different\n\n",Noeud[i].pere->nom);
 			}
 			else
@@ -1681,8 +1702,10 @@ int CreerGenealogie(int* plIndividu, int* plPere, int* plMere, int* plSexe, int 
 		if (Noeud[i].mere!=NULL) 
 		{
 			if (Noeud[Noeud[i].mere->noind].sex==GEN_MASC){
-				GENError("Individual %d is both mother and father to two different individuals\n\n",Noeud[i].mere->nom);
-				throw std::exception();
+//				GENError("Individual %d is both mother and father to two different individuals\n\n",Noeud[i].mere->nom);
+				char erreur[TAILLEDESCRIPTION];
+				sprintf(erreur, "Individual %d is both mother and father to two different individuals\n\n",Noeud[i].mere->nom);
+				throw std::range_error(erreur);
 				//GENError("L'individu %d est a la fois un pere et une mere pour deux individu different\n\n",Noeud[i].mere->nom);
 			}
 			else
@@ -1690,8 +1713,10 @@ int CreerGenealogie(int* plIndividu, int* plPere, int* plMere, int* plSexe, int 
 		}		
 		//Test dupplicata individu
 		if (Trie[i].nom==oldnumber){
-			GENError("Individual %d is duplicated in the genealogy",Trie[i].nom);
-			throw std::exception();
+//			GENError("Individual %d is duplicated in the genealogy",Trie[i].nom);
+			char erreur[TAILLEDESCRIPTION];
+			sprintf(erreur, "Individual %d is duplicated in the genealogy",Trie[i].nom);
+			throw std::range_error(erreur);
 			//GENError("L'individu %d est duppliqué dans la généalogie",Trie[i].nom);			
 		}
 		oldnumber=Trie[i].nom;
@@ -1703,8 +1728,10 @@ int CreerGenealogie(int* plIndividu, int* plPere, int* plMere, int* plSexe, int 
 		for(i=0;i<lNIndividu;i++) 		
 		{
 			if (Noeud[i].sex==GEN_INCONNU){
-				GENError("The sexe of individual %d is unknown and must be set",plIndividu[i]);
-				throw std::exception();
+//				GENError("The sexe of individual %d is unknown and must be set",plIndividu[i]);
+				char erreur[TAILLEDESCRIPTION];
+				sprintf(erreur, "The sexe of individual %d is unknown and must be set",plIndividu[i]);
+				throw std::range_error(erreur);
 				//GENError("Le sexe de l'individu %d est inconnu et doit-être fournie",plIndividu[i]);
 			}
 			//Compte le nombre d'individu masculin
@@ -1728,7 +1755,7 @@ int CreerGenealogie(int* plIndividu, int* plPere, int* plMere, int* plSexe, int 
 	saveptr[GENBIN_PROFMAX]=profondeurMax;		//PROFONDEUR MAXIMALE
 	saveptr[GENBIN_NINDMASC]=NIndMasc;			//NOMBRE D'HOMME 
 
-	//FAIRE LA SAUVEGARDE EN TENANT EN COMPTE LA PRIORITE
+	//FAIRE LA SAUVEGARDE EN TENANT COMPTE DE LA PRIORITE
 	curseur=GENBIN_NBIND_OFFSET;  //indice du curseur 
 	for(i=0;i<lNIndividu;i++) 
 	{        
@@ -1856,13 +1883,13 @@ int LengthGenealogie(int* Genealogie, int* nenfant, int* nprofmax, int* nindmasc
 	try{
 	//validation
 	if (Genealogie[0]!='G' || Genealogie[1]!='E' || Genealogie[2]!='N' ){
-	  GENError("\nError: invalid genealogy given. Create one using gen.genealogie(ind,father,mother).");
-	  throw std::exception();
+//	  GENError("\nError: invalid genealogy given. Create one using gen.genealogie(ind,father,mother).");
+	  throw std::range_error("Error: invalid genealogy given. Create one using gen.genealogie(ind,father,mother).");
 	  //GENError("\nErreur: La généalogie fournie n'est pas valide. Créer en une à l'aide de gen.genealogie(ind,pere,mere).");
 	}
 	if (Genealogie[3]!=VERSIONGENEALOGIE){
-	  GENError("\nError: Given genealogy is not from current version.");
-	  throw std::exception();
+//	  GENError("\nError: Given genealogy is not from current version.");
+	  throw std::range_error("Error: Given genealogy is not from current version.");
 	  //GENError("\nErreur: La généalogie fournie n'est pas de la version courante.");
 	}
 	//Initialisation
@@ -1876,12 +1903,12 @@ int LengthGenealogie(int* Genealogie, int* nenfant, int* nprofmax, int* nindmasc
 		*nindmasc=Genealogie[GENBIN_NINDMASC];
 
 	return iNind;
- 			} catch(std::exception &ex) {
- 				forward_exception_to_r(ex);
- 			} catch(...){
- 				::Rf_error("c++ exception (unknown reason)"); 
- 			} 
- 			return 0;
+ 	} catch(std::exception &ex) {
+ 		forward_exception_to_r(ex);
+ 	} catch(...){
+ 		::Rf_error("c++ exception (unknown reason)"); 
+ 	} 
+ 	return 0;
 }
 
 
@@ -2201,8 +2228,8 @@ int LoadGenealogie(int* Genealogie,int loadChildren,int* NInd, CIndSimul **Noeud
 	if (!g_CacheGenArray)
 	{
 		FlushGenealogie();
-		GENError("Not enough memory to load genealogy.");
-		throw std::exception();
+//		GENError("Not enough memory to load genealogy.");
+		throw std::range_error("Not enough memory to load genealogy.");
 		//GENError("Il n'y a pas assez de mémoire disponible pour charger la généalogie.");
 	}	
 	if (loadChildren)
@@ -2211,8 +2238,8 @@ int LoadGenealogie(int* Genealogie,int loadChildren,int* NInd, CIndSimul **Noeud
 		if (!g_CacheChildList)
 		{
 			FlushGenealogie();
-			GENError("Not enough memory to load genealogy.");
-			throw std::exception();
+//			GENError("Not enough memory to load genealogy.");
+			throw std::range_error("Not enough memory to load genealogy.");
 			//GENError("Il n'y a pas assez de mémoire disponible pour charger la généalogie.");
 		}	
 	}
@@ -2229,8 +2256,8 @@ int LoadGenealogie(int* Genealogie,int loadChildren,int* NInd, CIndSimul **Noeud
 	if (!g_CacheRecherche)
 	{
 		FlushGenealogie();
-		GENError("Not enough memory to load genealogy.");
-		throw std::exception();
+//		GENError("Not enough memory to load genealogy.");
+		throw std::range_error("Not enough memory to load genealogy.");
 		//GENError("Il n'y a pas assez de mémoire disponible pour charger la généalogie.");
 	}	
 	memcpy(g_CacheRecherche,VecteurRecherche,g_CacheNInd*sizeof(int));
@@ -2299,8 +2326,8 @@ static int LoadVec(ENUMBANQUE banque,int* vec, int nb, CIndSimul*** NproAnc)
 	if (!g_CacheGenArray)
 	{
 		FlushProposantAncetre(banque);
-		GENError("Invalid use of LoadProposant or LoadAncetre function: start by LoadGenealogie");
-		throw std::exception();
+//		GENError("Invalid use of LoadProposant or LoadAncetre function: start by LoadGenealogie");
+		throw std::range_error("Invalid use of LoadProposant or LoadAncetre function: start by LoadGenealogie");
 		//GENError("Utilisation invalide de la fonction LoadProposant ou LoadAncetre : il faut utiliser LoadGenealogie avant.");
 	}
 
@@ -2314,8 +2341,10 @@ static int LoadVec(ENUMBANQUE banque,int* vec, int nb, CIndSimul*** NproAnc)
 		if (!g_CacheVec[banque])
 		{
 			FlushGenealogie();
-			GENError("Not enough memory to load the %s.",type[banque]);
-			throw std::exception();
+//			GENError("Not enough memory to load the %s.",type[banque]);
+			char erreur[TAILLEDESCRIPTION];
+			sprintf(erreur, "Not enough memory to load the %s.",type[banque]);
+			throw std::range_error(erreur);
 			//GENError("Il n'y a pas assez de mémoire disponible pour charger les %s.",type[banque]);
 		}	
 		g_CacheVecInd[banque]=nb;
@@ -2331,8 +2360,10 @@ static int LoadVec(ENUMBANQUE banque,int* vec, int nb, CIndSimul*** NproAnc)
 		{
 			FlushProposantAncetre(banque);
 //			if(i>0) return 1;
-			GENError("Special IEEE caracter %s is not a valid %s", DescIEEEValue(vec+i),type[banque]);
-			throw std::exception();
+//			GENError("Special IEEE caracter %s is not a valid %s", DescIEEEValue(vec+i),type[banque]);
+			char erreur[TAILLEDESCRIPTION];
+			sprintf(erreur, "Special IEEE caracter %s is not a valid %s", DescIEEEValue(vec+i),type[banque]);
+			throw std::range_error(erreur);
 			//GENError("Le caractère spécial IEEE %s n'est pas un %s valide",DescIEEEValue(vec+i),type[banque]);
 		}
 
@@ -2349,8 +2380,10 @@ static int LoadVec(ENUMBANQUE banque,int* vec, int nb, CIndSimul*** NproAnc)
 			{
 				FlushProposantAncetre(banque);
 				//printf("on retourne -1\n");
-				GENError("%s %d is not included in the genealogy ...",type[banque],vec[i]);
-				throw std::exception();
+//				GENError("%s %d is not included in the genealogy ...",type[banque],vec[i]);
+				char erreur[TAILLEDESCRIPTION];
+				sprintf(erreur, "%s %d is not included in the genealogy ...",type[banque],vec[i]);
+				throw std::range_error(erreur);
 				//return -1;
 				//printf("on devrait pas lire ça...\n");
 				//GENError("Le %s %d n'est pas inclus dans la généalogie",type[banque],vec[i]);
@@ -2408,16 +2441,16 @@ static int LoadVecGroupe(ENUMBANQUE banque,int* BorneGr,int nbGroupe, CIndSimul*
 	{
 		FlushProposantAncetre(banque);
 		FlushGroupeProposantAncetre(banque);
-		GENError("Invalid use of LoadGroupeProposant or LoadGroupeAncetre function: start with LoadGenealogie");
-		throw std::exception();
+//		GENError("Invalid use of LoadGroupeProposant or LoadGroupeAncetre function: start with LoadGenealogie");
+		throw std::range_error("Invalid use of LoadGroupeProposant or LoadGroupeAncetre function: start with LoadGenealogie");
 		//GENError("Utilisation invalide de la fonction LoadGroupeProposant ou LoadGroupeAncetre : il faut utiliser LoadGenealogie avant.");
 	}
 	//Verifie si des proposants et ancetre ont déjà été chargé a l'aide de loadproposant ou loadancetre
 	if (!g_CacheVec[banque])
 	{
 		FlushProposantAncetre(banque);
-		GENError("Invalid use of LoadGroupeProposant or LoadGroupeAncetre function: start with Loadproposant or loadancetre");
-		throw std::exception();
+//		GENError("Invalid use of LoadGroupeProposant or LoadGroupeAncetre function: start with Loadproposant or loadancetre");
+		throw std::range_error("Invalid use of LoadGroupeProposant or LoadGroupeAncetre function: start with Loadproposant or loadancetre");
 		//GENError("Utilisation invalide de la fonction LoadGroupeProposant ou LoadGroupeAncetre: il faut utiliser Loadproposant ou loadancetre avant.");
 	}
 
@@ -2432,8 +2465,8 @@ static int LoadVecGroupe(ENUMBANQUE banque,int* BorneGr,int nbGroupe, CIndSimul*
 		if (BorneGr[i]>g_CacheVecInd[banque])
 		{
 			FlushProposantAncetre(banque);
-			GENError("Invalid use of LoadGroupeProposant or LoadGroupeAncetre function: too many individuals in the group compared to those loaded by loadproposant");
-			throw std::exception();
+//			GENError("Invalid use of LoadGroupeProposant or LoadGroupeAncetre function: too many individuals in the group compared to those loaded by loadproposant");
+			throw std::range_error("Invalid use of LoadGroupeProposant or LoadGroupeAncetre function: too many individuals in the group compared to those loaded by loadproposant");
 			//GENError("Utilisation invalide de la fonction LoadGroupeProposant ou LoadGroupeAncetre : il y a trop d'individus dans le groupe p/r à ceux chargés par loadproposant");
 		}
 		g_CacheGroup[banque][i]=g_CacheVec[banque]+BorneGr[i];
@@ -2509,14 +2542,18 @@ int LoadVectorNC(int* vec,int nb, CIndSimul*** NproAnc, CIndSimul* NoeudArr,int 
 	for(int i=0;i<nb;i++)
 	{	
 		if (DescIEEEValue(vec+i)!=NULL){
-			GENError("Special IEEE %s is not a valid proband",DescIEEEValue(vec+i));
-			throw std::exception();
+//			GENError("Special IEEE %s is not a valid proband",DescIEEEValue(vec+i));
+			char erreur[TAILLEDESCRIPTION];
+			sprintf(erreur, "Special IEEE %s is not a valid proband",DescIEEEValue(vec+i));
+			throw std::range_error(erreur);
 			//GENError("Le caractère spécial IEEE %s n'est pas un proposant valide",DescIEEEValue(vec+i));
 		}
 		int tmpindice = ReTrouverIndiceStructure(vec[i],NoeudArr,IndexRecherche, nbind);
 		if (tmpindice==-1){
-			GENError("Proband %d is not in the genealogy",vec[i]);
-			throw std::exception();
+//			GENError("Proband %d is not in the genealogy",vec[i]);
+			char erreur[TAILLEDESCRIPTION];
+			sprintf(erreur, "Proband %d is not in the genealogy",vec[i]);
+			throw std::range_error(erreur);
 			//GENError("Le proposant %d n'est pas inclus dans la généalogie",vec[i]);
 		}
 		else

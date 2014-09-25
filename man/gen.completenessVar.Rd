@@ -20,15 +20,15 @@ data(geneaJi)
 genJi<-gen.genealogy(geneaJi) 
 gen.completeness(genJi, type="IND")
 gen.completenessVar(genJi)
-gen.completenessVar(genJi, genNo=4) # For the 4th generation
+\dontrun{For the 4th generation}
+gen.completenessVar(genJi, genNo=4)
 
-
-## For a more complex example:
-#data(genea140) 
-#gen140<-gen.genealogy(genea140) 
-#gen.completeness(gen140)
-#gen.completenessVar(gen140)
-
+ \donttest{
+  data(genea140) 
+  gen140<-gen.genealogy(genea140) 
+  gen.completeness(gen140)
+  gen.completenessVar(gen140)
+ }
 }
 \references{
 Cazes P, Cazes MH. (1996) Comment mesurer la profondeur genealogique d'une ascendance? Population (French Ed) 51:117-140.

@@ -170,10 +170,8 @@ int Congen(int* Genealogie, int* plProposant,int lNProposant, int* plAncetre, in
 
 	\remark les no d'individu ne sont que des étiquettes, ne sont utilisé qu'en référence au père et mère
 */
-int CongenPLUS(int* Genealogie,
-	int* plProposant,int lNProposant,  
-	int* plAncetre, int lNAncetre,double* pdSexe, 
-	double* pdCongen,int printprogress) 
+int CongenPLUS(int* Genealogie, int* plProposant,int lNProposant, int* plAncetre, int lNAncetre, double* pdSexe, 
+			double* pdCongen,int printprogress) 
 {
 	//CREATION DE TABLEAU D'INDIVIDU
 	int lNIndividu;

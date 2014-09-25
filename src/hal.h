@@ -11,6 +11,7 @@
 #else
  #include <R_ext/RS.h>
 #endif
+#define R_NO_REMAP
 /*FONCTION CLASSIQUE*/
 int processorCount();
 int thetime();

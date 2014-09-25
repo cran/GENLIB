@@ -23,12 +23,15 @@ data(geneaJi)
 genJi<-gen.genealogy(geneaJi)
 gen.findMRCA(genJi, individuals=c(1,29), NbProcess = 1)
 
-## For a more complex example:
-#data(genea140) 
-#gen140<-gen.genealogy(genea140) 
-#all_commonFounders<-gen.findFounders(gen140, individuals=c(409033,408728), NbProcess = 1)
-#length(all_commonFounders) #127 founders common to #409033 and #408728
-##22 most recent common ancestors for #409033 and #408728
-#MRCA_2ind<-gen.findMRCA(gen140, individuals=c(409033,408728), NbProcess = 1)
+\donttest{
+ \dontrun{For a more complex example:}
+ data(genea140) 
+ gen140<-gen.genealogy(genea140) 
+ all_commonFounders<-gen.findFounders(gen140, individuals=c(409033,408728), NbProcess = 1)
+ \dontrun{127 founders common to #409033 and #408728}
+ length(all_commonFounders)
+ \dontrun{22 most recent common ancestors for #409033 and #408728}
+ MRCA_2ind<-gen.findMRCA(gen140, individuals=c(409033,408728), NbProcess = 1)
+}
 }
 \keyword{manip}

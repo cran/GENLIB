@@ -1,6 +1,5 @@
-
 ## Use the R_HOME indirection to support installations of multiple R version
 PKG_LIBS = $(shell "${R_HOME}/bin${R_ARCH_BIN}/Rscript.exe" -e "Rcpp:::LdFlags()")
-CXX_STD = CXX11 
-##PKG_CPPFLAGS = -std=c++0x
+PKG_CPPFLAGS = -std=c++0x
+##CXX_STD = CXX11 
 

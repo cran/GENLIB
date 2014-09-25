@@ -18,6 +18,7 @@
 \examples{
 data(geneaJi) 
 genJi<-gen.genealogy(geneaJi) 
-gen.half.founder(genJi)  #There are 2 half-founders
+\dontrun{There are 2 half-founders}
+gen.half.founder(genJi)
 }
 \keyword{manip}

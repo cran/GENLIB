@@ -11,7 +11,9 @@
 
 #include "outilsalloc.h"
 #include "hashtable.h"
-//#include <Rcpp.h>
+#include <Rcpp.h>
+#define R_NO_REMAP
+
 /// Structure de gestion memoire mémoire utilise par kinship2
 /**
 	Utiliser pour effectuer une serie d'assignement memoire et ensuite laisser la voie libre au

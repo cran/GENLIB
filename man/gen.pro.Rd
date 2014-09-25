@@ -19,12 +19,14 @@
 \examples{
 data(geneaJi) 
 genJi<-gen.genealogy(geneaJi) 
-gen.pro(genJi)  #There are 3 proposants
+\dontrun{There are 3 proposants}
+gen.pro(genJi)
 
 
 data(genea140) 
 gen140<-gen.genealogy(genea140)
-gen.pro(gen140) #There are 140 proposants
+gen.pro(gen140)
+\dontrun{There are 140 proposants}
 
 }
 \keyword{manip}
