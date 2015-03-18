@@ -7,7 +7,7 @@
 \item{gen}{An object of class GLgen obtained with gen.genealogy, gen.lineages or gen.branching. Required.}
 \item{pro}{Vector of proband id numbers to be included. Default is 0, which will select all individuals without children.}
 \item{ancestors}{Vector of ancestors id numbers to be included. Default is 0, which will select all individuals without parents.}
-\item{vctProb}{Vector of transmission probabilities. Default is vctProb=c(0.5,0.5,0.5,0.5).}
+\item{vctProb}{Vector of transmission probabilities. The first two values indicate the probabilities of transmission of a father to his son and daughter, respectively, and the following two values are the same for the mother. Default is vctProb=c(0.5,0.5,0.5,0.5).}
 \item{typeCG}{IF typeCG="IND" (default), the genetic contribution from each ancestor is calculated for each proband.
 	If typeCG="MEAN", the average (over all probands) genetic contributions of each ancestor is returned.
 	If typeCG="PRODUCT", the product (over all probands) of genetic contributions is returned for each ancestor.
@@ -38,12 +38,13 @@ gc<-gen.gc(gen140, pro=c(454422,676521,677273,717537,717634,717709,868572),
            ancestors=c(18305,18528,31114,18325))
 gc
 \dontrun{Mother-daughter transmission only with probability=0.5}
-gc_MoLi<-gen.gc(gen140, pro=c(217891,302718,409282,802424,409682,443151), 
-                ancestors=c(18321,218231,296200,39066,18679,442607),vctProb=c(0,0,0.5,0))
+gc_MoLi<-gen.gc(gen140, pro=c(217891,302718,409282,802424,409682,443151),
+		ancestors=c(18321,218231,296200,39066,18679,442607),vctProb=c(0,0,0,0.5))
 gc_MoLi
 }
 \references{
 Roberts DF. (1968) Genetic effects of population size reduction. Nature, 220, 1084-1088. 
+
 O'Brien E, Jorde LB, Ronnlof B, Fellman JO, Eriksson AW. (1988) Founder effect and genetic disease in Sottunga, Finland. American Journal of Physical Anthropology, 77, 335-346.
 }
 \keyword{manip}

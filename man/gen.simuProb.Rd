@@ -8,22 +8,32 @@
 \item{gen}{An object of class GLgen obtained with gen.genealogy, gen.lineages or gen.branching. Required.}
 \item{pro}{Vector of proband id numbers to be included. Required.}
 \item{statePro}{Required vector indicating, for each proband in pro, the probability to be calculated:
+
 	0 = no disease allele is transmitted
+
 	1 = 1 disease allele is transmitted
+
 	2 = 2 disease alleles are transmitted
+
 	3 = 1 or 2 disease alleles are transmitted}
 \item{ancestors}{Vector of ancestors id numbers to be included. Required.}
 \item{stateAncestors}{Required vector indicating, for each ancestor in ancestors, the genotype state:
+
 	0 = no disease allele present
+
 	1 = 1 disease allele present
+
 	2 = 2 disease alleles present}
 \item{simulNo}{Number of simulations to perform. Default is 5000.}
 \item{probRecomb}{Recombination probabilities for males and females. Default is no recombination.}
 \item{probSurvival}{Survival probability for homozygotes. Default is 1.}
 }
 \value{A list containing the following:
+
  	the joint probability of specified statePro for all probands,
+
  	the probability of specified statePro for each proband,
+
  	the probability that, 0, 1, ..., and all probands inherit the specified number of disease alleles.
 }
 \seealso{

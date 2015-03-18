@@ -143,7 +143,7 @@ gen.simuSample = function(gen, pro, ancestors, stateAncestors, simulNo = 5000)#,
 #	if(!is(gen, "GLgen"))
 #		stop("Invalid parameter: gen must be an instance of Glgen (see gen.genealogy)")
 #		#stop("Parametre invalide: gen doit etre une instance de GLgen (voir gen.genealogy)")
-#	if(!is(pro, "numeric") & !is(pro, "GLgroupe"))
+#	if(!is(pro, "numeric") & !is(pro, "GLgroup"))
 #		stop("Invalid parameter: pro must be numeric vectors")
 #		#stop("Parametre invalide: proband doit etre un vecteur numerique")
 #	if(!is(ancestors, "numeric") || !is(stateAncAll1, "numeric") || !is(stateAncAll2, "numeric"))
@@ -227,7 +227,7 @@ gen.simuSet = function(gen, pro, ancestors, stateAncestors, probMatrix = matrix(
 {
 	if(!is(gen, "GLgen"))
 		stop("Invalid parameter: gen must be an instance of Glgen (see gen.genealogy)")
-	if(!is(pro, "numeric") & !is(pro, "GLgroupe"))
+	if(!is(pro, "numeric") & !is(pro, "GLgroup"))
 		stop("Invalid parameter: pro must be numeric vectors")
 	if(!is(ancestors, "numeric") || !is(stateAncestors, "numeric"))
 		stop("Invalid parameter: ancestors and stateAncestors must be numeric vectors")

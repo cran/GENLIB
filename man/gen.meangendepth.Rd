@@ -1,6 +1,6 @@
 \name{gen.meangendepth}
 \alias{gen.meangendepth}
-\title{Expected Genealogical Depth)}
+\title{Expected Genealogical Depth}
 \description{Returns the expected genealogical depth.}
 \usage{gen.meangendepth( gen, pro = "0", type = "MEAN", ...)}
 \arguments{
@@ -37,7 +37,9 @@ gen.meangendepth(gen140, pro=c(454422, 676521, 677273, 717537, 717634, 717709, 8
 }
 \references{
 Cazes P, Cazes MH. (1996) Comment mesurer la profondeur genealogique d'une ascendance? Population (French Ed) 51:117-140.
+
 Kouladjian K. (1986) Une mesure d'entropie genealogique. Chicoutimi, SOREP, Document III-C-43.
+
 De Brakaeleer M, Bellis G. (1994) Genealogies et reconstitutions de familles en genetique humaine. Dossiers et Recherches, no 43, INED, Paris.
 }
 \keyword{manip}

@@ -8,10 +8,13 @@
 \item{pro}{Vector of proband id numbers to be included. Required.}
 \item{ancestors}{Vector of ancestors id numbers to be included. Required.}
 \item{stateAncestors}{Required vector indicating, for each ancestor in ancestors, the genotype state:
+
 	0 = no disease allele present
+
 	1 = 1 disease allele present
+
 	2 = 2 disease alleles present}
-\item{simulNo}{Number of simulations to perform. Deafult is 5000.}
+\item{simulNo}{Number of simulations to perform. Default is 5000.}
 }
 \value{A matrix with number of columns equal to the number of simulations and number of rows equal to the number of probands.}
 \seealso{

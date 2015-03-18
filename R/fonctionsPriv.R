@@ -15,7 +15,7 @@
 # 30 - GLCGGroup					-> garde article
 # 32 - GLFGroup					-> garde article
 # 38 - GLgen						-> garde article
-# 39 - GLgroupe					-> garde article
+# 39 - GLgroup					-> garde article
 # 44 - GLmulti						-> garde article
 # 45 - GLOverGroup2					-> garde article
 # 46 - GLOverGroup3					-> garde article
@@ -33,7 +33,7 @@
 # 69 - GLPriv.variance3V				-> garde article
 # 72 - GLPrivCG					-> garde article
 # 73 - GLPrivCGcumul				-> garde article
-# 74 - GLPrivCGgroupe				-> garde article
+# 74 - GLPrivCGgroup				-> garde article
 # 75 - GLPrivCGmoyen				-> garde article
 # 76 - GLPrivCGPLUS					-> garde article
 # 77 - GLPrivCGproduit				-> garde article
@@ -104,7 +104,7 @@ gen.detectionErreur = function(gen, sorted, pro, named, ancestors, nouvtempsmax,
 	}
 	#Parametre 'pro'
 	if(is.element(5, check)) {
-		if(is(pro, "GLgroupe"))
+		if(is(pro, "GLgroup"))
 			retour$pro = pro
 		else {
 			if(sum(as.numeric(pro)) == 0)
@@ -171,10 +171,10 @@ gen.detectionErreur = function(gen, sorted, pro, named, ancestors, nouvtempsmax,
 	}
 	#Parametre 'grppro'
 	if(is.element(9, check)) {
-		if(is(grppro, "GLgroupe"))
+		if(is(grppro, "GLgroup"))
 			retour$grppro = grppro
-		else return(list(erreur = T, messageErreur = "Invalid 'grppro' parameter: must be a 'GLgroupe' object"))
-		#"Parametre 'grpprop' invalide: doit etre un objet 'GLgroupe'"))
+		else return(list(erreur = T, messageErreur = "Invalid 'grppro' parameter: must be a 'GLgroup' object"))
+		#"Parametre 'grpprop' invalide: doit etre un objet 'GLgroup'"))
 	}
 	#Parametre 'named'
 	if(is.element(10, check)) {
@@ -349,7 +349,7 @@ gen.detectionErreur = function(gen, sorted, pro, named, ancestors, nouvtempsmax,
 	}
 	#Parametre 'label'
 	if(is.element(27, check)) {
-		if(is.null(groupe(matricephi))) {
+		if(is.null(group(matricephi))) {
 			if(is.null(label))
 				label <- dimnames(matricephi)[[1]]
 			if(length(label) != dim(matricephi)[1])
@@ -358,10 +358,10 @@ gen.detectionErreur = function(gen, sorted, pro, named, ancestors, nouvtempsmax,
 		}
 		else {
 			if(is.null(label))
-				label <- names(groupe(matricephi))
-			if(length(label) != length(matricephi@groupe))
+				label <- names(group(matricephi))
+			if(length(label) != length(matricephi@group))
 				return(list(erreur = T, messageErreur = "Invalid 'label' parameter: label number must equal group number in 'matricephi'"))
-					#"Parametre 'label' invalide: Le nombre d'etiquette doit etre egale au nombre de groupe dans 'matricephi'"))
+					#"Parametre 'label' invalide: Le nombre d'etiquette doit etre egale au nombre de group dans 'matricephi'"))
 		}
 		retour$label = label
 	}
@@ -829,12 +829,12 @@ GLapplyCG = function(x, FUN, ..., FunReturnLength = 1, mirror = T, named = T, na
 {
 	#Si c'est une matrice applique la fonction a la matrice entiere
 	#Si c'est un vecteur applique la fonction au vecteur en entier
-	#Si c'est un matrice avec groupe ... 
-	#applique la fonction a chaque groupe de proband et pour chaque ancestor
+	#Si c'est un matrice avec group ... 
+	#applique la fonction a chaque group de proband et pour chaque ancestor
 	#Bon determine si c'est pour plusieurs depth
-	#Groupe
-	if(is.null(groupe(x))) {
-		#Non pas de groupes
+	#Group
+	if(is.null(group(x))) {
+		#Non pas de groups
 		#applique la formule pour chaque ancestor (chaque colonne)
 		x <- as(x, "matrix")
 		if(!named)
@@ -850,14 +850,14 @@ GLapplyCG = function(x, FUN, ..., FunReturnLength = 1, mirror = T, named = T, na
 		drop(ret)
 	}
 	else {
-		#Oui des groupes 
+		#Oui des groups 
 		#  si FUN retourne un vecteur alors retourne tableau 3 dim
 		#si FUN retourne valeur alors retourne une matrice
-		xgrindice <- x@grindice
-		xgroupe <- x@groupe
+		xgrindex <- x@grindex
+		xgroupe <- x@group
 		x <- as(x, "matrix")
 		ng <- length(xgroupe)
-		#nombre de groupe
+		#nombre de group
 		ret <- array(0., c(ng, dim(x)[2], FunReturnLength))
 		#Calcul de la valeur (probablement moyen de faire plus efficace)    
 		for(a in 1:ng) {
@@ -865,7 +865,7 @@ GLapplyCG = function(x, FUN, ..., FunReturnLength = 1, mirror = T, named = T, na
 			{
 				FUN2(mat[, x], ...)
 			}
-			, mat = x[xgrindice[[a]],  , drop = F], FUN2 = FUN, ...)
+			, mat = x[xgrindex[[a]],  , drop = F], FUN2 = FUN, ...)
 		}
 		if(named)
 			dimnames(ret) <- list(names(xgroupe), dimnames(x)[[2]], namesVector)
@@ -877,11 +877,11 @@ GLapplyF = function(x, FUN, ..., FunReturnLength = 1, mirror = T, named = T, nam
 {
 	#Si c'est un matrice, applique la fonction a la matrice entiere
 	#Si c'est un vecteur, applique la fonction au vecteur entier
-	#Si c'est un vecteur avec groupe ... applique la fonction a chaque sous-vecteur de groupe....
+	#Si c'est un vecteur avec group ... applique la fonction a chaque sous-vecteur de group....
 	#Et ce pour chaque depth si necessaire
 	if(!is.null(depth(x))) {
-		if(is.null(groupe(x))) {
-			#Pas de groupe 
+		if(is.null(group(x))) {
+			#Pas de group 
 			#Un fois la fonction par depth (resultat est un gugus....) 
 			depth <- x@depth
 			x <- as(x, "array")
@@ -897,22 +897,22 @@ GLapplyF = function(x, FUN, ..., FunReturnLength = 1, mirror = T, named = T, nam
 			GLmulti(drop(ret), depth)
 		}
 		else {
-			#Oui des groupes
+			#Oui des groups
 			#Retourne un array de dimension 4 (gr1,gr2,vecteurresult,depth) 
-			xgrindice <- x@grindice
-			xgroupe <- x@groupe
+			xgrindex <- x@grindex
+			xgroupe <- x@group
 			ng <- length(xgroupe)
-			#nombre de groupe
+			#nombre de group
 			depth <- x@depth
 			x <- as(x, "array")
 			#Creation du tableau original
 			ng <- length(xgroupe)
-			#nombre de groupe
+			#nombre de group
 			ret <- array(0., c(ng, FunReturnLength, length(depth)))
 			#Calcul de la valeur (probablement moyen de faire plus efficace)    
 			for(p in 1:length(depth))
 				for(a in 1:ng) {
-					ret[a,  , p] <- FUN(x[xgrindice[[a]], p, drop = F], ...)
+					ret[a,  , p] <- FUN(x[xgrindex[[a]], p, drop = F], ...)
 				}
 			if(named)
 				dimnames(ret) <- list(names(xgroupe), namesVector, NULL)
@@ -922,9 +922,9 @@ GLapplyF = function(x, FUN, ..., FunReturnLength = 1, mirror = T, named = T, nam
 	}
 	else {
 		#Une depth
-		#Groupe
-		if(is.null(groupe(x))) {
-			#Pas de groupe (simple un resultat)
+		#Group
+		if(is.null(group(x))) {
+			#Pas de group (simple un resultat)
 			x <- as(x, "array")
 			ret = FUN(x, ...)
 			if(named)
@@ -932,18 +932,18 @@ GLapplyF = function(x, FUN, ..., FunReturnLength = 1, mirror = T, named = T, nam
 			return(ret)
 		}
 		else {
-			#Oui des groupes 
+			#Oui des groups 
 			#  si FUN retourne un vecteur alors retourne tableau 3 dim
 			#si FUN retourne valeur alors retourne une matrice
-			xgrindice <- x@grindice
-			xgroupe <- x@groupe
+			xgrindex <- x@grindex
+			xgroupe <- x@group
 			x <- as(x, "array")
 			ng <- length(xgroupe)
-			#nombre de groupe
+			#nombre de group
 			ret <- array(0., c(ng, FunReturnLength))
 			#Calcul de la valeur (probablement moyen de faire plus efficace)    
 			for(a in 1:ng)
-				ret[a,  ] <- FUN(x[xgrindice[[a]], drop = F], ...)
+				ret[a,  ] <- FUN(x[xgrindex[[a]], drop = F], ...)
 			if(named)
 				dimnames(ret) <- list(names(xgroupe), namesVector)
 			return(drop(ret))
@@ -951,22 +951,22 @@ GLapplyF = function(x, FUN, ..., FunReturnLength = 1, mirror = T, named = T, nam
 	}
 }
 
-GLapplyGroup = function(Matrice, GroupIndice, FUN, ..., named = T)
+GLapplyGroup = function(Matrice, GroupIndex, FUN, ..., named = T)
 {
 	#Applique une fonction a une grande matrice en fct du group
 	Matrice = unclass(Matrice)
 	#Creation de la matrice resultat
-	n <- length(GroupIndice)
+	n <- length(GroupIndex)
 	ret <- matrix(0, ncol = n, nrow = n)
 	#Calcul de la valeur (probablement moyen de faire plus efficace)
 	for(a in 1:n)
 		for(b in a:n) {
-			ret[a, b] <- FUN(Matrice[GroupIndice[[a]], GroupIndice[[b]], drop = F], ...)
+			ret[a, b] <- FUN(Matrice[GroupIndex[[a]], GroupIndex[[b]], drop = F], ...)
 			#Mirroir
 			ret[b, a] <- ret[a, b]
 		}
 	if(named)
-		dimnames(ret) <- list(names(GroupIndice), names(GroupIndice))
+		dimnames(ret) <- list(names(GroupIndex), names(GroupIndex))
 	return(ret)
 }
 
@@ -974,10 +974,10 @@ GLapplyPhi = function(x, FUN, ..., FunReturnLength = 1, mirror = T, named = T, n
 {
 	#Si c'est une matrice appliquer la fonction a la matrice entiere
 	#Si c'est un vecteur appliquer la fonction au vecteur en entier
-	#Si c'est un matrice avec groupe ... applique la fonction a chaque sous-matrice entre groupe....
+	#Si c'est un matrice avec group ... applique la fonction a chaque sous-matrice entre group....
 	#Et ce pour chaque depth, si necessaire
 	if(!is.null(depth(x))) {
-		if(is.null(groupe(x))) {
+		if(is.null(group(x))) {
 			depth <- x@depth
 			x <- as(x, "array")
 			#Boucle pour chaque depth
@@ -993,24 +993,24 @@ GLapplyPhi = function(x, FUN, ..., FunReturnLength = 1, mirror = T, named = T, n
 		}
 		else {
 			#Retourne un array de dimension 4 (gr1,gr2,vecteurresult,depth) 
-			xgrindice <- x@grindice
-			xgroupe <- x@groupe
+			xgrindex <- x@grindex
+			xgroupe <- x@group
 			ng <- length(xgroupe)
-			#nombre de groupe
+			#nombre de group
 			depth <- x@depth
 			x <- as(x, "array")
 			#Creation du tableau original
 			ng <- length(xgroupe)
-			#nombre de groupe
+			#nombre de group
 			ret <- array(0., c(ng, ng, FunReturnLength, length(depth)))
 			#Calcul de la valeur (probablement moyen de faire plus efficace)    
 			for(p in 1:length(depth))
 				for(a in 1:ng)
 					for(b in a:ng) {
-						ret[a, b,  , p] <- FUN(as(x[xgrindice[[a]], xgrindice[[b]], p], "matrix"), ...)
+						ret[a, b,  , p] <- FUN(as(x[xgrindex[[a]], xgrindex[[b]], p], "matrix"), ...)
 						if(mirror)
 							ret[b, a,  , p] <- ret[a, b,  , p]
-						else ret[b, a,  , p] <- FUN(as(x[xgrindice[[b]], xgrindice[[a]], p], "matrix"), ...)
+						else ret[b, a,  , p] <- FUN(as(x[xgrindex[[b]], xgrindex[[a]], p], "matrix"), ...)
 					}
 			if(named)
 				dimnames(ret) <- list(names(xgroupe), names(xgroupe), namesVector, NULL)
@@ -1019,8 +1019,8 @@ GLapplyPhi = function(x, FUN, ..., FunReturnLength = 1, mirror = T, named = T, n
 		}
 	}
 	else {
-		if(is.null(groupe(x))) {
-			#Pas de groupe (simple un resultat)
+		if(is.null(group(x))) {
+			#Pas de group (simple un resultat)
 			x <- as(x, "array")
 			ret = FUN(x, ...)
 			if(named)
@@ -1028,22 +1028,22 @@ GLapplyPhi = function(x, FUN, ..., FunReturnLength = 1, mirror = T, named = T, n
 			ret
 		}
 		else {
-			#Oui des groupes 
+			#Oui des groups 
 			#si FUN retourne un vecteur, alors retourne tableau 3 dim
 			#si FUN retourne valeur, alors retourne une matrice
-			xgrindice <- x@grindice
-			xgroupe <- x@groupe
+			xgrindex <- x@grindex
+			xgroupe <- x@group
 			x <- as(x, "array")
 			ng <- length(xgroupe)
-			#nombre de groupe
+			#nombre de group
 			ret <- array(0., c(ng, ng, FunReturnLength))
 			#Calcul de la valeur (probablement moyen de faire plus efficace)    
 			for(a in 1:ng)
 				for(b in a:ng) {
-					ret[a, b,  ] <- FUN(x[xgrindice[[a]], xgrindice[[b]], drop = F], ...)
+					ret[a, b,  ] <- FUN(x[xgrindex[[a]], xgrindex[[b]], drop = F], ...)
 					if(mirror)
 						ret[b, a,  ] <- ret[a, b,  ]
-					else ret[b, a,  ] <- FUN(x[xgrindice[[b]], xgrindice[[a]], drop = F], ...)
+					else ret[b, a,  ] <- FUN(x[xgrindex[[b]], xgrindex[[a]], drop = F], ...)
 				}
 			if(named)
 				dimnames(ret) <- list(names(xgroupe), names(xgroupe), namesVector)
@@ -1056,7 +1056,7 @@ GLapplyPhi = function(x, FUN, ..., FunReturnLength = 1, mirror = T, named = T, n
 GLapplyPhi.mat = function(x, FUN, ..., FunReturnLength = 1, mirror = T, named = T, namesVector = NULL)
 {
 	#Applique a une matrice de phi ayant une seule depth
-	#Pas de groupe
+	#Pas de group
 	x <- as(x, "array")
 	ret = FUN(x, ...)
 	if(named)
@@ -1064,10 +1064,10 @@ GLapplyPhi.mat = function(x, FUN, ..., FunReturnLength = 1, mirror = T, named = 
 	return(ret)
 }
 
-GLCGGroup = function(MatriceCG, Groupe, proband)
+GLCGGroup = function(MatriceCG, Group, proband)
 {
-	#un cg groupe c'est une matrice de groupe x ancestor...
-	if(!is(Groupe, "GLgroupe")) stop("Invalid parameter: Groupe must a group of valid probands")
+	#un cg group c'est une matrice de group x ancestor...
+	if(!is(Group, "GLgroup")) stop("Invalid parameter: Group must a group of valid probands")
 	#TROUVE LES PROPOSANTS CORRESPONDANTS A LA MATRICE A L'AIDE DES ETIQUETTES
 	if(missing(proband)) proband <- as.integer(dimnames(MatriceCG)[[1]])
 	#La dimension 1 c'est les ancestors
@@ -1076,27 +1076,27 @@ GLCGGroup = function(MatriceCG, Groupe, proband)
 			#"Parametre invalide: proposant doit etre la liste de proposants utilises pour generer la MatricePhi")
 	if(length(dim(MatriceCG)) == 2) {
 		#COMPACTAGE
-		ind <- unique(unlist(Groupe, use.names = T))
+		ind <- unique(unlist(Group, use.names = T))
 		ind2 <- match(ind, proband)
 		if(any(is.na(ind2)))
-			stop("Invalid parameter: all probands of Groupe must be part of the probands")
-			#stop("Parametre invalide: tous les probands du Groupe doit faire partie des probands")
+			stop("Invalid parameter: all probands of Group must be part of the probands")
+			#stop("Parametre invalide: tous les probands du Group doit faire partie des probands")
 		MatriceCG <- MatriceCG[ind2,  , drop = F]
 		#pro,anc (tous les ancestors sont conserve)
 		#GENERATION DES INDICES DES PROPOSANTS
-		indice <- lapply(Groupe, function(x, pro)
+		indice <- lapply(Group, function(x, pro)
 		{
 			match(x, pro)
 		}
 		, pro = ind)
 		#CREATION D'OBJET
-		new("GLCGMatrixGroupSingle", MatriceCG, groupe = Groupe, grindice = indice)
+		new("GLCGMatrixGroupSingle", MatriceCG, group = Group, grindex = indice)
 	}
 	else stop("Invalid parameter: MatriceCG must one or more phi matrix or a GLCGMatrixGroupSingle object")
 		#stop("Parametre invalide: MatriceCG doit-etre une ou plusieurs matrices phi ou un objet GLCGMatrixGroupSingle")
 }
 
-GLFGroup = function(VecteurF, Groupe, depth = NULL, proband)
+GLFGroup = function(VecteurF, Group, depth = NULL, proband)
 {
 	#Prend.. vecteur ou matrix x par 1   -> GLmultiFgroupSingle
 	#Prend.. matrice x par y et depth!= y     -> GLmultiFgroup
@@ -1108,41 +1108,41 @@ GLFGroup = function(VecteurF, Groupe, depth = NULL, proband)
 		if(is.null(depth) && !is.null(depth(VecteurF))) depth = depth(VecteurF)
 		VecteurF <- as(VecteurF, "matrix")
 		#Compactage
-		ind <- unique(unlist(Groupe, use.names = T))
+		ind <- unique(unlist(Group, use.names = T))
 		ind2 <- match(ind, proband)
 		if(any(is.na(ind2)))
-			stop("Invalid grpPro parameter (function GLFGroupe): all probands of 'grpPro' must be part of probands")
-			#stop("Parametre 'grpPro' invalide (Fct : GLFGroupe): tous les probands de 'grpPro' doivent faire partie des probands")
+			stop("Invalid grpPro parameter (function GLFGroup): all probands of 'grpPro' must be part of probands")
+			#stop("Parametre 'grpPro' invalide (Fct : GLFGroup): tous les probands de 'grpPro' doivent faire partie des probands")
 		VecteurF <- VecteurF[ind2,  , drop = F]
 		#Generation des indices des probands
-		indice <- lapply(Groupe, function(x, pro)
+		indice <- lapply(Group, function(x, pro)
 		{
 			match(x, pro)
 		}
 		, pro = ind)
 		#Creation de l'objet
-		new("GLmultiFGroup", GLmulti(VecteurF, depth), groupe = Groupe, grindice = indice)
+		new("GLmultiFGroup", GLmulti(VecteurF, depth), group = Group, grindex = indice)
 	}
 	else if(dim(VecteurF)[2] == 1) {
 		#C'est un vecteur
 		#une depth, compactage
-		ind <- unique(unlist(Groupe, use.names = T))
+		ind <- unique(unlist(Group, use.names = T))
 		ind2 <- match(ind, proband)
 		if(any(is.na(ind2)))
-			stop("Invalid grpPro parameter (function GLFGroupe): all probands of 'grpPro' must be part of probands")
-			#stop("Parametre 'grpPro' invalide (Fct : GLFGroupe): tous les probands de 'grpPro' doivent faire partie des probands")
+			stop("Invalid grpPro parameter (function GLFGroup): all probands of 'grpPro' must be part of probands")
+			#stop("Parametre 'grpPro' invalide (Fct : GLFGroup): tous les probands de 'grpPro' doivent faire partie des probands")
 		VecteurF <- VecteurF[ind2,  , drop = F]
 		#Generation des indices des probands
-		indice <- lapply(Groupe, function(x, pro)
+		indice <- lapply(Group, function(x, pro)
 		{
 			match(x, pro)
 		}
 		, pro = ind)
 		#Creation de l'objet
-		new("GLmultiFGroupSingle", VecteurF, groupe = Groupe, grindice = indice)
+		new("GLmultiFGroupSingle", VecteurF, group = Group, grindex = indice)
 	}
-	else	stop("Invalid 'VecteurF' parameter (function GLFGroupe): must be one or more F vectors or a 'GLmultiFGroup' object")
-		#stop("Parametre 'VecteurF' invalide (Fct : GLFGroupe): doit etre un ou plusieurs vecteurs F ou un objet 'GLmultiFGroup'")
+	else	stop("Invalid 'VecteurF' parameter (function GLFGroup): must be one or more F vectors or a 'GLmultiFGroup' object")
+		#stop("Parametre 'VecteurF' invalide (Fct : GLFGroup): doit etre un ou plusieurs vecteurs F ou un objet 'GLmultiFGroup'")
 }
 
 GLgen = function(...)
@@ -1155,17 +1155,17 @@ is.all.white <- function(listeNoms)
   unlist(lapply(listeNoms,function(n){gsub(" ", "", n, fixed=T)==""}))
 }
 
-GLgroupe = function(liste)
+GLgroup = function(liste)
 {
-	#creation du groupe et complementation
+	#creation du group et complementation
 	if(!is.list(liste)) stop("Invalid parameter: liste must be a valid list") #stop("parametre invalide : liste doit etre une liste valide")
 	defaultname <- sapply(1:length(liste), function(i)
-	paste("Groupe", i))
+	paste("Group", i))
 	if(is.null(names(liste)))
 		toreplace <- rep(T, length(liste))
 	else toreplace <- is.all.white(names(liste)) #is.all.white(names(liste), empty = T)
 	names(liste)[toreplace] <- defaultname[toreplace]
-	return(new("GLgroupe", liste))
+	return(new("GLgroup", liste))
 }
 
 GLmulti = function(Array, depth, drop = T, addDim = F)
@@ -1348,7 +1348,7 @@ GLOverVector2 = function(pro, dim1, ..., named, abs)
 	return(list(pro = pro, dim1 = dim1, param = p, named = n, abs = ab))
 }
 
-GLPhiGroup = function(MatricePhi, Groupe, depth = NULL, proband)
+GLPhiGroup = function(MatricePhi, Group, depth = NULL, proband)
 {
 	#Nombre de depth
 	if(is.numeric(MatricePhi) && is.array(MatricePhi) && length(dim(MatricePhi)) == 3) {
@@ -1356,37 +1356,37 @@ GLPhiGroup = function(MatricePhi, Groupe, depth = NULL, proband)
 		if(is.null(depth) && !is.null(depth(MatricePhi))) depth = depth(MatricePhi)
 		MatricePhi <- as(MatricePhi, "array")
 		#compactage
-		ind <- unique(unlist(Groupe, use.names = T))
+		ind <- unique(unlist(Group, use.names = T))
 		ind2 <- match(ind, proband)
 		if(any(is.na(ind2)))
-			stop("Invalid parameter: all probands of Groupe must be part of proband")
-			#stop("Parametre invalide: tous les probands du Groupe doit faire partie des probands")
+			stop("Invalid parameter: all probands of Group must be part of proband")
+			#stop("Parametre invalide: tous les probands du Group doit faire partie des probands")
 		MatricePhi <- MatricePhi[ind2, ind2,  ]
 		#Generation des indices des probands
-		indice <- lapply(Groupe, function(x, pro)
+		indice <- lapply(Group, function(x, pro)
 		{
 			match(x, pro)
 		}
 		, pro = ind)
 		#Creation d'objet
-		new("GLmultiPhiGroup", GLmulti(MatricePhi, depth), groupe = Groupe, grindice = indice)
+		new("GLmultiPhiGroup", GLmulti(MatricePhi, depth), group = Group, grindex = indice)
 	}
 	else if(length(dim(MatricePhi)) == 2) {
 		#compactage
-		ind <- unique(unlist(Groupe, use.names = T))
+		ind <- unique(unlist(Group, use.names = T))
 		ind2 <- match(ind, proband)
 		if(any(is.na(ind2)))
-			stop("Invalid parameter: all probands of Groupe must be part of proband")
-			#stop("Parametre invalide: tous les probands du Groupe doit faire partie des probands")
+			stop("Invalid parameter: all probands of Group must be part of proband")
+			#stop("Parametre invalide: tous les probands du Group doit faire partie des probands")
 		MatricePhi <- MatricePhi[ind2, ind2]
 		#Generation des indices des probands
-		indice <- lapply(Groupe, function(x, pro)
+		indice <- lapply(Group, function(x, pro)
 		{
 			match(x, pro)
 		}
 		, pro = ind)
 		#Creation d'objet
-		new("GLmultiPhiGroupSingle", MatricePhi, groupe = Groupe, grindice = indice)
+		new("GLmultiPhiGroupSingle", MatricePhi, group = Group, grindex = indice)
 	}
 	else stop("Invalid 'MatricePhi' parameter: must be a phi matrix with one or more depths")
 		#stop("Parametre 'MatricePhi' invalide: doit etre un matrice phi avec une ou plusieurs depths")
@@ -1566,7 +1566,7 @@ GLPrivCG = function(gen, pro, ancestors, print.it = F, named = T)
 
 GLPrivCGcumul = function(CG, named = T)
 {
-	#Calcule la somme par groupe
+	#Calcule la somme par group
 	somme <- GLapplyCG(CG, sum, named = named)
 	if(!is.matrix(somme))
 		return(cumsum(rev(sort(somme))))
@@ -1574,10 +1574,10 @@ GLPrivCGcumul = function(CG, named = T)
 		cumsum(rev(sort(x))))))
 }
 
-GLPrivCGgroupe = function(CG, grppro, pro)
+GLPrivCGgroup = function(CG, grppro, pro)
 {
-	#Applique un groupe a une matrice CG
-	#Accepte: Une Matrice et un groupe
+	#Applique un group a une matrice CG
+	#Accepte: Une Matrice et un group
 	#Dans tous les cas, pro peut-etre omis si CG est etiquette dans le cas contraire
 	#il faut fournir une liste de proband de meme taille que la premiere dimension de CG 
 	if(missing(pro)) GLCGGroup(CG, grppro) else GLCGGroup(CG, grppro, proband = pro)
@@ -1608,7 +1608,7 @@ GLPrivCGPLUS = function(gen, pro, ancestors, vctProb, print.it = F, named = T)
 
 GLPrivCGproduit = function(CG, named = T)
 {
-	if(is.null(groupe(CG))) {
+	if(is.null(group(CG))) {
 		#La formule   
 		resultat <- drop(exp(t(rep(1, dim(CG)[1])) %*% log(CG)))
 		if(named)
@@ -1617,18 +1617,18 @@ GLPrivCGproduit = function(CG, named = T)
 		return(resultat)
 	}
 	else {
-		#Oui des groupes 
-		xgrindice <- CG@grindice
-		xgroupe <- CG@groupe
+		#Oui des groups 
+		xgrindex <- CG@grindex
+		xgroupe <- CG@group
 		x <- as(CG, "matrix")
 		ng <- length(xgroupe)
-		#nombre de groupe
+		#nombre de group
 		#Matrice de resultat
 		ret <- array(0., dim = c(ng, dim(x)[2]))
-		#Calcul de la valeur pour chaque groupe
+		#Calcul de la valeur pour chaque group
 		for(a in 1:ng) {
 			#Trouve la matrice sur laquel applique la fonction
-			ind = xgrindice[[a]]
+			ind = xgrindex[[a]]
 			mat = x[ind,  , drop = F]
 			#La formule
 			ret[a,  ] <- drop(exp(t(rep(1, length(ind))) %*% log(mat)))
@@ -1649,7 +1649,7 @@ GLPrivExtCG = function(x, ..., drop)
 	#extrait pour certaine depth
 	l2 <- GLOverGroup2(...)
 	dim1 <- l2$dim1
-	#Groupe
+	#Group
 	dim2 <- l2$dim2
 	#Ancestor
 	if(missing(drop)) drop <- T
@@ -1670,8 +1670,8 @@ GLPrivExtCG = function(x, ..., drop)
 		}
 		else {
 			#Si drop = F return GLCGMatrixGroupSingle
-			xgrindice <- x@grindice
-			xgroupe <- x@groupe
+			xgrindex <- x@grindex
+			xgroupe <- x@group
 			x <- unclass(x)
 			if(is(dim1, "missing"))
 				dim1 <- 1:length(xgroupe)
@@ -1679,19 +1679,19 @@ GLPrivExtCG = function(x, ..., drop)
 			tmp <- 1:length(xgroupe)
 			names(tmp) <- names(xgroupe)
 			lg <- tmp[dim1]
-			#Nouveau Groupe a construire
+			#Nouveau Group a construire
 			if(any(is.na(lg))) stop("Invalid extraction: one of the element was not found")
 				#stop("Extraction invalide, un des elements n'a pas ete trouve")
 			#extraction
 			lg <- xgroupe[dim1]
 			#Regeneration de la liste de proband
-			gind <- unlist(xgrindice, use.names = F)
+			gind <- unlist(xgrindex, use.names = F)
 			ggrou <- unlist(xgroupe, use.names = F)
 			pro <- ggrou[match(1:(dim(x)[1]), gind)]
 			if(any(is.na(pro))) stop("Can not use Drop=T for this particular object")
 				#stop("Vous ne pouvez pas utilise Drop=T pour cette objet en particulier")
 			#Nouvelle matrice reduite
-			class(lg) <- "GLgroupe"
+			class(lg) <- "GLgroup"
 			#Creation de l'objet 
 			#dim2 est le subscript pour les ancestors
 			GLCGGroup(x[, dim2, drop = F], lg, proband = pro)
@@ -1718,18 +1718,18 @@ GLPrivExtF = function(x, ..., drop)
 		if(l2$param == 0 || l2$param == 1 || l2$param == 2) {
 			#Si drop=T alors retourne un GLMultiMatrix de resultat
 			#declassement
-			xgrindice <- x@grindice
-			xgroupe <- x@groupe
+			xgrindex <- x@grindex
+			xgroupe <- x@group
 			xdepth <- x@depth
 			x <- as(x, "array")
 			ng <- length(xgroupe)
-			#nombre de groupe   
+			#nombre de group   
 			#Genere le tableau de phi moyen pour chaque depth 
 			m <- array(0., c(ng, length(xdepth)))
 			#Calcul de la valeur (probablement moyen de faire plus efficace)    
 			for(p in 1:length(xdepth))
 				for(a in 1:ng) {
-					m[a, p] <- mean(x[xgrindice[[a]], p])
+					m[a, p] <- mean(x[xgrindex[[a]], p])
 				}
 			if(l2$named)
 				dimnames(m) <- list(names(xgroupe), NULL)
@@ -1750,13 +1750,13 @@ GLPrivExtF = function(x, ..., drop)
 			#Peut-importe dim1 et dim2 ca passe a l'operateur 
 			GLmulti(getMethod("[", "array")(m, dim1, pro, drop = T), xdepth[pro])
 		}
-		else stop("You can only use one or two subscript (depth alone or depth,groupe)")
-			#stop("Vous ne pouvez utiliser qu'un ou deux subscripts (depth seul ou depth,groupe)")
+		else stop("You can only use one or two subscript (depth alone or depth, group)")
+			#stop("Vous ne pouvez utiliser qu'un ou deux subscripts (depth seul ou depth,group)")
 	}
 	else {
 		#Si drop = F alors retourne un objet GLmultiPhiGroupSingle modifier
-		xgrindice <- x@grindice
-		xgroupe <- x@groupe
+		xgrindex <- x@grindex
+		xgroupe <- x@group
 		xdepth <- x@depth
 		if(l2$param == 0 || l2$param == 1 || l2$param == 2) {
 			#Cas particulier depth
@@ -1770,31 +1770,31 @@ GLPrivExtF = function(x, ..., drop)
 				pro <- pos
 			}
 			#Else dans ce cas garde pro comme il etait      
-			#validation du groupe
+			#validation du group
 			if(is(dim1, "missing")) dim1 <- 1:length(xgroupe)
 			tmp <- 1:length(xgroupe)
 			names(tmp) <- names(xgroupe)
 			lg <- tmp[dim1]
-			#Nouveau Groupe a construire
+			#Nouveau Group a construire
 			if(any(is.na(lg))) stop("Invalid extraction: one of the lement was not found")
 				#stop("Extraction invalide, un des elements n'a pas ete trouve")
 			#extraction
 			lg <- xgroupe[dim1]
-			#Nouveau Groupe a construire
+			#Nouveau Group a construire
 			#Regeneration de la liste de proband
-			gind <- unlist(xgrindice, use.names = F)
+			gind <- unlist(xgrindex, use.names = F)
 			ggrou <- unlist(xgroupe, use.names = F)
 			pro <- ggrou[match(1:(dim(x)[1]), gind)]
 			if(any(is.na(pro)))
 				stop("Can not use Drop=T for this particular object")
 				#stop("Vous ne pouvez pas utiliser Drop=T pour cet objet en particulier")
 			#Nouvelle matrice reduite
-			class(lg) <- "GLgroupe"
+			class(lg) <- "GLgroup"
 			#Creation de l'objet
 			GLFGroup(getMethod("[", "matrix")(x,  , pro), lg, xdepth[pro], pro)
 		}
-		else	stop("If Drop=T, you can only use one or two subscript (depth and optionally groupes")
-			#stop("Si Drop=T, vous ne pouvez utiliser qu'un ou deux subscript (depth et optionnellement les groupes)")
+		else	stop("If Drop=T, you can only use one or two subscript (depth and optionally groups")
+			#stop("Si Drop=T, vous ne pouvez utiliser qu'un ou deux subscript (depth et optionnellement les groups)")
 	}
 }
 
@@ -1814,18 +1814,18 @@ GLPrivExtFSINGLE = function(x, ..., drop)
 		if(drop) {
 			#Si 'drop=T', alors retourne la matrice de resultat
 			if(is(pro, "GLnothing")) class(pro) <- "missing"
-			#Genere le tableau de F moyen par groupe
+			#Genere le tableau de F moyen par group
 			#m <- GLapplyF(x,mean,named=l2$named) #Modifier si sa tartine
 			#La suite est equivalent a la ligne ci-haut
-			xgrindice <- x@grindice
-			xgroupe <- x@groupe
+			xgrindex <- x@grindex
+			xgroupe <- x@group
 			x <- as(x, "array")
 			ng <- length(xgroupe)
-			#nombre de groupe
+			#nombre de group
 			m <- double(ng)
 			#Calcul de la valeur (probablement moyen de faire plus efficace)    
 			for(a in 1:ng)
-				m[a] <- mean(x[xgrindice[[a]]])
+				m[a] <- mean(x[xgrindex[[a]]])
 			if(l2$named)
 				names(m) <- names(xgroupe)
 			#Fin construction de m
@@ -1834,8 +1834,8 @@ GLPrivExtFSINGLE = function(x, ..., drop)
 		else {
 			#Si 'drop = F', alors retourne un objet 'GLmultiPhiGroupSingle' modifie
 			#declassement
-			xgrindice <- x@grindice
-			xgroupe <- x@groupe
+			xgrindex <- x@grindex
+			xgroupe <- x@group
 			x <- unclass(x)
 			if(l2$param <= 1) {
 				if(is(pro, "GLnothing"))
@@ -1844,26 +1844,26 @@ GLPrivExtFSINGLE = function(x, ..., drop)
 				tmp <- 1:length(xgroupe)
 				names(tmp) <- names(xgroupe)
 				lg <- tmp[pro]
-				#Nouveau Groupe a construire
+				#Nouveau Group a construire
 				if(any(is.na(lg))) stop("Invalid extraction: one of the element was not found")
 					#stop("Extraction invalide: un des elements n'a pas ete trouve")
 				#extraction
 				lg <- xgroupe[pro]
 				#Nouveau Groupe a construire
 				#Regeneration de la liste de proband
-				gind <- unlist(xgrindice, use.names = F)
+				gind <- unlist(xgrindex, use.names = F)
 				ggrou <- unlist(xgroupe, use.names = F)
 				pro <- ggrou[match(1:(dim(x)[1]), gind)]
 				if(any(is.na(pro)))
 					stop("you can not use Drop=T for this particular object")
 					#stop("Vous ne pouvez pas utiliser 'Drop=T' pour cet objet en particulier")
 				#Nouvelle matrice reduite
-				class(lg) <- "GLgroupe"
+				class(lg) <- "GLgroup"
 				#Creation de l'objet
 				GLFGroup(x, lg, proband = pro)
 			}
-			else	stop("if Drop=T, you can only use one subscript (for the wanted groupes)")
-				#stop("Si 'Drop=T', vous ne pouvez utiliser qu'un seul subscript (pour les groupes voulus)")
+			else	stop("if Drop=T, you can only use one subscript (for the wanted groups)")
+				#stop("Si 'Drop=T', vous ne pouvez utiliser qu'un seul subscript (pour les groups voulus)")
 		}
 	}
 	else	stop("You can only use one subscript (as for a vector)")
@@ -1886,8 +1886,8 @@ GLPrivExtPHI = function(x, ..., drop)
 	if(is(dim2, "GLnothing"))
 		class(dim2) <- "missing"
 	#declassement
-	xgrindice <- x@grindice
-	xgroupe <- x@groupe
+	xgrindex <- x@grindex
+	xgroupe <- x@group
 	xdepth <- x@depth
 	x <- unclass(x)
 	if(drop) {
@@ -1897,7 +1897,7 @@ GLPrivExtPHI = function(x, ..., drop)
 			m <- array(0, c(length(xgroupe), length(xgroupe), length(xdepth)))
 			for(p in 1:length(xdepth)) {
 				#Matrice pour une depth donne
-				m[,  , p] <- GLapplyGroup(x[,  , p], xgrindice, gen.phiMean, check = 0, named = F)
+				m[,  , p] <- GLapplyGroup(x[,  , p], xgrindex, gen.phiMean, check = 0, named = F)
 			}
 			if(l2$named)
 				dimnames(m) <- list(names(xgroupe), names(xgroupe), NULL)
@@ -1935,31 +1935,31 @@ GLPrivExtPHI = function(x, ..., drop)
 				pro <- pos
 			}
 			#Else dans ce cas garde pro comme il etait      
-			#validation du groupe
+			#validation du group
 			if(is(dim1, "missing")) dim1 <- 1:length(xgroupe)
 			tmp <- 1:length(xgroupe)
 			names(tmp) <- names(xgroupe)
 			lg <- tmp[dim1]
-			#Nouveau Groupe a construire
+			#Nouveau Group a construire
 			if(any(is.na(lg))) stop("Invalid extraction: one of the element was not found")
 				#stop("Extraction invalide, un des elements n'a pas ete trouve")
 			#extraction
 			lg <- xgroupe[dim1]
-			#Nouveau Groupe a construire
+			#Nouveau Group a construire
 			#Regeneration de la liste de proband
-			gind <- unlist(xgrindice, use.names = F)
+			gind <- unlist(xgrindex, use.names = F)
 			ggrou <- unlist(xgroupe, use.names = F)
 			pro <- ggrou[match(1:(dim(x)[1]), gind)]
 			if(any(is.na(pro)))
 				stop("You can not use Drop=T for this particular object")
 				#stop("Vous ne pouvez pas utiliser Drop=T pour cet objet en particulier")
 			#Nouvelle matrice reduite
-			class(lg) <- "GLgroupe"
+			class(lg) <- "GLgroup"
 			#Creation de l'objet
 			GLPhiGroup(getMethod("[", "array")(x,  ,  , pro), lg, xdepth[pro], pro)
 		}
-		else	stop("if Drop=T, you can only use one or two subscript (depth and optionally groupes)")
-		 	#stop("Si Drop=T, vous ne pouvez utiliser qu'un ou deux subscript (depth et optionnellement les groupes)")
+		else	stop("if Drop=T, you can only use one or two subscript (depth and optionally groups)")
+		 	#stop("Si Drop=T, vous ne pouvez utiliser qu'un ou deux subscript (depth et optionnellement les groups)")
 	}
 }
 
@@ -1981,13 +1981,13 @@ GLPrivExtPHISINGLE = function(x, ..., drop)
 		if(is(dim2, "GLnothing"))
 			class(dim2) <- "missing"
 		#declassement
-		xgrindice <- x@grindice
-		xgroupe <- x@groupe
+		xgrindex <- x@grindex
+		xgroupe <- x@group
 		x <- unclass(x)
 		if(drop) {
 			#Si drop=T, alors retourne la matrice de resultat
 			#Genere le tableau de phi moyen
-			m <- GLapplyGroup(x, xgrindice, gen.phiMean, check = 0, named = F)
+			m <- GLapplyGroup(x, xgrindex, gen.phiMean, check = 0, named = F)
 			if(l2$named)
 				dimnames(m) <- list(names(xgroupe), names(xgroupe))
 			else dimnames(m) <- NULL
@@ -2005,26 +2005,26 @@ GLPrivExtPHISINGLE = function(x, ..., drop)
 				tmp <- 1:length(xgroupe)
 				names(tmp) <- names(xgroupe)
 				lg <- tmp[dim1]
-				#Nouveau Groupe a construire
+				#Nouveau Group a construire
 				if(any(is.na(lg))) stop("Invalid extraction: one of the element was not found (Error in the 'GLPrivExtPHISINGLE' function)")
 					#stop("Extraction invalide: un des elements n'a pas ete trouve (Erreur dans la fonction 'GLPrivExtPHISINGLE')")
 				#extraction
 				lg <- xgroupe[dim1]
-				#Nouveau Groupe a construire
+				#Nouveau Group a construire
 				#Regeneration de la liste de proband
-				gind <- unlist(xgrindice, use.names = F)
+				gind <- unlist(xgrindex, use.names = F)
 				ggrou <- unlist(xgroupe, use.names = F)
 				pro <- ggrou[match(1:(dim(x)[1]), gind)]
 				if(any(is.na(pro)))
 					stop("You can not use Drop=T for this particular object (Error in the 'GLPrivExtPHISINGLE' function)")
 					#stop("Vous ne pouvez pas utiliser 'Drop=T' pour cet objet en particulier (Erreur dans la fonction 'GLPrivExtPHISINGLE')")
 				#Nouvelle matrice reduite
-				class(lg) <- "GLgroupe"
+				class(lg) <- "GLgroup"
 				#Creation de l'objet
 				GLPhiGroup(x, lg, proband = pro)
 			}
-			else stop("If Drop=T, you can only use one subscript (for wanted groupes)")
-				#stop("Si 'Drop=T', vous ne pouvez utiliser qu'un seul subscript (pour les groupes voulus)")
+			else stop("If Drop=T, you can only use one subscript (for wanted groups)")
+				#stop("Si 'Drop=T', vous ne pouvez utiliser qu'un seul subscript (pour les groups voulus)")
 		}
 	}
 	else stop("You can only use one or two subscript (just like a matrix)")

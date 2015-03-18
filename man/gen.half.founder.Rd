@@ -1,7 +1,7 @@
 \name{gen.half.founder}
 \alias{gen.half.founder}
 \title{Get half-founder id numbers}
-\description{Returns the id numbers of the half-founders. Half-founders are defined as the individuals with only one founder parent in the genealogy.}
+\description{Returns the id numbers of the half-founders. Half-founders are defined as the individuals with only one known parent in the genealogy (i.e., either mother id=0 or father id=0).}
 \usage{gen.half.founder( gen, ...)}
 \arguments{
 \item{gen}{An object of class GLgen obtained with gen.genealogy, gen.lineages or gen.branching. Required.}

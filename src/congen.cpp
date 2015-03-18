@@ -483,9 +483,9 @@ static void ExploreConGenProposantPLUS(CIndSimul* Noeud, int profondeur, double*
 			iprob = 0;
 		else if (Noeud->sex == GEN_MASC && current->noeud->sex == GEN_FEM)//homme-femme
 			iprob = 1;
-		else if (Noeud->sex == GEN_FEM && current->noeud->sex == GEN_FEM) //femme-femme
-			iprob = 2;
 		else if (Noeud->sex == GEN_FEM && current->noeud->sex == GEN_MASC) //femme-homme
+			iprob = 2;
+		else if (Noeud->sex == GEN_FEM && current->noeud->sex == GEN_FEM) //femme-femme
 			iprob = 3;
 		
 		if (pdSexe[iprob] != 0)

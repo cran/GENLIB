@@ -30,14 +30,16 @@ gen.meangendepth(gen140, pro=probands)
 gen.meangendepthVar(gen140, pro=probands)
 gen.meangendepthVar(gen140, pro=probands, type="MEAN")
 
- \donttest{
-  gen.meangendepth(gen140, pro=probands, type="IND")
-  gen.meangendepthVar(gen140, pro=probands, type="IND")
- }
+\donttest{
+gen.meangendepth(gen140, pro=probands, type="IND")
+gen.meangendepthVar(gen140, pro=probands, type="IND")
+}
 }
 \references{
 Cazes P, Cazes MH. (1996) Comment mesurer la profondeur genealogique d'une ascendance? Population (French Ed) 51:117-140.
+
 Kouladjian K. (1986) Une mesure d'entropie genealogique. Chicoutimi, SOREP, Document III-C-43.
+
 De Brakaeleer M, Bellis G. (1994) Genealogies et reconstitutions de familles en genetique humaine. Dossiers et Recherches, no 43, INED, Paris.
 }
 \keyword{manip}

@@ -13,7 +13,7 @@
 Objects can be created by calls of the form \code{gen.genealogy('data.frame')}.
 }
 \section{Extends}{
-Class \code{"\linkS4class{GLgroupe}"}, directly.
+Class \code{"\linkS4class{GLgroup}"}, directly.
 }
 \section{Methods}{
   \describe{

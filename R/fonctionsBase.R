@@ -50,16 +50,16 @@
 #	named = retour$named
 #
 #	if(typeCG == "IND") {
-#		if(is(pro, "GLgroupe")) {
+#		if(is(pro, "GLgroup")) {
 #			CG = GLPrivCG(gen = gen, pro = as.numeric(unlist(pro)), ancestors = ancestors, print.it = FALSE, named = named)
-#			return(GLPrivCGgroupe(CG, grppro = pro))
+#			return(GLPrivCGgroup(CG, grppro = pro))
 #		}
 #		else return(GLPrivCG(gen = gen, pro = pro, ancestors = ancestors, print.it = FALSE, named = named))
 #	}
 #	else {
-#		if(is(pro, "GLgroupe")) {
+#		if(is(pro, "GLgroup")) {
 #			CG = GLPrivCG(gen = gen, pro = as.numeric(unlist(pro)), ancestors = ancestors, print.it = FALSE, named = named)
-#			CG = GLPrivCGgroupe(CG, grppro = pro)
+#			CG = GLPrivCGgroup(CG, grppro = pro)
 #			if(typeCG == "MEAN")
 #				return(GLPrivCGmoyen(CG = CG, named = named))
 #			if(typeCG == "CUMUL")
@@ -99,16 +99,16 @@ gen.gc = function(gen, pro = 0, ancestors = 0, vctProb = c(0.5, 0.5, 0.5, 0.5), 
 	named = retour$named
 
 	if(typeCG == "IND") {
-		if(is(pro, "GLgroupe")) {
+		if(is(pro, "GLgroup")) {
 			CG = GLPrivCGPLUS(gen = gen, pro = as.numeric(unlist(pro)), ancestors = ancestors, vctProb = vctProb, print.it = FALSE, named = named)
-			return(GLPrivCGgroupe(CG, grppro = pro))
+			return(GLPrivCGgroup(CG, grppro = pro))
 		}
 		else return(GLPrivCGPLUS(gen = gen, pro = pro, ancestors = ancestors, vctProb, print.it = FALSE, named = named))
 	}
 	else {
-		if(is(pro, "GLgroupe")) {
+		if(is(pro, "GLgroup")) {
 			CG = GLPrivCGPLUS(gen = gen, pro = as.numeric(unlist(pro)), ancestors = ancestors, vctProb = vctProb, print.it = FALSE, named = named)
-			CG = GLPrivCGgroupe(CG, grppro = pro)
+			CG = GLPrivCGgroup(CG, grppro = pro)
 			if(typeCG == "MEAN")
 				return(GLPrivCGmoyen(CG = CG, named = named))
 			if(typeCG == "CUMUL")
@@ -205,9 +205,11 @@ gen.completenessVar = function(gen, pro = 0, genNo = -1, ...) #, check = 1, ...)
 	tab = sapply(pro, function(x, gen, genNo, named)
 		GLPriv.completeness3V(gen$ind, gen$father, gen$mother, pro = x, genNo = genNo, named = named),
 		gen = gen, genNo = genNo, named = named)
+	
 	if(is.null(dim(tab))) tab <- t(as.matrix(tab))
 	tab = data.frame(apply(tab, 1, var) * corrFactor)
 	dimnames(tab)[[1]] <- as.character(genNo)
+	dimnames(tab)[[2]] <- "completeness.var"
 	return(tab)
 }
 
@@ -687,10 +689,11 @@ gen.implex = function(gen, pro = 0, genNo = -1, type = "MEAN", onlyNewAnc = F, .
 		, gen = gen, genNo = genNo, fctApp = fctApp, named = named)
 		if(is.null(dim(tableau))) tableau <- t(as.matrix(tableau))
 		#Selon le resultat, on applique au tableau une operation de moyenne ou pas
-		if(type == "MEAN") tableau = data.frame(apply(tableau, 1, mean))
+		if(type == "MEAN")	tableau = data.frame(apply(tableau, 1, mean))
 		#if(named == T)
-			if(type == "IND")
-				dimnames(tableau)[[2]] <- as.character(paste("Ind", as.character(pro)))
+		#dimnames(tableau)[[2]] <- "implex"
+		names(tableau) <- "implex"
+		if(type == "IND")	dimnames(tableau)[[2]] <- as.character(paste("Ind", as.character(pro)))
 		dimnames(tableau)[[1]] <- as.character(genNo)
 		return(data.frame(tableau))
 	}
@@ -732,6 +735,7 @@ gen.implexVar = function(gen, pro = 0, onlyNewAnc = F, genNo = -1, ...)# check =
 	if(is.null(dim(tableau))) tableau <- t(as.matrix(tableau))
 	tableau = data.frame(apply(tableau, 1, var) * facteurCorr)
 	dimnames(tableau)[[1]] <- as.character(genNo)
+	dimnames(tableau)[[2]] <- "implex.var"
 	return(tableau)
 }
 
@@ -891,7 +895,7 @@ gen.occ = function(gen, pro = 0, ancestors = 0, typeOcc = "IND", ...) # check = 
 	#}
 	#Les probands sont consideres individuellement
 	#Les probands sont divises en groupe
-	if(is(pro, "GLgroupe")) {
+	if(is(pro, "GLgroup")) {
 		occurences <- matrix(0, nrow = length(ancestors), ncol = length(pro))
 		for(i in 1:length(pro))
 			occurences[, i] <- GLPrivOcc(gen, pro = pro[[i]], ancestors = ancestors)
@@ -1258,7 +1262,7 @@ gen.rec = function(gen, pro = 0, ancestors = 0, ...) #, check = 1
 		pro = retour$pro
 		ancestors = retour$ancestors
 	#}
-	if(is(pro, "GLgroupe")) {
+	if(is(pro, "GLgroup")) {
 		nombreAncetre <- length(ancestors)
 		nombreGroupe <- length(pro)
 		rec <- matrix(0, nrow = nombreAncetre, ncol = nombreGroupe)
@@ -1300,7 +1304,7 @@ gen.meangendepthVar = function(gen, pro = 0, type = "MEAN", ...)#, check = 1, na
 #		}
 		if(type == "IND")
 			dimnames(tableau)[[1]] <- as.character(paste("Ind", as.character(pro)))
-		dimnames(tableau)[[2]] <- "Exp.Gen.Depth"
+		dimnames(tableau)[[2]] <- "Mean.Gen.Depth"
 		return(tableau)
 	}
 	else if(type == "MEAN")

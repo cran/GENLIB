@@ -22,12 +22,12 @@
 \code{\link{gen.phiMean}}
 }
 \examples{
- \donttest{
-  data(genea140)
-  gen140<-gen.genealogy(genea140)
-  ge07<-gen.branching(gen140, pro=gen.pro(gen140)[c(1:7)])
-  phiMat<-gen.phi(ge07)
-  gen.phiCI(phiMat)
- }
+\donttest{
+data(genea140)
+gen140<-gen.genealogy(genea140)
+ge07<-gen.branching(gen140, pro=gen.pro(gen140)[c(1:7)])
+phiMat<-gen.phi(ge07)
+gen.phiCI(phiMat)
+}
 }
 \keyword{manip}

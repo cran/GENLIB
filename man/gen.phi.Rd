@@ -41,7 +41,9 @@ legend("topright", legend=c("Individuals 1 and 2", "Individuals 2 and 29"),lty=c
 }
 \references{
 Malecot G. (1948) Les mathematiques de l'heredite. Paris: Masson, p 65.
+
 Thompson EA. (1986) Pedigree Analysis in Human Genetics. Baltimore, MD, USA: Johns Hopkins University Press, p 25.
+
 Karigl G. (1981) A recursive algorithm for the calculation of identity coefficients. Ann Hum Genet 45:299-305.
 }
 \keyword{manip}

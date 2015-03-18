@@ -1,7 +1,7 @@
 Package: GENLIB
 Type: Package
 Title: Genealogical Data Analysis
-Version: 1.0.3
+Version: 1.0.4
 Date: 2015-03-18
 Authors@R: c( person("Louis",			"Houde", 		role="aut"),
 		    person("Jean-Francois",	"Lefebvre",	role="aut", email="jf_lef@yahoo.ca"),
@@ -16,7 +16,7 @@ Depends: R (>= 3.1.0), Rcpp (>= 0.9.10)
 Imports: kinship2, methods, bootstrap, Matrix, lattice, quadprog,
         foreach, parallel, doParallel
 LinkingTo: Rcpp
-Packaged: 2015-03-20 13:30:07 UTC; sainte-justine\lefjea01
+Packaged: 2015-04-20 19:48:46 UTC; sainte-justine\lefjea01
 Author: Louis Houde [aut],
   Jean-Francois Lefebvre [aut],
   Valery Roy-Lagace [aut],
@@ -25,6 +25,5 @@ Author: Louis Houde [aut],
   Marie-Helene Roy-Gagnon [cre]
 Maintainer: Marie-Helene Roy-Gagnon <mroygagn@uottawa.ca>
 NeedsCompilation: yes
-X-CRAN-Comment: Version 1.0 was removed for copyright violation.
 Repository: CRAN
-Date/Publication: 2015-03-20 18:02:50
+Date/Publication: 2015-04-21 07:54:37

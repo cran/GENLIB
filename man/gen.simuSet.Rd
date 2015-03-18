@@ -13,21 +13,33 @@
 \item{pro}{Vector of proband id numbers to be included. Required.}
 \item{ancestors}{Vector of ancestors id numbers to be included. Required.}
 \item{stateAncestors}{Required vector indicating, for each ancestor in ancestors, the genotype state:
+
 	0 = no disease allele present
+
 	1 = 1 disease allele present
+
 	2 = 2 disease alleles present}
-\item{probMatrix}{Matrix of transmission probabilities of 0, 1, or 2 disease alleles. Deafult is:
+\item{probMatrix}{Matrix of transmission probabilities of 0, 1, or 2 disease alleles. Default is:
+
 	 [,1] [,2] [,3] [,4] [,5] [,6] [,7] [,8] [,9] [,10] [,11] [,12]
+
 [1,]  1.0 0.50    0    1 1.00  1.0  1.0 0.50    0     1  1.00   1.0
+
 [2,]  0.5 0.25    0    1 0.75  0.5  0.5 0.25    0     1  0.75   0.5
+
 [3,]  0.0 0.00    0    1 0.50  0.0  0.0 0.00    0     1  0.50   0.0
+
 	where rows are genotype states (0,1,2) for the father and columns are states for the mother (in blocks of 3).
+
 	1st block (col 1-3) are the probabilities of transmitting 0 allele to a son.
+
 	2nd block (col 4-6) are the probabilities of transmitting 1 allele to a son.
+
 	3rd block (col 7-9) are the probabilities of transmitting 0 allele to a daughter.
+
 	4th block (col 10-12) are the probabilities of transmitting 1 allele to a daughter.
 }
-\item{simulNo}{Number of simulations to perform. Deafult is 5000.}
+\item{simulNo}{Number of simulations to perform. Default is 5000.}
 }
 \value{A matrix with number of columns equal to the number of simulations and number of rows equal to the number of probands.}
 \seealso{

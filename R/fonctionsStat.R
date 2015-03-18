@@ -23,12 +23,12 @@ gen.fCI = function(vectF, prob = c(0.025, 0.05, 0.95, 0.975), b = 5000, print.it
 		#drop(boot.ci(boot(x, mean, R=b), prob)$bca)
 		#limits.bca(bootstrap(x, mean, B = b, trace = pprogress), prob))
 	}
-	if(!is.null(groupe(vectF))) {
-		#Validation si tous les groupes sont de meme taille
-		tai = sapply(groupe(vectF), length)
+	if(!is.null(group(vectF))) {
+		#Validation si tous les groups sont de meme taille
+		tai = sapply(group(vectF), length)
 		if(any(tai <= 1))
 			stop("Invalid parameter: groups in matricephi must all contain at least 2 probands")
-			#stop("Parametre invalide: Les groupes contenus dans matricephi doivent tous inclure au moins 2 probands")
+			#stop("Parametre invalide: Les groups contenus dans matricephi doivent tous inclure au moins 2 probands")
 	}
 	#Test pour accelerer la procedure
 	nam <- sapply(prob * 100, function(x)	paste(x, "%", collapse = "1", sep = ""))
@@ -51,17 +51,17 @@ gen.phiCI = function(phiMatrix, prob = c(0.025, 0.05, 0.95, 0.975), b = 5000, pr
 		print.it = retour$print.it
 		named = retour$named
 	#}
-	#Si les groupe sont petits et s'ils ne sont pas de meme taille, une erreur se produit 
+	#Si les groups sont petits et s'ils ne sont pas de meme taille, une erreur se produit 
 	##Il faut verifier avec Louis
-	if(!is.null(groupe(matricephi))) {
-		#Validation si tous les groupes sont de meme taille
-		tai = sapply(groupe(matricephi), length)
+	if(!is.null(group(matricephi))) {
+		#Validation si tous les groups sont de meme taille
+		tai = sapply(group(matricephi), length)
 		if(any(tai <= 2))
 			stop("Invalid 'matricephi' parameter: groups in 'matricephi' must all contain at least 3 probands")
-			#stop("Param\350tre 'matricephi' invalide: Les groupes contenus dans 'matricephi' doivent tous inclure au moins 3 probands")
+			#stop("Param\350tre 'matricephi' invalide: Les groups contenus dans 'matricephi' doivent tous inclure au moins 3 probands")
 		if(any(tai != tai[1]))
 			stop("Invalid 'matricephi' parameter: all groups in 'matricephi' must be the same size")
-			#stop("Param\350tre 'matricephi' invalide: Les groupes contenus dans 'matricephi' doivent tous etre de la meme taille")
+			#stop("Param\350tre 'matricephi' invalide: Les groups contenus dans 'matricephi' doivent tous etre de la meme taille")
 	}
 	FUN <- function(x, pprogress, b, prob)
 	{

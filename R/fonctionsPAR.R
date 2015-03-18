@@ -15,8 +15,8 @@
 #  
 #  - gen -> the genealogy
 #  - individuals -> the individuals to consider
-#  - NbProcess -> Number of process to use when running this function. default=detectCores()-1
-gen.findMRCA <- function(gen, individuals, NbProcess=detectCores()-1)
+#  - NbProcess -> Number of process to use when running this function. default=parallel::detectCores()-1
+gen.findMRCA <- function(gen, individuals, NbProcess=parallel::detectCores()-1)
 {
  retour = tryCatch({
  # create the processes
@@ -86,7 +86,7 @@ gen.getAncestorsPAR <- function(gen, pro) {
 
 
 #####
-gen.findFounders <- function(gen, individuals, NbProcess=detectCores()-1) {
+gen.findFounders <- function(gen, individuals, NbProcess=parallel::detectCores()-1) {
  retour = tryCatch({
  
  NbProcess = min(length(individuals),NbProcess)

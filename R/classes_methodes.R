@@ -2,7 +2,7 @@
 #1-CG
 #2-F
 #3-GLgen
-#4-GLgroupe
+#4-GLgroup
 #5-GLmultiArray4
 #6-GLmultiMatrix
 #7-GLmultiNumber
@@ -10,14 +10,14 @@
 #9-GLnoone
 #10-GLmultiPhi
 #######
-#OBJET GLgroupe
+#OBJET GLgroup
 #
 #Objet qui represente un ensemble de proband dans different groupe
 #Chaque etement de la liste est le nom d'un groupe avec le no du proband
-setClass("GLgroupe",representation(), contains="list")
+setClass("GLgroup",representation(), contains="list")
 #Methode Length correct
 
-setMethod("show","GLgroupe",function(object){
+setMethod("show","GLgroup",function(object){
 		#Affiche les donnees concernant les groupes
 		lapply(1:length(object),function(x,obj) 
 		{		 	
@@ -26,40 +26,40 @@ setMethod("show","GLgroupe",function(object){
 		},obj=object)
 })
 
-setMethod("[","GLgroupe", function(x,...,drop){
+setMethod("[","GLgroup", function(x,...,drop){
 	#Subscript qui ne change pas la classe c'est tout
 	x<-as(x,"list")
 	ret <- x[...,drop=drop]
-	class(ret)<-"GLgroupe"
+	class(ret)<-"GLgroup"
 	ret
 })
 
 #CG
-setClass("GLCGMatrixGroupSingle",representation(groupe="GLgroupe",grindice="list"), contains="matrix")  #Une depth
+setClass("GLCGMatrixGroupSingle",representation(group="GLgroup",grindex="list"), contains="matrix")  #Une depth
 # la matrice est dans le sens [proband, ancestor]
 
 #FONCTION VIRTUELLE ASSOCIE
-#if (isGeneric("groupe")==F)  groupe <- function(x){x@groupe}
+#if (isGeneric("group")==F)  group <- function(x){x@group}
 
-setGeneric("groupe",function(x) standardGeneric("groupe") )
-setMethod("groupe","GLCGMatrixGroupSingle",function(x) x@groupe )
+setGeneric("group",function(x) standardGeneric("group") )
+setMethod("group","GLCGMatrixGroupSingle",function(x) x@group )
 
 #setMethod("Dim","GLCGMatrixGroupSingle",function(object, ...){
 Dim <- function(object, ...) {
 	param <- list(...)
 	if (!is.null(param$drop) && param$drop==F){	
-		#Dans ce cas, groupe seulement
-		c(length(object@groupe),dim(object)[2])
+		#Dans ce cas, group seulement
+		c(length(object@group),dim(object)[2])
 	}else{	
 		#Dans ce cas, ces les phi moyen...
-		c(length(object@groupe),dim(object)[2])
+		c(length(object@group),dim(object)[2])
 	}
 }#)
 
 setMethod("show","GLCGMatrixGroupSingle",function(object){
 	#S'assure de toujours affiche une matrice et non un vecteur...
-	xgrindice <- object@grindice
-	xgroupe   <- object@groupe
+	xgrindex <- object@grindex
+	xgroupe   <- object@group
 	x <- unclass(object) 						
 	z=GLapplyCG(object,mean)
 	dim(z)<-c(length(xgroupe),dim(x)[2])
@@ -78,7 +78,7 @@ setMethod("Ops","GLCGMatrixGroupSingle",function(e1,e2=NULL){
 })
 
 setReplaceMethod("[","GLCGMatrixGroupSingle",function(x,...,value){
-	stop("\nYou can not directly modify a GLCGMatrixGroupSingle object\nYou must create a new object using gen.cggroupe()")
+	stop("\nYou can not directly modify a GLCGMatrixGroupSingle object\nYou must create a new object using gen.gc()")
 	#stop("\nVous ne pouvez pas faire de modification directement sur un GLCGMatrixGroupSingle\nVous devez recreer un nouvel objet a l'aide de gen.cggroupe()")
 })
 
@@ -97,35 +97,35 @@ setMethod("Summary","GLCGMatrixGroupSingle",function(x, ..., na.rm = F){
 #DECLARATION DES NOUVELLES FONCTION GENERIQUE (DUPPLIQUE POUR EVITE ERREUR)
 #if (isGeneric("depth")==F) 
 #setGeneric("depth",function(x) standardGeneric("depth") )
-#if (isGeneric("groupe")==F)     
-#setGeneric("groupe",function(x){ methods::standardGeneric("groupe") })
+#if (isGeneric("group")==F)     
+#setGeneric("group",function(x){ methods::standardGeneric("group") })
 
 
 #class d'inpiration : 
 setClass("GLmultiVector",representation(depth="integer"), contains="matrix")
-setClass("GLmultiFGroup",representation(groupe="GLgroupe",grindice="list"), contains="GLmultiVector") #Plusieur depth
-setClass("GLmultiFGroupSingle",representation(groupe="GLgroupe",grindice="list"), contains="matrix")  #Une depth
+setClass("GLmultiFGroup",representation(group="GLgroup",grindex="list"), contains="GLmultiVector") #Plusieur depth
+setClass("GLmultiFGroupSingle",representation(group="GLgroup",grindex="list"), contains="matrix")  #Une depth
 
 #Fonctions virtuelles associees (jusqu'ici pas necessaire)
-setMethod("groupe","GLmultiFGroup"      ,function(x) x@groupe)
-setMethod("groupe","GLmultiFGroupSingle",function(x) x@groupe)
+setMethod("group","GLmultiFGroup"      ,function(x) x@group)
+setMethod("group","GLmultiFGroupSingle",function(x) x@group)
 
 setMethod("Dim","GLmultiFGroup",function(object, ...){	
 	z=dim(object)	
-	c(z[length(z)],length(object@groupe))
+	c(z[length(z)],length(object@group))
 })
 
 setMethod("Dim","GLmultiFGroupSingle",function(object, ...){
-	c(length(object@groupe))
+	c(length(object@group))
 })
 
 setMethod("show","GLmultiFGroup",function(object){
-	#Affiche les donnees sur le groupes
+	#Affiche les donnees sur le group
 	show(GLapplyF(object,mean,named=T))
 })
 
 setMethod("show","GLmultiFGroupSingle",function(object){
-	#Affiche les donnees sur le groupes
+	#Affiche les donnees sur le group
 	show(GLapplyF(object,mean,named=T))
 })
 
@@ -186,13 +186,13 @@ setMethod("Summary","GLmultiFGroup",function(x, ..., na.rm = F){
 #if (isGeneric("depth")==F)
 #	setGeneric("depth",function(x) standardGeneric("depth") )
 	
-#if (isGeneric("groupe")==F)
-#	setGeneric("groupe",function(x) standardGeneric("groupe") )
+#if (isGeneric("group")==F)
+#	setGeneric("group",function(x) standardGeneric("group") )
 
 setGeneric("depth",function(x) standardGeneric("depth") )
 
 setMethod("depth","ANY",function(x) {NULL})
-setMethod("groupe","ANY",function(x) {NULL})
+setMethod("group","ANY",function(x) {NULL})
 
 setClass("GLgen",representation(.Data="integer",Date="character"),
 	validity=	function(object){
@@ -754,7 +754,7 @@ setReplaceMethod("[","GLmultiVector",function(x,...,value){
 GLnoone <- -999
 class(GLnoone) <- "GLnothing"
 ##########################################################################################
-#Definition des classes servant a contenir et gerer l'information du phi moyen par groupe
+#Definition des classes servant a contenir et gerer l'information du phi moyen par group
 #
 #1-GLmultiPhiGroupSingle
 #2-GLmultiPhiGroup
@@ -766,59 +766,59 @@ class(GLnoone) <- "GLnothing"
 
 
 #class d'inspiration : setClass("GLmultiMatrix",representation("array",depth="integer"))
-setClass("GLmultiPhiGroup",representation(groupe="GLgroupe",grindice="list"), contains="GLmultiMatrix") #Plusieurs depths
-setClass("GLmultiPhiGroupSingle",representation(groupe="GLgroupe",grindice="list"), contains="matrix")  #Une depth
+setClass("GLmultiPhiGroup",representation(group="GLgroup",grindex="list"), contains="GLmultiMatrix") #Plusieurs depths
+setClass("GLmultiPhiGroupSingle",representation(group="GLgroup",grindex="list"), contains="matrix")  #Une depth
 
 #FONCTION VIRTUELLE ASSOCIeE (jusqu'ici pas necessaire)
 
-setMethod("groupe","GLmultiPhiGroup",function(x) x@groupe)
+setMethod("group","GLmultiPhiGroup",function(x) x@group)
 
-setMethod("groupe","GLmultiPhiGroupSingle",function(x) x@groupe)
+setMethod("group","GLmultiPhiGroupSingle",function(x) x@group)
 
 setMethod("Dim","GLmultiPhiGroup",function(object, ...){	
 	param <- list(...)
 	if (!is.null(param$drop) && param$drop==F){	
-		#Dans ce cas, groupe seulement
+		#Dans ce cas, group seulement
 		z=dim(object)	
-		c(z[length(z)],length(object@groupe))
+		c(z[length(z)],length(object@group))
 	}else{
-		#Dans ce cas, ces les groups par groupes
+		#Dans ce cas, ces les groups par group
 		z=dim(object)	
-		c(z[length(z)],length(object@groupe),length(object@groupe))
+		c(z[length(z)],length(object@group),length(object@group))
 	}
 })
 
 setMethod("Dim","GLmultiPhiGroupSingle",function(object, ...){
 	param <- list(...)
 	if (!is.null(param$drop) && param$drop==F){	
-		#Dans ce cas, groupe seulement
-		c(length(object@groupe))
+		#Dans ce cas, group seulement
+		c(length(object@group))
 	}else{	
-		#Dans ce cas, ces les groups par groupes
-		c(length(object@groupe),length(object@groupe))
+		#Dans ce cas, ce sont les groups par group
+		c(length(object@group),length(object@group))
 	}
 })
 
 setMethod("show","GLmultiPhiGroup",function(object){
 		depth 		<- object@depth
-		xgrindice <- object@grindice
-		xgroupe   <- object@groupe		
+		xgrindex <- object@grindex
+		xgroupe   <- object@group		
 		object 	<- as(object,"array")		
-		lapply(1:length(depth),function(x,obj,depth,xgroupe,xgrindice){
+		lapply(1:length(depth),function(x,obj,depth,xgroupe,xgrindex){
 		 	cat("depth : ",depth[x],"\n")
 		
-			m <- GLapplyGroup(obj[,,x],xgrindice,gen.phiMean,check=0,named=F)
+			m <- GLapplyGroup(obj[,,x],xgrindex,gen.phiMean,check=0,named=F)
 			dimnames(m) <- list(names(xgroupe),names(xgroupe))
 			prmatrix(m)
 
 			cat("\n")
-		},obj=object,depth=depth,xgroupe=xgroupe,xgrindice=xgrindice)
+		},obj=object,depth=depth,xgroupe=xgroupe,xgrindex=xgrindex)
 })
 
 setMethod("show","GLmultiPhiGroupSingle",function(object){
 	#Affiche les donnees concernant une genealogie	
-	m <- GLapplyGroup(as(object,"matrix",strict=T),object@grindice,gen.phiMean,check=0,named=F)
-	dimnames(m) <- list(names(object@groupe),names(object@groupe))
+	m <- GLapplyGroup(as(object,"matrix",strict=T),object@grindex,gen.phiMean,check=0,named=F)
+	dimnames(m) <- list(names(object@group),names(object@group))
 	prmatrix(m)
 })
 

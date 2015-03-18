@@ -1,4 +1,4 @@
-\name{Classes of GLgroupe handling}
+\name{Classes of GLgroup handling}
 \Rdversion{1.1}
 \docType{class}
 \alias{GLmultiPhiGroup-class}
@@ -27,29 +27,29 @@
 }
 \section{Objects from the Class}{
 Objects can be created by calls of the form \cr
-\code{new("GLmultiPhiGroup", MatriceCG, groupe = 'GLgroupe', grindice = 'list')} \cr
-\code{new("GLmultiPhiGroupSingle", MatriceCG, groupe = 'GLgroupe', grindice = 'list')} \cr
-\code{new("GLmultiFGroup", MatriceCG, groupe = 'GLgroupe', grindice = 'list')} \cr
-\code{new("GLmultiFGroupSingle", MatriceCG, groupe = 'GLgroupe', grindice = 'list')} \cr
-\code{new("GLCGMatrixGroupSingle", MatriceCG, groupe = 'GLgroupe', grindice = 'list')}
+\code{new("GLmultiPhiGroup", MatriceCG, group = 'GLgroup', grindex = 'list')} \cr
+\code{new("GLmultiPhiGroupSingle", MatriceCG, group = 'GLgroup', grindex = 'list')} \cr
+\code{new("GLmultiFGroup", MatriceCG, group = 'GLgroup', grindex = 'list')} \cr
+\code{new("GLmultiFGroupSingle", MatriceCG, group = 'GLgroup', grindex = 'list')} \cr
+\code{new("GLCGMatrixGroupSingle", MatriceCG, group = 'GLgroup', grindex = 'list')}
 
 }
 \section{Slots}{
   \describe{
     GLCGMatrixGroupSingle, GLmultiFGroupSingle, GLmultiPhiGroupSingle
     \item{\code{.Data}:}{Object of class \code{"matrix"} }
-    \item{\code{groupe}:}{Object of class \code{"GLgroupe"} }
-    \item{\code{grindice}:}{Object of class \code{"list"} containing the indices of the probands of 'groupe' }
+    \item{\code{group}:}{Object of class \code{"GLgroup"} }
+    \item{\code{grindex}:}{Object of class \code{"list"} containing the indices of the probands of 'group' }
     
     GLmultiPhiGroup :
     \item{\code{.Data}:}{Object of class \code{"GLmultiMatrix"} }
-    \item{\code{groupe}:}{Object of class \code{"GLgroupe"} }
-    \item{\code{grindice}:}{Object of class \code{"list"} containing the indices of the probands of 'groupe' }
+    \item{\code{group}:}{Object of class \code{"GLgroup"} }
+    \item{\code{grindex}:}{Object of class \code{"list"} containing the indices of the probands of 'group' }
     
     GLmultiFGroup :
     \item{\code{.Data}:}{Object of class \code{"GLmultiVector"} }
-    \item{\code{groupe}:}{Object of class \code{"GLgroupe"} }
-    \item{\code{grindice}:}{Object of class \code{"list"} containing the indices of the probands of 'groupe' }
+    \item{\code{group}:}{Object of class \code{"GLgroup"} }
+    \item{\code{grindex}:}{Object of class \code{"list"} containing the indices of the probands of 'group' }
   }
 }
 \section{Extends}{
@@ -62,7 +62,7 @@ Class \code{"\linkS4class{vector}"}, by class "matrix", distance 4, with explici
   \describe{
     \item{[<-}{\code{signature(x = "GLCGMatrixGroupSingle", i = "ANY", j = "ANY", value = "ANY")}: ... }
     \item{[}{\code{signature(x = "GLCGMatrixGroupSingle", i = "ANY", j = "ANY", drop = "ANY")}: ... }
-    \item{groupe}{\code{signature(x = "GLCGMatrixGroupSingle")}: ... }
+    \item{group}{\code{signature(x = "GLCGMatrixGroupSingle")}: ... }
 	 }
 }
 \examples{

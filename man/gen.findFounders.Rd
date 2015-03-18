@@ -2,11 +2,11 @@
 \alias{gen.findFounders}
 \title{Find common founder ancestors}
 \description{Returns all the ancestors that are founders for specified individuals in the genealogy.}
-\usage{gen.findFounders(gen, individuals, NbProcess=detectCores()-1)}
+\usage{gen.findFounders(gen, individuals, NbProcess=parallel::detectCores()-1)}
 \arguments{
 \item{gen}{An object of class GLgen obtained with gen.genealogy, gen.lineages or gen.branching. Required.}
 \item{individuals}{Vector of individual id numbers for which to find the founders. Required}
-\item{NbProcess}{Number of processes to use when running this function. Default=detectCores()-1}
+\item{NbProcess}{Number of processes to use when running this function. Default=parallel::detectCores()-1}
 }
 \value{A vector of integers}
 \note{Uses slave processes to make the search faster. Those slave processes launch the function gen.getFoundersMPI.}
@@ -30,9 +30,9 @@ gen2<-gen.branching(gen140,pro=c(409033,408728))
 all_founders<-gen.founder(gen2) 
 length(all_founders)
 
- \donttest{
-  all_commonFounders<-gen.findFounders(gen140, individuals=c(409033,408728), NbProcess = 1)
-  length(all_commonFounders) \dontrun{127 founders common to #409033 and #408728}
- }
+\donttest{
+all_commonFounders<-gen.findFounders(gen140, individuals=c(409033,408728), NbProcess = 1)
+length(all_commonFounders) \dontrun{127 founders common to #409033 and #408728}
+}
 }
 \keyword{manip}

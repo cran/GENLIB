@@ -2,11 +2,11 @@
 \alias{gen.findMRCA}
 \title{Finding most recent common ancestors, MRCAs}
 \description{Returns MRCAs of pairs of specified individuals and the distance (number of meioses) between individuals through the MRCAs.}
-\usage{gen.findMRCA(gen, individuals, NbProcess=detectCores()-1)}
+\usage{gen.findMRCA(gen, individuals, NbProcess=parallel::detectCores()-1)}
 \arguments{
 \item{gen}{An object of class GLgen obtained with gen.genealogy, gen.lineages or gen.branching. Required.}
 \item{individuals}{Vector of individual id numbers for which to find the MRCAs. Required}
-\item{NbProcess}{Number of processes to use when running this function. Default=detectCores()-1}
+\item{NbProcess}{Number of processes to use when running this function. Default=parallel::detectCores()-1}
 }
 \value{returns a matrix}
 \note{This function uses the parallel programming functions of foreach, snow and doSNOW for launching several processes.}
