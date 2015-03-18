@@ -2,13 +2,14 @@
 	Fichier qui contient les fonctions très spécifique au hardware
 
 
+\contributor Jean-François Lefebvre
 
   ***********************************/
 #include "hal.h"
 #include <time.h>	
 
 /* VERSION WINDOWS  */
-#ifdef _WIN32
+#if defined _WIN32 || defined _WIN64
 	/*#define _CRTDBG_MAP_ALLOC
 	#include<stdio.h>
 	#include<stdlib.h>

@@ -2,12 +2,11 @@
 \alias{gen.branching}
 \title{Genealogy subset}
 \description{Creates an object of class GLgen from an existing GLgen object by selecting specified individuals.}
-\usage{gen.branching( gen, pro = 0, ancestors = gen.founder(gen), check = 1, bflag = 0)}
+\usage{gen.branching( gen, pro = 0, ancestors = gen.founder(gen), bflag = 0)}
 \arguments{
 \item{gen}{An object of class GLgen obtained with gen.genealogy, gen.lineages or gen.branching. Required.}
 \item{pro}{Vector of proband id numbers to be included. Default is 0, which will select all individuals without children.}
 \item{ancestors}{Vector of ancestors id numbers to be included. Default includes all founders in the original GLgen object.}
-\item{check}{If check=1 (default), all parameters are validated.}
 \item{bflag}{If set to 0 (default and recommended), probands and founders are filtered to quicken the calculations.}
 }
 \value{returns a GLgen object}

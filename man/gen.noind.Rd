@@ -2,10 +2,9 @@
 \alias{gen.noind}
 \title{Number of individuals}
 \description{Returns the number of individuals included in the genealogy}
-\usage{gen.noind( gen, check = "1")}
+\usage{gen.noind( gen)}
 \arguments{
 \item{gen}{An object of class GLgen obtained with gen.genealogy, gen.lineages or gen.branching. Required.}
-\item{check}{If check=1 (default), all parameters are validated.}
 }
 \value{returns a vector of integer}
 \seealso{

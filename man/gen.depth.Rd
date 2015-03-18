@@ -12,7 +12,7 @@
 \code{\link{gen.min}}
 \code{\link{gen.mean}}
 \code{\link{gen.min}}
-\code{\link{gen.entropy}}
+\code{\link{gen.meangendepth}}
 }
 \examples{
 data(geneaJi) 

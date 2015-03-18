@@ -1,11 +1,12 @@
 /***************************
 	Fichier qui contient les fonctions très spécifique au hardware
+\contributor Jean-François Lefebvre
   ***********************************/
 #ifndef GENLIBHAL
 #define GENLIBHAL
 #define WIN32_LEAN_AND_MEAN 
 
-#ifdef _WIN32
+#if defined _WIN32 || defined _WIN64
  #include <Rcpp.h>
  #include <Windows.h>
 #else
@@ -26,7 +27,7 @@ int CSema_destroy(CSema& Semaphore);
 
 //FONCTION POUR LE MULTITHREAD
 
-#ifdef WIN32
+#if defined _WIN32 || defined _WIN64
 	#define THREADRETURN DWORD WINAPI  	//unsigned int
 	#define THREADONEXIT return 0;
 #else	

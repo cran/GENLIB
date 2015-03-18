@@ -10,7 +10,8 @@
 \item{statePro}{Required vector indicating, for each proband in pro, the probability to be calculated:
 	0 = no disease allele is transmitted
 	1 = 1 disease allele is transmitted
-	2 = 2 disease alleles are transmitted}
+	2 = 2 disease alleles are transmitted
+	3 = 1 or 2 disease alleles are transmitted}
 \item{ancestors}{Vector of ancestors id numbers to be included. Required.}
 \item{stateAncestors}{Required vector indicating, for each ancestor in ancestors, the genotype state:
 	0 = no disease allele present
@@ -26,7 +27,6 @@
  	the probability that, 0, 1, ..., and all probands inherit the specified number of disease alleles.
 }
 \seealso{
-
 \code{\link{gen.genealogy}}
 \code{\link{gen.simuSample}}
 \code{\link{gen.simuSet}}

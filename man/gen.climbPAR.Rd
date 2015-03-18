@@ -1,8 +1,8 @@
-\name{gen.grimperPAR}
-\alias{gen.grimperPAR}
+\name{gen.climbPAR}
+\alias{gen.climbPAR}
 \title{Internal function used by gen.findMRCA}
-\description{gen.grimperPAR is an internal function used by gen.findMRCA.}
-\usage{gen.grimperPAR(gen, individuals, founder)}
+\description{gen.climbPAR is an internal function used by gen.findMRCA.}
+\usage{gen.climbPAR(gen, individuals, founder)}
 \arguments{
 \item{gen}{The genealogy to consider.}
 \item{individuals}{probands to consider}

@@ -4,6 +4,7 @@
 Interface de toutes les fonctions qui sont d'un intéret général pour chaque menu
 
 \author Sébastien Leclerc
+\contributor Jean-Francois Lefebvre
 */
 
 #ifndef GENOUTILS

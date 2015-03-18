@@ -2,11 +2,10 @@
 \alias{gen.half.founder}
 \title{Get half-founder id numbers}
 \description{Returns the id numbers of the half-founders. Half-founders are defined as the individuals with only one founder parent in the genealogy.}
-\usage{gen.half.founder( gen, check = "1", ...)}
+\usage{gen.half.founder( gen, ...)}
 \arguments{
 \item{gen}{An object of class GLgen obtained with gen.genealogy, gen.lineages or gen.branching. Required.}
-\item{check}{If check=1 (default), all parameters are validated.}
-\item{...}{Additionnal arguments to be passed to methods.}
+\item{...}{Option to pass additionnal arguments automaticaly between methods. Internal use only.}
 }
 \value{returns a vector of integer}
 \seealso{

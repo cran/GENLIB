@@ -1,15 +1,14 @@
-\name{gen.entropy}
-\alias{gen.entropy}
-\title{Genelogical entropy (expected genealogical depth)}
-\description{Returns the expected genealogical depth, a measure of genealogical entropy.}
-\usage{gen.entropy( gen, pro = "0", type = "MEAN", check = "1", ...)}
+\name{gen.meangendepth}
+\alias{gen.meangendepth}
+\title{Expected Genealogical Depth)}
+\description{Returns the expected genealogical depth.}
+\usage{gen.meangendepth( gen, pro = "0", type = "MEAN", ...)}
 \arguments{
 \item{gen}{An object of class GLgen obtained with gen.genealogy, gen.lineages or gen.branching. Required.}
 \item{pro}{Vector of proband id numbers to be included. Default is 0, which will select all individuals without children.}
-\item{type}{If type="MEAN" (default), mean entropy over all specified probands is calculated.
-	If type="IND", entropy is calculated for each specified proband.}
-\item{check}{If check=1 (default), all parameters are validated.}
-\item{...}{Additionnal arguments to be passed to methods.}
+\item{type}{If type="MEAN" (default), mean genealogical depth over all specified probands is calculated.
+	If type="IND", mean genealogical depth is calculated for each specified proband.}
+\item{...}{Option to pass additionnal arguments automaticaly between methods. Internal use only.}
 }
 \value{A data frame with only one numeric value when type is "MEAN".
 	  When type is "IND", the number of rows equals the number of probands specified.}
@@ -25,15 +24,15 @@
 \examples{
 data(geneaJi) 
 genJi<-gen.genealogy(geneaJi) 
-gen.entropy(genJi)
-gen.entropy(genJi, type="IND")
+gen.meangendepth(genJi)
+gen.meangendepth(genJi, type="IND")
 
 
 data(genea140) 
 gen140<-gen.genealogy(genea140) 
-gen.entropy(gen140)
-gen.entropy(gen140, pro=c(454422, 676521, 677273, 717537, 717634, 717709, 868572))
-gen.entropy(gen140, pro=c(454422, 676521, 677273, 717537, 717634, 717709, 868572), type="IND")
+gen.meangendepth(gen140)
+gen.meangendepth(gen140, pro=c(454422, 676521, 677273, 717537, 717634, 717709, 868572))
+gen.meangendepth(gen140, pro=c(454422, 676521, 677273, 717537, 717634, 717709, 868572), type="IND")
 
 }
 \references{

@@ -82,10 +82,10 @@ gen.simuProb = function(gen, pro, statePro, ancestors, stateAncestors, simulNo=5
 	#long* nSimul, double* pdRetConj,double* pdRetSimul,double* pdRetPro,long *PrintProgress)
 	.Call("SPLUSSimul", gen@.Data, pro, statePro, length(pro), ancestors, as.integer(stateAncestors), length(ancestors),
 						as.integer(simulNo), tmpconj, tmpsimul, tmppro, probRecomb, probSurvival, FALSE, specialsok = T)
-	v <- list(conj = tmpconj, simul = tmpsimul, atteint = tmppro)
+	v <- list(joint = tmpconj, marginal = tmpsimul, Nprobands = tmppro)
 	#if(named) {
-		names(v$simul) <- c(pro)
-		names(v$atteint) <- c(0:length(pro))
+		names(v$marginal) <- c(pro)
+		names(v$Nprobands) <- c(0:length(pro))
 	#}
 #	if(print.it) {
 #		argument <- c(deparse(substitute(gen)), deparse(substitute(pro)), deparse(substitute(statePro)), deparse(substitute(
@@ -162,8 +162,8 @@ gen.simuSample = function(gen, pro, ancestors, stateAncestors, simulNo = 5000)#,
 #		stop("Invalid parameter: print.it and named must be logical values")
 #		#stop("Parametre invalide: print.it et named doivent etre des valeurs logiques")
 #
-#	#  J'ai aucune idée pourquoi c'est mis en liste surtout que ça cause plein de problème coté C++ !
-#	#  faique d'la marde, ça redevient un vecteur d'entier.
+#	#  J'ai aucune idee pourquoi c'est mis en liste surtout que ca cause plein de probleme cote C++ !
+#	#  faique ca redevient un vecteur d'entier.
 #	#if(is(pro, "numeric"))
 #	#	pro = list(pro)
 #	

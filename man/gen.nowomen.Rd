@@ -2,10 +2,9 @@
 \alias{gen.nowomen}
 \title{Number of women}
 \description{Returns the number of women included in the genealogy}
-\usage{gen.nowomen( gen, check = "1")}
+\usage{gen.nowomen( gen)}
 \arguments{
 \item{gen}{An object of class GLgen obtained with gen.genealogy, gen.lineages or gen.branching. Required.}
-\item{check}{If check=1 (default), all parameters are validated.}
 }
 \value{returns a vector of integer}
 \seealso{

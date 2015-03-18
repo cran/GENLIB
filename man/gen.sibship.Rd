@@ -2,13 +2,12 @@
 \alias{gen.sibship}
 \title{Get id numbers of siblings}
 \description{Returns the id numbers of the siblings of specified individuals.}
-\usage{gen.sibship( gen, individuals, halfSibling = "T", check = "1", ...)}
+\usage{gen.sibship( gen, individuals, halfSibling = "T", ...)}
 \arguments{
 \item{gen}{An object of class GLgen obtained with gen.genealogy, gen.lineages or gen.branching. Required.}
 \item{individuals}{Vector of individual id numbers. Required.}
 \item{halfSibling}{If halfSibling="T" (default) then ids of halfsiblings are also returned. halfSibling="F" returns only full sibling ids.}
-\item{check}{If check=1 (default), all parameters are validated.}
-\item{...}{Additionnal arguments to be passed to methods.}
+\item{...}{Option to pass additionnal arguments automaticaly between methods. Internal use only.}
 }
 \value{returns a vector of integer}
 \seealso{

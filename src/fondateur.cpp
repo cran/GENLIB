@@ -3,6 +3,7 @@
 
 Calcul et Analyse de diverse valeur dérivé du gene fondateur
 
+
 \author Sébastien Leclerc 
 \contributor Jean-Francois Lefebvre
 */
@@ -35,6 +36,7 @@ Calcul et Analyse de diverse valeur dérivé du gene fondateur
 #include <Rcpp.h>
 #include <Rcpp/as.h>
 #include <Rcpp/Function.h>
+//#include <boost/random/random_device.hpp>
 
 #define R_NO_REMAP
 //using namespace std;
@@ -156,7 +158,6 @@ int simul(int* Genealogie, int* plProposant, int* plProEtat,int lNProposant, int
 	int ap,am;
 	//int *VecteurPosition=NULL;
 
-	
 	//INITIALISATION DE LA STRUCTURE DE NOEUD
 	for(i=0;i<lNIndividu;i++)
 	{
@@ -164,7 +165,6 @@ int simul(int* Genealogie, int* plProposant, int* plProEtat,int lNProposant, int
 		Noeud[i].etat=GENNONEXPLORER;
 		Noeud[i].bFlagSort=0;	   				
 	}
-	
 	
 	//identifier et etiqueter les proposant
 	for(i=0;i<lNProposant;i++)
@@ -188,8 +188,20 @@ int simul(int* Genealogie, int* plProposant, int* plProEtat,int lNProposant, int
 	memset(OrdreSaut,0,sizeof(int)*lNIndividu);
 	for(i=0;i<lNAncetre;i++)		
 		StartSortPrioriteArbre(NoeudAnc[i],Ordre,&NOrdre,OrdreSaut);
+	
+//	unsigned seed2 = time(0);
+//	std::mt19937 gen(seed2);
 
-	std::random_device rd;		// **chgt IGES**
+//	boost::random_device rd;
+//	std::random_device rd;		// **chgt IGES**
+//	std::mt19937 gen(rd());
+	
+	#if defined _WIN32 || defined _WIN64
+	  std::mt19937 gen(time(0));
+	#else
+//	  boost::random_device gen;
+	  std::random_device gen;
+	#endif
  	int nbannulee = 0;		// **chgt IGES**
  	int nbCasHomo = 0;		// **chgt IGES**
 
@@ -207,13 +219,14 @@ int simul(int* Genealogie, int* plProposant, int* plProEtat,int lNProposant, int
 		{
 			//croisement p/r au parent
 			//double iRandom =urand();
-			double iRandom = (double)rd()/(double)rd.max();		// pour le passage de l'allele.  **chgt IGES**
+			double iRandom = (double)gen()/(double)gen.max();
+			//double iRandom = (double)rd()/(double)rd.max();		// pour le passage de l'allele.  **chgt IGES**
 			
-			if (Ordre[i]->pere!=NULL)	ap=	Ordre[i]->pere->allele;		// Ordre=vecteur de ptr vers les elts tries. allelePere (ap)
-			else						ap=0;							// si pas de ptr, ap = 0.
+			if (Ordre[i]->pere!=NULL)	ap=	Ordre[i]->pere->allele;	// Ordre=vecteur de ptr vers les elts tries. allelePere (ap)
+			else						ap=0;					// si pas de ptr, ap = 0.
 			
-			if (Ordre[i]->mere!=NULL)	am=	Ordre[i]->mere->allele;		// alleleMere (am) existe et on l'attribe
-			else						am=0;							// existe pas donc am = 0.
+			if (Ordre[i]->mere!=NULL)	am=	Ordre[i]->mere->allele;	// alleleMere (am) existe et on l'attribe
+			else						am=0;					// existe pas donc am = 0.
 			
 			if (iRandom<TransGenCum[ap][am][0])
 			{
@@ -224,7 +237,7 @@ int simul(int* Genealogie, int* plProposant, int* plProEtat,int lNProposant, int
 			}
 			else
 			{
-				double alea    = (double)rd()/(double)rd.max();		// pour la recombinaison.  **chgt IGES**
+				double alea    = (double)gen()/(double)gen.max();//(double)rd()/(double)rd.max(); // pour la recombinaison.**chgt IGES**
 				int sex = Ordre[i]->sex;
 				if(alea < probRecomb[1]) // tx femme (plus élevé)
 				{
@@ -245,7 +258,7 @@ int simul(int* Genealogie, int* plProposant, int* plProEtat,int lNProposant, int
 					Ordre[i]->allele=2;
 					nbCasHomo++;
 					//Descendance conditionnelle aux nombre d'alleles recus
-					double alea2 = (double)rd()/(double)rd.max(); // 3e aleatoire pour determiner les cas homo
+					double alea2 = (double)gen()/(double)gen.max(); // 3e aleatoire pour determiner les cas homo
 					if(alea2 > probSurvieHomo){ simAnnulee = true; break; }
 				}
 			}
@@ -255,7 +268,11 @@ int simul(int* Genealogie, int* plProposant, int* plProEtat,int lNProposant, int
 			bConj=0;
 			for(int i=0;i<lNProposant;i++)
 			{
-				if ( (plProEtat[i]==0 && NoeudPro[i]->allele==0) || (plProEtat[i]!=0 && NoeudPro[i]->allele>=plProEtat[i]))
+//				if ( (plProEtat[i]==0 && NoeudPro[i]->allele==0) || (plProEtat[i]!=0 && NoeudPro[i]->allele>=plProEtat[i]))
+				if ( (plProEtat[i]==0 && NoeudPro[i]->allele==0) || 
+					(plProEtat[i]==1 && NoeudPro[i]->allele==1) ||
+					(plProEtat[i]==2 && NoeudPro[i]->allele==2) ||
+					(plProEtat[i]==3 && NoeudPro[i]->allele>=1) )
 				{
 					++ProCompteur[i];
 					++bConj;
@@ -275,6 +292,7 @@ int simul(int* Genealogie, int* plProposant, int* plProEtat,int lNProposant, int
 	//double* pdRetConj,double* pdRetSimul,double* pdRetProp
 	for(int i=0;i<lNProposant;i++)
 	{
+		//printf("%f\n", double(ProCompteur[i]));
 		pdRetSimul[i]=double(ProCompteur[i])/double(lSimul);
 		pdRetProp[i]=double(NCompteur[i])/double(lSimul);
 	}
@@ -296,9 +314,9 @@ int simul(int* Genealogie, int* plProposant, int* plProEtat,int lNProposant, int
 
 
 /*! 
-	\brief Execute une plusieur simulation et retourne le nombre d'allele transmit a chaque proposant (pour chaque simulation)
+	\brief Execute une ou plusieurs simulation et retourne le nombre d'allele transmit a chaque proposant (pour chaque simulation)
 
-	Calcule un etat possible pour chaque proposant en tenant en comple chaque ancetre et son etat
+	Calcule un etat possible pour chaque proposant en tenant compte de chaque ancetre et son etat
 
 	\param Genealogie	[in] Une genealogie construite à l'aide de gen.genealogie 
 
@@ -341,13 +359,31 @@ int simulsingle(int* Genealogie, int* plProposant, int lNProposant, int* plAncet
 	CIndSimul **NoeudAnc=NULL;
 	LoadAncetre(plAncetre,lNAncetre,&NoeudAnc);
 	
+	/**D***/
+	//Creation des tableau
+	INITGESTIONMEMOIRE;
+	CIndSimul** Ordre		=(CIndSimul**) memalloc(lNIndividu,sizeof(CIndSimul*));	
+	
+	//Pour le sort spécial		
+	int*		OrdreSaut	=(int*) memalloc(lNIndividu,sizeof(int*));				
+	int NOrdre;
+	/**F***/
 	//CREATION DES TABLEAU       
 	int i;
 	//int *VecteurPosition=NULL;
 
+	/**D***/
 	//INITIALISATION DE LA STRUCTURE DE NOEUD
 	for(i=0;i<lNIndividu;i++)
-		Noeud[i].allele=0;			
+	{
+		Noeud[i].allele=0;	
+		Noeud[i].etat=GENNONEXPLORER;
+		Noeud[i].bFlagSort=0;	   				
+	}
+	//INITIALISATION DE LA STRUCTURE DE NOEUD
+//	for(i=0;i<lNIndividu;i++)
+//		Noeud[i].allele=0;			
+	/**F***/
 	
 	//IDENTIFIER ET ETIQUETER LES PROPOSANT
 	for(i=0;i<lNProposant;i++)
@@ -360,15 +396,61 @@ int simulsingle(int* Genealogie, int* plProposant, int lNProposant, int* plAncet
 		NoeudAnc[i]->allele=interval(plAncEtat[i],0,2);		
 	}
 
+	/**D***/
+	//identifier et marque les noeuds utile et ceux inutile a la recherche
+	for(i=0;i<lNAncetre;i++)
+		ExploreArbre(NoeudAnc[i]);
+
+	
+	//creation d'un ordre d'execution et calcul des sauts
+	PrepareSortPrioriteArbre(Noeud,lNIndividu);	
+	NOrdre=0;
+	memset(OrdreSaut,0,sizeof(int)*lNIndividu);
+	for(i=0;i<lNAncetre;i++)		
+		StartSortPrioriteArbre(NoeudAnc[i],Ordre,&NOrdre,OrdreSaut);
+	/**F***/
+
 	//INITIALISATION
 	//initrand();
-	std::random_device rd;		// **chgt IGES**
+//	unsigned seed2 = time(0);
+//	std::mt19937 gen(seed2);
+//	boost::random_device rd;
+//	std::random_device rd;		// **chgt IGES**
+//	std::mt19937 gen(rd());
+	#if defined _WIN32 || defined _WIN64
+	  std::mt19937 gen(time(0));
+	#else
+	std::random_device gen;		// **chgt IGES**
+//	  boost::random_device gen;
+	#endif
 	int ap,am;
 		
 	//Partie 3: SIMULATION
 	//CREATE_PROGRESS_BAR(lSimul,printprogress)
 	for(int csimul=0;csimul<lSimul; csimul++)
 	{
+/* Utilisant la facon de faire de la fonction simul */
+		for(int i=0;i<NOrdre;i++)
+		{
+			if (Ordre[i]->pere!=NULL) ap=	Ordre[i]->pere->allele;
+       		else					ap=0;
+				
+			if (Ordre[i]->mere!=NULL) am=	Ordre[i]->mere->allele;
+       		else					am=0;
+						
+			if (ap==0 && am==0)		Ordre[i]->allele=0;
+			else {
+				double iRandom = (double)gen()/(double)gen.max();
+				if (iRandom<TransGenCum[ap][am][0])		Ordre[i]->allele=0;
+				else
+					if (iRandom<TransGenCum[ap][am][1]) Ordre[i]->allele=1;			
+					else							 Ordre[i]->allele=2;
+			}
+		}
+	
+/* Fin de la nouvelle facon de faire */ 
+
+/* Code remplace par la facon de faire de la fonction simul
 		for(i=0;i<lNIndividu;i++)
 		{	  
 			if (Noeud[i].etat!=GENDEPART)
@@ -382,7 +464,8 @@ int simulsingle(int* Genealogie, int* plProposant, int lNProposant, int* plAncet
 				if (ap==0 && am==0)		Noeud[i].allele=0;
 				else {
 					//double iRandom =urand();
-					double iRandom = (double)rd()/(double)rd.max();		// pour le passage de l'allele.  **chgt IGES**
+					//double iRandom = (double)gen()/(double)rd.max();
+					double iRandom = (double)gen()/(double)gen.max();//(double)rd()/(double)rd.max();		// pour le passage de l'allele.  **chgt IGES**
 					if (iRandom<TransGenCum[ap][am][0])		Noeud[i].allele=0;
 					else
 						if (iRandom<TransGenCum[ap][am][1]) Noeud[i].allele=1;			
@@ -390,7 +473,8 @@ int simulsingle(int* Genealogie, int* plProposant, int lNProposant, int* plAncet
 				} //fin ap==am==0
 			}//fin if noeud depart
 		}// fin for pour chaque noeud
-		
+** Fin du code remplace */		
+
         //Modification des compteurs
 		const int tmp = csimul*lNProposant;
 		for(i=0;i<lNProposant;i++)
@@ -403,12 +487,12 @@ int simulsingle(int* Genealogie, int* plProposant, int lNProposant, int* plAncet
 	///nettoyer
 	//outrand();
 	return 0;
- 			} catch(std::exception &ex) {
- 				forward_exception_to_r(ex);
- 			} catch(...){
- 				::Rf_error("c++ exception (unknown reason)"); 
- 			} 
- 			return 0;
+ } catch(std::exception &ex) {
+ 	forward_exception_to_r(ex);
+ } catch(...){
+ 	::Rf_error("c++ exception (unknown reason)"); 
+ } 
+ return 0;
 }
 /*! 
 	\brief Execute une plusieur simulation et retourne le nombre d'allele transmit a chaque proposant (pour chaque simulation)
@@ -482,7 +566,17 @@ SEXP simulsingleProb(int* Genealogie, int* plProposant, int lNProposant, int* pl
 
 	//INITIALISATION
 	//initrand();
-	std::random_device rd;		// **chgt IGES**
+//	unsigned seed2 = time(0);
+//	std::mt19937 gen(seed2);
+//	boost::random_device rd;
+//	std::random_device rd;		// **chgt IGES**
+//	std::mt19937 gen(rd());
+	#if defined _WIN32 || defined _WIN64
+	  std::mt19937 gen(time(0));
+	#else
+//	  boost::random_device gen;
+	  std::random_device gen;
+	#endif
 	int ap,am;
 		
 	//Pointeur de retour
@@ -509,7 +603,8 @@ SEXP simulsingleProb(int* Genealogie, int* plProposant, int lNProposant, int* pl
 //					ap += 1;
 					if (Noeud[i].sex == GEN_FEM) am += 6;
 //					double iRandom =urand(); 											
-					double iRandom = (double)rd()/(double)rd.max();		// pour le passage de l'allele.  **chgt IGES**
+					//double iRandom = (double)gen()/(double)rd.max();
+					double iRandom = (double)gen()/(double)gen.max();//(double)rd()/(double)rd.max();		// pour le passage de l'allele.  **chgt IGES**
 					if (iRandom<(double)matprob(ap,am))			Noeud[i].allele=0;		       
 					else
 						if (iRandom<(double)matprob(ap,am+=3))	Noeud[i].allele=1;			
@@ -609,8 +704,18 @@ int simulsingleFreq(int* Genealogie, int* plProposant, int lNProposant, int* plA
 	const int tmp2 = 2*lNProposant; //Fréquence de 2 allèle
 
 	//INITIALISATION
-	//initrand();
-	std::random_device rd;		// **chgt IGES**
+	//initrand(); 
+//	unsigned seed2 = time(0);
+//	std::mt19937 gen(seed2);
+//	boost::random_device rd;
+//	std::random_device rd;		// **chgt IGES**
+//	std::mt19937 gen(rd());
+	#if defined _WIN32 || defined _WIN64
+	  std::mt19937 gen(time(0));
+	#else
+//	  boost::random_device gen;
+	  std::random_device gen;
+	#endif
 	int ap,am;
 		
 	//Partie 3: SIMULATION
@@ -630,7 +735,8 @@ int simulsingleFreq(int* Genealogie, int* plProposant, int lNProposant, int* plA
 				if (ap==0 && am==0)							Noeud[i].allele=0;
 				else {
 					//double iRandom = urand();
-					double iRandom = (double)rd()/(double)rd.max();		// pour le passage de l'allele.  **chgt IGES**
+					//double iRandom = (double)gen()/(double)rd.max();
+					double iRandom = (double)gen()/(double)gen.max();//(double)rd()/(double)rd.max();		// pour le passage de l'allele.  **chgt IGES**
 					if (iRandom<TransGenCum[ap][am][0])		Noeud[i].allele=0;		       
 					else
 						if (iRandom<TransGenCum[ap][am][1])	Noeud[i].allele=1;			
@@ -1311,8 +1417,13 @@ int CoefApparentement(int* Genealogie,	int* plProposant, int NProposant, int* pl
 //				    "Maximum memory allowed: %lG Mo  memory needed: %lG Mo\n\n", 
 //					COAPPMOD_MAXMEMORY_USABLE/MEGAOCTET,MaxMemoryUsed/MEGAOCTET);
 			char erreur[TAILLEDESCRIPTION];
-			sprintf(erreur, "Memory usage is too great for duplicata detection\nDeactivate it if you want to continue\nMaximum memory allowed: %Lf Mo  memory needed: %Lf Mo\n\n",
-				   COAPPMOD_MAXMEMORY_USABLE/MEGAOCTET,MaxMemoryUsed/MEGAOCTET);
+			
+			double maxMemAllowed = COAPPMOD_MAXMEMORY_USABLE/MEGAOCTET;
+			double memUsed = MaxMemoryUsed/MEGAOCTET;
+			sprintf(erreur, "Memory usage is too great for duplicata detection\nDeactivate it if you want to continue\nMaximum memory allowed: %f Mo  memory needed: %f Mo\n\n",
+				maxMemAllowed, memUsed);
+			//sprintf(erreur, "Memory usage is too great for duplicata detection\nDeactivate it if you want to continue\nMaximum memory allowed: %Lf Mo  memory needed: %Lf Mo\n\n",
+				// (COAPPMOD_MAXMEMORY_USABLE/MEGAOCTET),(MaxMemoryUsed/MEGAOCTET));
 			throw std::range_error(erreur);
 			//GENError("La quantite de mémoire utilisé par la détection de dupplicata est trop importante\n Déactivé la détection de dupplication si vous désiré continuer"
 					 //"\nTaille maximal permise : %lG Mo   Mémoire demandé : %lG Mo\n\n",	 COAPPMOD_MAXMEMORY_USABLE/MEGAOCTET,MaxMemoryUsed/MEGAOCTET);
@@ -1349,8 +1460,11 @@ int CoefApparentement(int* Genealogie,	int* plProposant, int NProposant, int* pl
 //		GENError( "Insufficient memory to create an anti-duplicata table\n Deactivate duplicata detection if you want to continue\n"
 //				"Memory needed: %lG Mo\n", MaxMemoryUsed/MEGAOCTET);
 		char erreur[TAILLEDESCRIPTION];
-		sprintf(erreur, "Insufficient memory to create an anti-duplicata table\n Deactivate duplicata detection if you want to continue\nMemory needed: %Lf Mo\n",
-			 MaxMemoryUsed/MEGAOCTET);
+		double memUsed = MaxMemoryUsed/MEGAOCTET;
+		sprintf(erreur, "Insufficient memory to create an anti-duplicata table\n Deactivate duplicata detection if you want to continue\nMemory needed: %f Mo\n",
+			memUsed);
+		//sprintf(erreur, "Insufficient memory to create an anti-duplicata table\n Deactivate duplicata detection if you want to continue\nMemory needed: %Lf Mo\n",
+		//	 (MaxMemoryUsed/MEGAOCTET));
 		throw std::range_error(erreur);
 		//GENError("Mémoire insuffisante pour utilisé créer une table anti-dupplicata\n Déactivé la détection de dupplication si vous désiré continuer"
 				 //"\nMémoire nécessaire : %lG Mo\n",MaxMemoryUsed/MEGAOCTET);

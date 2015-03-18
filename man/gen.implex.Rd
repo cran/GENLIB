@@ -2,7 +2,7 @@
 \alias{gen.implex}
 \title{Genealogical implex}
 \description{Returns the genealogical implex index (a measure of pedigree collapsing) for the specified probands.}
-\usage{gen.implex( gen, pro = "0", genNo = -1, type = "MEAN", onlyNewAnc = "F", check = "1", ...)}
+\usage{gen.implex( gen, pro = "0", genNo = -1, type = "MEAN", onlyNewAnc = "F", ...)}
 \arguments{
 \item{gen}{An object of class GLgen obtained with gen.genealogy, gen.lineages or gen.branching. Required.}
 \item{pro}{Vector of proband id numbers to be included. Default is 0, which will select all individuals without children.}
@@ -14,8 +14,7 @@
 \item{onlyNewAnc}{If onlyNewAnc="F" (default), all ancestors will be considered.
 	If onlyNewAnc="T", only new ancestors will be counted
 	 (i.e., an ancestor is not counted again if it has already been counted in another generation).}
-\item{check}{If check=1 (default), all parameters are validated.}
-\item{...}{Additionnal arguments to be passed to methods.}
+\item{...}{Option to pass additionnal arguments automaticaly between methods. Internal use only.}
 }
 \value{A data frame with each generation at which the completeness is calculated as rows and one column when type is "MEAN".
  	  When type is "IND", the number of columns equals the number of probands specified.}
@@ -24,7 +23,7 @@
 \code{\link{gen.genealogy}}
 \code{\link{gen.occ}}
 \code{\link{gen.rec}}
-\code{\link{gen.entropy}}
+\code{\link{gen.meangendepth}}
 \code{\link{gen.completeness}}
 \code{\link{gen.gc}}
 }

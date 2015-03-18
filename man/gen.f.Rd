@@ -2,13 +2,12 @@
 \alias{gen.f}
 \title{Inbreeding coefficient}
 \description{Returns the inbreeding coefficients of the specified probands}
-\usage{gen.f( gen, pro, depthmin= (gen.depth(gen)-1), depthmax= (gen.depth(gen)-1), check = "1")}
+\usage{gen.f( gen, pro, depthmin= (gen.depth(gen)-1), depthmax= (gen.depth(gen)-1))}
 \arguments{
 \item{gen}{An object of class GLgen obtained with gen.genealogy, gen.lineages or gen.branching. Required.}
 \item{pro}{Vector of proband id numbers to be included.}
 \item{depthmin}{Minimum genealogical depth to consider in the calculation. Default is the whole genealogy.}
 \item{depthmax}{Maximum genealogical depth to consider in the calculation. Default is the whole genealogy.}
-\item{check}{If check=1 (default), all parameters are validated.}
 }
 \value{A vector or GLmultiVector object depending on the number of generations treated.
 	  GLmultiVector is an array of vectors, one for each depth. Array of size ('depthMax'-'depthMin'), vectors of size 'length(pro)'.

@@ -4,6 +4,7 @@
 Interface de toutes les fonctions en rapport avec la contribution génétique
 
 \author Sébastien Leclerc
+\contributor Jean-François Lefebvre
 */
 
 #ifndef GENCONGEN

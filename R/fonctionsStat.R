@@ -2,10 +2,9 @@
 # 2 - gen.phiCI				-> garde article
 
 
-gen.fCI = function(vectF, prob = c(0.025, 0.05, 0.95, 0.975), b = 5000, print.it = F, check = 1)#named = T, 
+gen.fCI = function(vectF, prob = c(0.025, 0.05, 0.95, 0.975), b = 5000, print.it = F)#, check = 1)#named = T, 
 {
-	if(length(check) != 1)
-		stop("Invalid 'check' parameter: choices are 0 or 1")
+	#if(length(check) != 1) stop("Invalid 'check' parameter: choices are 0 or 1")
 		#stop("Param\350tre 'check' invalide: les choix disponibles sont 0 et 1")
 	#if(check == 1) {
 		retour = gen.detectionErreur(vectF = vectF, prob = prob, b = b, print.it = print.it, named = T, check = c(33, 21, 22, 18, 10))
@@ -37,14 +36,13 @@ gen.fCI = function(vectF, prob = c(0.025, 0.05, 0.95, 0.975), b = 5000, print.it
 	return(GLapplyF(vectF, FUN, FunReturnLength = length(prob), named = named, namesVector = nam, pprogress = print.it, b = b, prob = prob))
 }
 
-gen.phiCI = function(phiMatrix, prob = c(0.025, 0.05, 0.95, 0.975), b = 5000, print.it = F, check = 1)#named = T, 
+gen.phiCI = function(phiMatrix, prob = c(0.025, 0.05, 0.95, 0.975), b = 5000, print.it = F)#, check = 1)#named = T, 
 {
-	if(length(check) != 1)
-		stop("Invalid 'check' parameter: choices are 0 or 1")
+	#if(length(check) != 1) stop("Invalid 'check' parameter: choices are 0 or 1")
 		#stop("Param\350tre 'check' invalide: les choix disponibles sont 0 et 1")
 	#if(check == 1) {
-		retour = gen.detectionErreur(matricephi = phiMatrix, prob = prob, b = b, print.it = print.it, named = T, check
-			 = c(29, 21, 22, 18, 10))
+		retour = gen.detectionErreur(matricephi = phiMatrix, prob = prob, b = b, print.it = print.it, named = T, 
+								check = c(29, 21, 22, 18, 10))
 		if(retour$erreur == T)
 			stop(retour$messageErreur)
 		matricephi = retour$matricephi

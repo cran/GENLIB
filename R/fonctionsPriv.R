@@ -114,7 +114,7 @@ gen.detectionErreur = function(gen, sorted, pro, named, ancestors, nouvtempsmax,
 				#"Parametre 'pro' invalide: doit etre un vecteur numerique"))
 			if(is(gen, "GLgen")) {
 				#print("check 5 -> gen.genout(gen, check = 0)")
-				if(!is.na(match(NA, match(pro, gen.genout(gen, check = 0)$ind))))
+				if(!is.na(match(NA, match(pro, gen.genout(gen)$ind)))) #, check = 0
 					return(list(erreur = T, messageErreur = "Invalid 'pro' parameter: one of the proband is not part of the individuals list"))
 						#"Parametre 'prop' invalide: L'un des proposants ne fait pas parti de la liste des individuals"))
 			}
@@ -145,7 +145,7 @@ gen.detectionErreur = function(gen, sorted, pro, named, ancestors, nouvtempsmax,
 			return(list(erreur = T, messageErreur = "Invalid 'pro' parameter: must be a numerical vector"))
 			#"Parametre 'prop' invalide: doit etre un vecteur numerique"))
 		if(is(gen, "GLgen")) {
-			if(!is.na(match(NA, match(pro, gen.genout(gen, check = 0)$ind))))
+			if(!is.na(match(NA, match(pro, gen.genout(gen)$ind)))) #, check = 0
 				return(list(erreur = T, messageErreur = "Invalid 'pro' parameter: one of the proband is not part of the individuals list"))
 					#"Parametre 'prop' invalide: L'un des proposants ne fait pas parti de la liste des individuals"))
 		}
@@ -189,9 +189,11 @@ gen.detectionErreur = function(gen, sorted, pro, named, ancestors, nouvtempsmax,
 			if(is(gen, "GLgen")) {
 				#print("check 11 genout(gen)")
 				genTemp = gen.genout(gen)
-				ancestors = genTemp$ind
+				#ancestors = genTemp$ind
+				ancestors = genTemp[genTemp[,"father"]==0 & genTemp[,"mother"]==0,"ind"]
 			}
-			else ancestors = gen$ind
+			else #ancestors = gen$ind
+				ancestors = gen[gen[,"father"]==0 & gen[,"mother"]==0,"ind"]
 		}
 		if(!is(ancestors, "numeric"))
 			return(list(erreur = T, messageErreur = "Invalid 'ancestors' parameter: must be a numerical vector"))
@@ -221,12 +223,13 @@ gen.detectionErreur = function(gen, sorted, pro, named, ancestors, nouvtempsmax,
 			return(list(erreur = T, messageErreur = "Invalid 'individuals' parameter: must be a numerical vector"))
 				#"Parametre 'individuals' invalide: doit etre un vecteur numerique"))
 		if(is(gen, "GLgen")) {
-			genTmp = gen.genout(gen, check = 0)
+			genTmp = gen.genout(gen)#, check = 0)
 			posTrouve = match(individuals, unique(c(genTmp$ind, genTmp$mother, genTmp$father)))
 		}
 		else posTrouve = match(individuals, unique(c(gen$ind, gen$mother, gen$father)))
 		if(length(posTrouve[is.na(posTrouve)]) > 0)
-			return(list(erreur = T, messageErreur = "Invalid 'individuals' parameter: all individuals must be present in the ascendance table"))
+			return(list(erreur = T, 
+					messageErreur = "Invalid 'individuals' parameter: all individuals must be present in the ascendance table"))
 				#"Parametre 'individuals' invalide: tous les individuals doivent etre presents dans la table d'ascendance"))
 		retour$individuals = individuals
 	}
@@ -671,7 +674,7 @@ gen.validationAsc = function(gen, pro = 0)
 		print("Error: some fathers and some mothers have the same individual number")
 		#print("Erreur: Certains peres et certaines meres portent les memes no d indiviuds")
 	}
-	#5. Les ascendances doivent avoir une fin, on veut voir apparaître le message "fin des ascendances"
+	#5. Les ascendances doivent avoir une fin, on veut voir apparaitre le message "fin des ascendances"
 	probands <- gen.pro(asc)
 	pp <- unique(c(asc$father[match(probands, asc$ind)], asc$mother[match(probands, asc$ind)]))
 	pp <- pp[pp != 0]
@@ -1988,7 +1991,7 @@ GLPrivExtPHISINGLE = function(x, ..., drop)
 			if(l2$named)
 				dimnames(m) <- list(names(xgroupe), names(xgroupe))
 			else dimnames(m) <- NULL
-			#Peut-importe dim1 et dim2 ça se passe a l'operateur
+			#Peut-importe dim1 et dim2 ca se passe a l'operateur
 			#S'il n'y a qu'un 'param', alors ce comporte comme un vecteur...
 			if(l2$param == 1) getMethod("[", "matrix")(m, dim1, drop = drop) else getMethod("[", "matrix")(m, dim1, dim2,
 					drop = drop)

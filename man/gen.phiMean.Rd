@@ -2,10 +2,9 @@
 \alias{gen.phiMean}
 \title{Average kinship}
 \description{Returns the average kinship among pairs of specified individuals}
-\usage{gen.phiMean( phiMatrix, check = "1")}
+\usage{gen.phiMean( phiMatrix)}
 \arguments{
 \item{phiMatrix}{A square matrix of kinship coefficients obtained for example with gen.phi. Required.}
-\item{check}{If check=1 (default), all parameters are validated.}
 }
 \value{returns a numeric value}
 \seealso{

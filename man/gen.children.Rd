@@ -2,12 +2,11 @@
 \alias{gen.children}
 \title{Get id numbers of children}
 \description{Returns the id numbers of the children of specified individuals.}
-\usage{gen.children( gen, individuals, check = "1", ...)}
+\usage{gen.children( gen, individuals, ...)}
 \arguments{
 \item{gen}{An object of class GLgen obtained with gen.genealogy, gen.lineages or gen.branching. Required.}
 \item{individuals}{Vector of individual id numbers. Required.}
-\item{check}{If check=1 (default), all parameters are validated.}
-\item{...}{Additionnal arguments to be passed to methods.}
+\item{...}{Option to pass additionnal arguments automaticaly between methods. Internal use only.}
 }
 \value{returns a vector of integer}
 \seealso{

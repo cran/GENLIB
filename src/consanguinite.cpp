@@ -4,6 +4,7 @@
 Calcul et Analyse de diverse valeur dérivé de F et Fmoyen
 
 \author Sébastien Leclerc
+\contributor Jean-François Lefebvre
 
 */
 

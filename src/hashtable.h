@@ -2,6 +2,7 @@
 \brief Implémentation d'une table de hashage parametre
 
 \author Claire Gires
+\contributor Jean-François Lefebvre
 
 */ 
 

@@ -7,6 +7,7 @@ reordonnancement, creation d'ordre, ordre saut etc...
   plus les petites fonction mathématiques
 
 	\author Sébastien Leclerc
+\contributor Jean-Francois Lefebvre
 
 */
 #include "base.h"
@@ -23,6 +24,7 @@ reordonnancement, creation d'ordre, ordre saut etc...
 #include <ctime>
 #include <random>
 #include <Rcpp.h>
+
 using namespace std;
 
 #define R_NO_REMAP
@@ -1265,8 +1267,17 @@ static int temoin(unsigned int a, unsigned int n)
 */
 unsigned int irand(unsigned int a, unsigned int b) 
 {
-	random_device rd;		// **chgt IGES**
-	return a + (unsigned int)((double)rd()/(double)rd.max() * (b-a+1));
+	#if defined _WIN32 || defined _WIN64
+	unsigned seed2 = time(0);
+	std::mt19937 gen(seed2);
+	#else
+//	boost::random_device gen;		// **chgt IGES**
+	std::random_device gen;		// **chgt IGES**
+	#endif
+	//mt19937 gen(rd());
+	//return a + (unsigned int)((double)gen()/(double)rd.max() * (b-a+1));
+	//return a + (unsigned int)((double)rd()/(double)rd.max() * (b-a+1));
+	return a + (unsigned int)((double)gen()/(double)gen.max() * (b-a+1));
     //return a + (unsigned int)(urand() * (b-a+1));
 }
 

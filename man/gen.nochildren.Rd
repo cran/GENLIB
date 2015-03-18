@@ -2,11 +2,10 @@
 \alias{gen.nochildren}
 \title{Number of children}
 \description{Returns the number of children for specified individuals}
-\usage{gen.nochildren( gen, individuals, check = "1")}
+\usage{gen.nochildren( gen, individuals)}
 \arguments{
 \item{gen}{An object of class GLgen obtained with gen.genealogy, gen.lineages or gen.branching. Required.}
 \item{individuals}{A vector of ids of the individuals on each of whom the number of chidren is to be returned. Required.}
-\item{check}{If check=1 (default), all parameters are validated.}
 }
 \value{A vector containing the number of children for each individual sepcified.}
 \seealso{

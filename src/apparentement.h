@@ -3,6 +3,7 @@
 
 
 \author Sébastien Leclerc
+\contributor Jean-François Lefebvre
 
 */
 

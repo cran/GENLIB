@@ -218,7 +218,7 @@ setClass("GLgen",representation(.Data="integer",Date="character"),
 
 setMethod("show","GLgen",function(object){
 		#Affiche les donnees concernant une genealogie
-		cat(" GENLIB: Ensemble de genealogies version ", object@.Data[4],"\n\n",
+		cat(" GENLIB: Genealogical Data Software version ", object@.Data[4],"\n\n", #Ensemble de genealogies version
 
 
 		" Number of individuals : ", object@.Data[9], "\n",
@@ -871,8 +871,8 @@ setMethod("Summary","GLmultiPhiGroup",function(x, ..., na.rm = F){
 })
 
 
-# Classes ajoutées par JFL car inexistantes dans ce qu'on a reçu de la version SPlus
-# mais qui sont nécessaire pour certaines fonctions STAT.
+# Classes ajoutees par JFL car inexistantes dans ce qu'on a recu de la version SPlus
+# mais qui sont necessaire pour certaines fonctions STAT.
 
 setClass("GLmultiList"		,representation(liste = "list"), contains="list")
 

@@ -2,13 +2,12 @@
 \alias{gen.parent}
 \title{Get id numbers of parents}
 \description{Returns the id numbers of the parents of specified individuals.}
-\usage{gen.parent( gen, individuals, output = "FaMo", check = "1", ...)}
+\usage{gen.parent( gen, individuals, output = "FaMo", ...)}
 \arguments{
 \item{gen}{An object of class GLgen obtained with gen.genealogy, gen.lineages or gen.branching. Required.}
 \item{individuals}{Vector of individual id numbers. Required.}
 \item{output}{If output="FaMo" (default) then both mothers and fathers are included. "Mo" outputs mothers only and "Fa", fathers only.}
-\item{check}{If check=1 (default), all parameters are validated.}
-\item{...}{Additionnal arguments to be passed to methods.}
+\item{...}{Option to pass additionnal arguments automaticaly between methods. Internal use only.}
 }
 \value{returns a list containing the following:
 \strong{Fathers} 

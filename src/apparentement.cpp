@@ -5,6 +5,7 @@
 Calcul et Analyse de diverse valeur dérivé de Phi et Phi moyen
 
 \author Sébastien Leclerc
+\contributor Jean-François Lefebvre
 
 */
 
@@ -293,7 +294,7 @@ int PhisMT(int* Genealogie, int* proposant, int NProposant,int NiveauMin,int Niv
 		//initialisation des données Phis de la structure
 		BASEMT_MESSAGE(1).ind1=NULL;
 		BASEMT_MESSAGE(1).ind2=NULL;
-		BASEMT_MESSAGE(1).niveauMax=niveauMax;	
+		BASEMT_MESSAGE(1).niveauMax=niveauMax;
 
 		//Indice ou placer la reponse dans le tableau de reponse
 		BASEMT_MESSAGE(1).indice1	= -1;

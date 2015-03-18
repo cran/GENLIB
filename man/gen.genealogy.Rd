@@ -2,16 +2,16 @@
 \alias{gen.genealogy}
 \title{Create object of class GLgen}
 \description{Creates an object of class GLgen that contains the ascending genealogies derived from input data in pedigree format}
-\usage{gen.genealogy(ped, check = "1", ...)}
+\usage{gen.genealogy(ped, autoComplete=FALSE, ...)}
 \arguments{
 \item{ped}{A matrix or data frame with the following columns: individual id, father id, mother id, sex. Required.
 	Individal id numbers must be numeric and unique.
 	If an individual does not have a father and/or mother, the father and/or mother id numbers must be set to 0.
-	All non-zero father and mother id numbers must also appear in the individual id column.
 	Sex must be equal to M or 1 for males and F or 2 for females.
 	The sex column is optional for this function but necessary for some other functions using GLgen objects.}
-\item{check}{If check=1 (default), all parameters are validated.}
-\item{...}{Additionnal arguments to be passed to methods.}
+\item{autoComplete}{If TRUE, any non-zero father and mother id numbers not appearing in the individual id column, 
+	will be added in the individual column as having no father or mother (both set to 0). Default to FALSE.}
+\item{...}{Option to pass additionnal arguments automaticaly between methods. Internal use only.}
 }
 \value{An object of class GLgen.}
 \seealso{

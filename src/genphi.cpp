@@ -1,5 +1,7 @@
 //#define MODETEST
 
+//contributor Jean-François Lefebvre
+
 /// Authorise l'affichage du niveau de progression sur la sortie standard
 /** 
 	Si ALLOWPRINTPROGRESS est defini, les fonctions suivantes peuvent 

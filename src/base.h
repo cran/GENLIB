@@ -10,6 +10,11 @@
 \remark Sous windows, le detecteur de memory leak et automatiquement activer en mode debug
 
 \author Sébastien Leclerc
+\contributor Jean-François Lefebvre
+// Distributed under the Boost Software License, Version 1.0.
+//    (See accompanying file LICENSE_1_0.txt or copy at
+//          http://www.boost.org/LICENSE_1_0.txt)
+
 */
 
 
@@ -25,14 +30,14 @@
 #ifndef GENBASE
 #define GENBASE
 
-#ifdef WIN32
+//#ifdef WIN32
 	//#define MODETEST			//##A Effacer### defini automatiquement MODETEST (voir plus haut) sur plateforme WIN32
   	//#define _CRTDBG_MAP_ALLOC
-#endif
+//#endif
 
 #ifndef MODETEST
 //	#include <S.h>	
-	#ifdef WIN32
+	#if defined _WIN32 || defined _WIN64
 		#include "sconnect.h"
 		#pragma warning(disable:4786)
 	#endif
@@ -41,7 +46,7 @@
 	#include<stdlib.h>
 #endif
 
-#ifdef WIN32
+#if defined _WIN32 || defined _WIN64
 	#include "crtdbg.h"
 	//#define WINDOWS_CONFLICT
 	
@@ -55,8 +60,9 @@
 	#define MAX_SXLONG	_I64_MAX
 
 	#define WINCDECL	__cdecl 
-	#define FASTCALL    __fastcall	
+	#define FASTCALL    __fastcall
 #else
+//	#include <boost/random/random_device.hpp>
 	#define XLONG unsigned long long int
 	#define MAX_XLONG	ULLONG_MAX
 
@@ -64,7 +70,7 @@
 	#define MAX_SXLONG	LLONG_MAX
 
 	#define WINCDECL 
-	#define FASTCALL  	
+	#define FASTCALL
 #endif
 
 //#include<cstdlib>

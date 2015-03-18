@@ -2,6 +2,7 @@
 \brief Implémentation d'une table d'allocation par block
 
 \author Sébastien Leclerc
+\contributor Jean-Francois Lefebvre
 
 */ 
 #include "base.h"

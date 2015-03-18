@@ -2,15 +2,13 @@
 \alias{gen.phi}
 \title{Kinship coefficient}
 \description{Returns the kinship coefficients between pairs of individuals}
-\usage{gen.phi(gen, pro, depthmin=(gen.depth(gen)-1), depthmax=(gen.depth(gen)-1), MT=F,
-               check=1)}
+\usage{gen.phi(gen, pro, depthmin=(gen.depth(gen)-1), depthmax=(gen.depth(gen)-1), MT=F)}
 \arguments{
 \item{gen}{An object of class GLgen obtained with gen.genealogy, gen.lineages or gen.branching. Required.}
 \item{pro}{Vector of proband id numbers to be included. Required.}
 \item{depthmin}{Minimum genealogical depth to consider in the calculation. Default is the whole genealogy.}
 \item{depthmax}{Maximum genealogical depth to consider in the calculation. Default is the whole genealogy.}
 \item{MT}{Allows parallel computing when set to TRUE. Default is MT=F.}
-\item{check}{If check=1 (default), all parameters are validated.}
 }
 \value{A matrix or a GLmultiMatrix object depending on the number of generations treated.
 	  GLmultiMatrix is an array of matrices, one for each depth. Array of size ('depthMax'-'depthMin') and 

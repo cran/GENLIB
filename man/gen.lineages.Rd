@@ -2,7 +2,7 @@
 \alias{gen.lineages}
 \title{Create object of class GLgen for maternal or paternal lineages}
 \description{Creates an object of class GLgen that contains maternal or paternal lineages selected from input data in pedigree format}
-\usage{gen.lineages(ped, pro = "0", maternal = "T", check = "1", ...)}
+\usage{gen.lineages(ped, pro = "0", maternal = "T", ...)}
 \arguments{
 \item{ped}{A matrix or data frame with the following columns: individual id, father id, mother id, sex. Required.
 	Individal id numbers must be numeric and unique.
@@ -12,8 +12,7 @@
 	The sex column is optional for this function but necessary for some other functions using GLgen objects.}
 \item{pro}{Vector of individual id numbers for which lineages should be included. Optional.}
 \item{maternal}{If mat="T" (default), maternal lineages are selected. mat="F" returns paternal lineages.}
-\item{check}{If check=1 (default), all parameters are validated.}
-\item{...}{Additionnal arguments to be passed to methods.}
+\item{...}{Option to pass additionnal arguments automaticaly between methods. Internal use only.}
 }
 \value{returns a GLgen object}
 \seealso{

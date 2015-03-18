@@ -2,7 +2,7 @@
 \alias{gen.implexVar}
 \title{Variance of genealogical implex}
 \description{Returns the variance of the implex index across probands.}
-\usage{gen.implexVar( gen, pro = "0", onlyNewAnc = "F", genNo = -1, check = "1", ...)}
+\usage{gen.implexVar( gen, pro = "0", onlyNewAnc = "F", genNo = -1, ...)}
 \arguments{
 \item{gen}{An object of class GLgen obtained with gen.genealogy, gen.lineages or gen.branching. Required.}
 \item{pro}{Vector of proband id numbers to be included. Default is 0, which will select all individuals without children.}
@@ -11,7 +11,6 @@
 	 (i.e., an ancestor is not counted again if it has already been counted in another generation).}
 \item{genNo}{Vector of generation numbers at which the implex should be calculated.
 	Default is -1, which calculates the implex at each generation.}
-\item{check}{If check=1 (default), all parameters are validated.}
 \item{...}{Additionnal arguments to be passed to methods.}
 }
 \value{A data frame with one column and each generation at which the variance is calculated as rows}

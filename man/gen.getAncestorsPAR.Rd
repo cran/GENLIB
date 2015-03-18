@@ -10,7 +10,7 @@
 \value{Vector of the founders identity.}
 \seealso{
 \code{\link{gen.findMRCA}}
-\code{\link{gen.grimperPAR}}
+\code{\link{gen.climbPAR}}
 }
 \examples{
 data(geneaJi) 

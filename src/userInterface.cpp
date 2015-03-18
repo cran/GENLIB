@@ -1,3 +1,4 @@
+//contributor Jean-Francois Lefebvre
 
 #include "base.h"
 #include "userInterface.h"

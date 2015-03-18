@@ -5,6 +5,7 @@
 	Seulement les fonctions d'ici sont caller à partir des wrappers des .ssc
 
 \author Sébastien Leclerc
+\contributor Jean-François Lefebvre
 */
 
 #include "base.h"

@@ -4,6 +4,7 @@
 Interface de toutes les fonctions en rapport avec la consanguinité
 
 \author Sébastien Leclerc
+\contributor Jean-François Lefebvre
 
 */
 

@@ -4,6 +4,7 @@
 Calcul et Analyse de diverse valeur dérivé de la contribution génétique
 
 \author Sébastien Leclerc
+\contributor Jean-François Lefebvre
 
 */
 

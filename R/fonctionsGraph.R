@@ -18,7 +18,7 @@ gen.graph <- function(gen, pro = gen.pro(gen), ancestors = gen.founder(gen), ind
 	nouv.asc$father[nouv.asc$father == 0 & nouv.asc$mother != 0] = c(num.max:(num.max + father.0 - 1))
 	nouv.asc$mother[nouv.asc$mother == 0 & nouv.asc$father != 0] = c((num.max + father.0 + 1):((num.max + father.0 + 1) + mother.0 - 1))
 	ligneFin.tab = (length(nouv.asc$ind) + 1)
-	#MÈRE
+	#MERE
 	if(mother.0 != 0) {
 		nouv.asc[ligneFin.tab:(ligneFin.tab + mother.0 - 1), 1] = c((num.max + father.0 + 1):((num.max + father.0 + 1) + mother.0 - 1))
 		nouv.asc[ligneFin.tab:(ligneFin.tab + mother.0 - 1), 2] = 0
@@ -26,7 +26,7 @@ gen.graph <- function(gen, pro = gen.pro(gen), ancestors = gen.founder(gen), ind
 		nouv.asc[ligneFin.tab:(ligneFin.tab + mother.0 - 1), 4] = "F"
 		nouv.asc[ligneFin.tab:(ligneFin.tab + mother.0 - 1), 5] = 1
 	}
-	#PÈRE
+	#PERE
 	ligneFin.tab = (length(nouv.asc$ind) + 1)
 	if(father.0 != 0) {
 		nouv.asc[ligneFin.tab:(ligneFin.tab + father.0 - 1), 1] = c(num.max:(num.max + father.0 - 1))

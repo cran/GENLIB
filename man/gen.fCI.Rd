@@ -2,13 +2,12 @@
 \alias{gen.fCI}
 \title{Average inbreeding coefficient confidence interval}
 \description{Returns the confidence interval of the average inbreeding among specified individuals}
-\usage{gen.fCI(vectF, prob=c(0.025,0.05,0.95,0.975), b="5000", print.it="F", check="1")}
+\usage{gen.fCI(vectF, prob=c(0.025,0.05,0.95,0.975), b="5000", print.it="F")}
 \arguments{
 \item{vectF}{A vector of inbreeding coefficients obtained for example with gen.f. Required.}
 \item{prob}{Confidence limits probabilities. Default is probs=c(0.025, 0.05, 0.95, 0.975).}
 \item{b}{Number of simulations used to calculate the confidence interval. Default is b="5000".}
 \item{print.it}{If print.it="F" (default), progression in the number of simulations performed is not displayed.}
-\item{check}{If check=1 (default), all parameters are validated.}
 }
 \value{A vector or a GLmultiVector object depending on the type of 'vectF' entered.
 	  If 'vectF' is a GLmultiVector, an array of vectors (GLmultiVector), one for each depth, is returned.

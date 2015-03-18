@@ -1,5 +1,5 @@
 #1 - gen.findMRCA
-#2 - gen.grimperPAR
+#2 - gen.climbPAR
 #3 - gen.getAncestorsPAR
 #4 - gen.findFounders
 #5 - gen.getFoundersPAR
@@ -11,7 +11,7 @@
 # gen.findMRCA finds the Most Recent Common Ancestors (MRCA) of the specified individuals 
 #  using the given genealogy. It then calculates the distance (number of meiosis)
 #  between the individuals, passing by each of the MRCAs previously found.
-# This function spawns slave processes that run gen.grimperPAR and gen.getAncestorsPAR.
+# This function spawns slave processes that run gen.climbPAR and gen.getAncestorsPAR.
 #  
 #  - gen -> the genealogy
 #  - individuals -> the individuals to consider
@@ -50,8 +50,8 @@ gen.findMRCA <- function(gen, individuals, NbProcess=detectCores()-1)
  print(paste(dim(inter)[1],"MRCA"))
  
  ### SECOND: Calculate the distance matrix
- clusterExport(cluster, c("gen.grimperPAR"))
- y <- foreach(i = 1:length(inter$ind)) %dopar% gen.grimperPAR(gen=gen,individuals=individuals,founder=inter$ind[i])
+ clusterExport(cluster, c("gen.climbPAR"))
+ y <- foreach(i = 1:length(inter$ind)) %dopar% gen.climbPAR(gen=gen,individuals=individuals,founder=inter$ind[i])
 
  x <- matrix(nrow=length(individuals), ncol=length(inter$ind))
  for(i in 1:length(inter$ind)){ 
@@ -70,7 +70,7 @@ gen.findMRCA <- function(gen, individuals, NbProcess=detectCores()-1)
 }
 
 #####
-gen.grimperPAR <- function(gen, individuals, founder) {
+gen.climbPAR <- function(gen, individuals, founder) {
 # require(GENLIB)
  dist <- as.numeric(unlist(lapply( individuals, function(deb){ gen.min(gen.branching(gen, deb), founder) })))
  list( founder=founder, distance=dist )

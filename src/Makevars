@@ -1,6 +1,6 @@
 ## Use the R_HOME indirection to support installations of multiple R version
 PKG_LIBS = `$(R_HOME)/bin/Rscript -e "Rcpp:::LdFlags()"` -rdynamic
-##PKG_CPPFLAGS = -I libmpi
+##PKG_CPPFLAGS = -I libmpi   -lboost_random
 ##PKG_CPPFLAGS = -std=c++ 
 CXX_STD = CXX11 
 

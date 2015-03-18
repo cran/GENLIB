@@ -2,14 +2,13 @@
 \alias{gen.completenessVar}
 \title{Variance of completeness index}
 \description{Returns the variance of the completeness index across probands.}
-\usage{gen.completenessVar( gen, pro = "0", genNo = -1, check = "1", ...)}
+\usage{gen.completenessVar( gen, pro = "0", genNo = -1, ...)}
 \arguments{
 \item{gen}{An object of class GLgen obtained with gen.genealogy, gen.lineages or gen.branching. Required.}
 \item{pro}{Vector of proband id numbers to be included. Default is 0, which will select all individuals without children.}
 \item{genNo}{Vector of generation numbers at which completeness should be calculated.
 	Default is -1, which calculates completeness at each generation.}
-\item{check}{If check=1 (default), all parameters are validated.}
-\item{...}{Additionnal arguments to be passed to methods.}
+\item{...}{Option to pass additionnal arguments automaticaly between methods. Internal use only.}
 }
 \value{A data frame with one column and each generation at which the variance is calculated as rows.}
 \seealso{

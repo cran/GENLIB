@@ -4,6 +4,7 @@
 non déterminé
 
 \author Sébastien Leclerc, Claire Gires
+\contributor Jean-Francois Lefebvre
 
 */
 

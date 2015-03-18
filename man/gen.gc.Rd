@@ -1,8 +1,8 @@
 \name{gen.gc}
 \alias{gen.gc}
-\title{Genetci contribution of ancestors}
+\title{Genetic contribution of ancestors}
 \description{Returns the genetic contribution of ancestors to the gene pool of sepcifiec probands}
-\usage{gen.gc(gen, pro=0, ancestors=0, vctProb=c(0.5,0.5,0.5,0.5), typeCG="IND", check=1)}
+\usage{gen.gc(gen, pro=0, ancestors=0, vctProb=c(0.5,0.5,0.5,0.5), typeCG="IND")}
 \arguments{
 \item{gen}{An object of class GLgen obtained with gen.genealogy, gen.lineages or gen.branching. Required.}
 \item{pro}{Vector of proband id numbers to be included. Default is 0, which will select all individuals without children.}
@@ -13,7 +13,6 @@
 	If typeCG="PRODUCT", the product (over all probands) of genetic contributions is returned for each ancestor.
 	If typeCG="TOTAL", the sum (over all probands) of genetic contributions is returned for each ancestor.
 	If typeCG="CUMUL", ancestors are ranked in decreasing order of total contribution and cumulative contribution is returned.}
-\item{check}{If check=1 (default), all parameters are validated.}
 }
 \value{A matrix with rows corresponding to probands and columns corrsponding to ancestors when typeCG="IND".
  	  For the other typeCG values, rows are ancestors and there is one column containing mean, product, total or cumulative values.}
@@ -22,7 +21,7 @@
 \code{\link{gen.rec}}
 \code{\link{gen.occ}}
 \code{\link{gen.implex}}
-\code{\link{gen.entropy}}
+\code{\link{gen.meangendepth}}
 \code{\link{gen.completeness}}
 }
 \examples{

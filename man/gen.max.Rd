@@ -2,11 +2,10 @@
 \alias{gen.max}
 \title{Maximum number of generations}
 \description{Returns the maximum number of generations between all probands and the individuals specified. Probands are defined as the individuals without children in the genealogy.}
-\usage{gen.max( gen, individuals, check = "1")}
+\usage{gen.max( gen, individuals)}
 \arguments{
 \item{gen}{An object of class GLgen obtained with gen.genealogy, gen.lineages or gen.branching. Required.}
 \item{individuals}{A vector of ids specifying the individuals to include in the calculation. Required.}
-\item{check}{If check=1 (default), all parameters are validated.}
 }
 \value{returns a vector of integer}
 \seealso{
@@ -15,7 +14,7 @@
 \code{\link{gen.mean}}
 \code{\link{gen.min}}
 \code{\link{gen.depth}}
-\code{\link{gen.entropy}}
+\code{\link{gen.meangendepth}}
 }
 \examples{
 data(geneaJi) 

@@ -3928,12 +3928,12 @@ int      s_mp_ispow2d(mp_digit d)
  */
 int      s_mp_tovalue(char ch, int r)
 {
-  int    val, xch;
+  unsigned int    val, xch;
   
   if(r > 36)
     xch = ch;
   else
-    xch = toupper(ch);
+    xch = toupper((unsigned)ch);
 
   if(isdigit(xch))
     val = xch - '0';
@@ -3970,7 +3970,7 @@ int      s_mp_tovalue(char ch, int r)
   
 char     s_mp_todigit(int val, int r, int low)
 {
-  char   ch;
+  unsigned char   ch;
 
   if(val < 0 || val >= r)
     return 0;

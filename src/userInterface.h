@@ -1,3 +1,4 @@
+//contributor Jean-Francois Lefebvre
 
 #ifndef GENUSERINTERFACE
 #define GENUSERINTERFACE
