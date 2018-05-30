@@ -20,7 +20,7 @@ Pour etre precis elle sont completement ignorer
 //Variable globale pour regle le probleme d'interception d'exception sous Solaris
 
 
-char g_LastMessage[TAILLEDESCRIPTION];
+char g_LastMessage[TAILLEDESCRIPTION+13];
 const char* getLastMessage() {return g_LastMessage;}
 
 void ErrorHandler()

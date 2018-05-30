@@ -53,8 +53,20 @@ gen.graph <- function(gen, pro = gen.pro(gen), ancestors = gen.founder(gen), ind
 		col[nouv.asc$ind %in% gen.pro(gen)] = 2
 		col[nouv.asc$ind %in% gen.founder(gen)] = 5
 	}
+# Voir dans le ".Rhistory" de la version 1.0.5 pour voir comment ajouter des formes et tailles differentes par individu.
+#******************  
+#	if(sum(cex) == 0) {
+#		cex = rep(1, length(nouv.asc$ind))
+#		cex[nouv.asc$ind %in% gen.pro(gen)] = 0.5
+#		cex[nouv.asc$ind %in% gen.founder(gen)] = 2
+#	}
+#****************** 
 	texte = as.character(c(varAffected[match(nouv.asc.pedigree$id, indVarAffected)]))
 	texte[texte == "NA"] = ""
-	plot(nouv.asc.pedigree, symbolsize = symbolsize, width = width, col = col, cex = cex, id = texte, packed = packed, align = align, ...)
+#	if(sum(symbolsize) == 0) {
+#	  print(plot(nouv.asc.pedigree, density=c(21:24), width = width, col = col, cex = cex, id = texte, packed = packed, align = align, ...)$call)
+#	}
+#	else
+	  plot(nouv.asc.pedigree, symbolsize = symbolsize, width = width, col = col, cex = cex, id = texte, packed = packed, align = align, ...)
 }
 

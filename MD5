@@ -1,8 +1,8 @@
-e01876976fc69c5097b0a74e43c4e6ef *DESCRIPTION
-acd70e0e84a366649816964ce1728e02 *NAMESPACE
+7d5374193ea6b6b85da52fdae5eb11bc *DESCRIPTION
+5d8dbfe5c4d0ec38581062b299747b26 *NAMESPACE
 ab34eeac5e0f05039ba2ef4ff1366f12 *R/classes_methodes.R
 069c411e1b88c46b08938b432e950609 *R/fonctionsBase.R
-4053397faf8162807130ba57c2f5b677 *R/fonctionsGraph.R
+d57b702654e17af61c24a6e31d7f2306 *R/fonctionsGraph.R
 9f9178790ccf392006a415f54421c4ca *R/fonctionsPAR.R
 93010530f1fa2b84f152012c9d9bbd83 *R/fonctionsPriv.R
 7e4ae3c4a3bcd3008f954b9882fa5c7a *R/fonctionsSimul.R
@@ -66,7 +66,7 @@ d47016b0d6ed8023208368cbaecd05ec *man/gen.simuSampleFreq.Rd
 8c3ef738365a23e629594e6fe7041ae8 *man/geneaJi.Rd
 9e553b1aea7ef23cb4c57617ab7ab101 *man/pop140.Rd
 928e3746d6290b3d8b989698b93c79ac *src/Makevars
-ae26355c034739962f3f70b33a5a8d85 *src/Makevars.win
+6ad5e7cf4076b7043b34e6dedf57790c *src/Makevars.win
 2917eee5bd388fe92d0c10bc4b988d04 *src/apparentement.cpp
 092cb2bd8d597dc121a8eb3f89993a8e *src/apparentement.h
 934f6b548ecde95a953c1e615e1bf28c *src/base.h
@@ -76,7 +76,7 @@ bcd23138fe49f231ef4a4f1402fd5be9 *src/congen.cpp
 fcb25bc6e6a86f2abe64947ac4bb8f40 *src/congen.h
 3a3f052e18b7f6107e864665208f9637 *src/consanguinite.cpp
 6ff4e793d00110862ac7d7c836a089a6 *src/consanguinite.h
-d05b890b76c6a7c070208eaca5ac19e3 *src/exception.cpp
+db1c9148e8d9737410901aa61137a2cc *src/exception.cpp
 cc9471e22b54627f8d28fa2ea4264cdc *src/exception.h
 80205aef4e5cf98ecfea70a850668f94 *src/fondateur.cpp
 47d24c0f15f686d8f32da68edfb69a2a *src/fondateur.h
@@ -105,6 +105,7 @@ eef7bc1c527b4c66e917eab895e684ef *src/mpi.c
 e799b0a550f98abc7c47690445c7860a *src/outilsalloc.h
 d474362f08004eda4455d5e8bdc53166 *src/probsimul.cpp
 d6ff2245a079c56a2bdd8728a575c839 *src/probsimul.h
+962802a18161599b7091f6ab005284d7 *src/registerDynamicSymbol.c
 6aad2854eae2ea3175e394c912a14827 *src/statanal.cpp
 b17c44f0735d86c00484bc0c3cfad9fb *src/statanal.h
 1fcb0b738118edf73d3d49f80a2dc4f2 *src/userInterface.cpp
