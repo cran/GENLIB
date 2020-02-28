@@ -1015,8 +1015,10 @@ gen.phiMean = function(phiMatrix)#, check = 1)#named = T,
 		named = retour$named
 	#}
 	#Test pour accelerer la procedure
-	if(class(phiMatrix) == "matrix") mean(phiMatrix[phiMatrix < 0.5]) else GLapplyPhi(phiMatrix, function(x)
-		mean(x[x < 0.5]), named = named)
+	if("matrix" %in% class(phiMatrix))
+		mean(phiMatrix[phiMatrix < 0.5])
+	else
+		GLapplyPhi(phiMatrix, function(x) mean(x[x < 0.5]), named = named)
 }
 
 #gen.phiMT = function(gen, pro = 0, nbgenerations = 0, print.it = F, named = T, check = 1)

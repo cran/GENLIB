@@ -1,7 +1,7 @@
-7d5374193ea6b6b85da52fdae5eb11bc *DESCRIPTION
+d87922503d9972b03a27300b43d73f84 *DESCRIPTION
 5d8dbfe5c4d0ec38581062b299747b26 *NAMESPACE
 ab34eeac5e0f05039ba2ef4ff1366f12 *R/classes_methodes.R
-069c411e1b88c46b08938b432e950609 *R/fonctionsBase.R
+7f03be17db7f1d841a0bbb50ed5bb3e0 *R/fonctionsBase.R
 d57b702654e17af61c24a6e31d7f2306 *R/fonctionsGraph.R
 9f9178790ccf392006a415f54421c4ca *R/fonctionsPAR.R
 93010530f1fa2b84f152012c9d9bbd83 *R/fonctionsPriv.R
@@ -62,9 +62,9 @@ caaea0f43fcfa07f497a222616549a7a *man/gen.phi.Rd
 cdf97e3f81049d84e5bb4ba79987d848 *man/gen.simuSample.Rd
 d47016b0d6ed8023208368cbaecd05ec *man/gen.simuSampleFreq.Rd
 379dba921ae540618e367e35e04d9901 *man/gen.simuSet.Rd
-53f07d7455bc29367e8bb6e0d9e3d9f6 *man/genea140.Rd
-8c3ef738365a23e629594e6fe7041ae8 *man/geneaJi.Rd
-9e553b1aea7ef23cb4c57617ab7ab101 *man/pop140.Rd
+c722b2dfc3bba100c505ec32bff22d60 *man/genea140.Rd
+c033114d1b4f2a7212ccbb873dea2703 *man/geneaJi.Rd
+077e9bf47c84b75b265ef951015edd06 *man/pop140.Rd
 928e3746d6290b3d8b989698b93c79ac *src/Makevars
 6ad5e7cf4076b7043b34e6dedf57790c *src/Makevars.win
 2917eee5bd388fe92d0c10bc4b988d04 *src/apparentement.cpp

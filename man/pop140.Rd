@@ -5,7 +5,7 @@
 \description{
   The 140 individuals from the genealogical corpus from Quebec were sampled from 7 different populations from 5 regions; Quebec City, Montreal, Saguenay, North Shore, Gaspesia. In Gaspesia we find 3 different populations: French-Canadians, Acadians and Loyalists.
   }
-\usage{pop140}
+\usage{data(pop140)}
 \format{
   [, 1]  ind:  An individual's ID number
   

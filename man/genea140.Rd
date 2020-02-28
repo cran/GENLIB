@@ -5,7 +5,7 @@
 \description{
 A genealogical corpus made of 41523 individuals from the province of Quebec, Canada. A total of 140 individuals have been sampled in seven sub-populations, listed in pop140, and their genealogies were reconstructed as far back as possible using the BALSAC population register and the Early Quebec Population Register.
 }
-\usage{genea140}
+\usage{data(genea140)}
 \format{
 A data frame with 41523 observations on 11 variables.
 

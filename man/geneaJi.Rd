@@ -5,7 +5,7 @@
 \description{
 A modified version of a pedigree of two Jicaque Indians studied by Chapman & Jacquard (1971).
 }
-\usage{geneaJi}
+\usage{data(geneaJi)}
 \format{
 A data frame with 29 observations on 4 variables.
 
