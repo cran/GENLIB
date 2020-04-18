@@ -72,7 +72,7 @@ gen.phiCI = function(phiMatrix, prob = c(0.025, 0.05, 0.95, 0.975), b = 5000, pr
 	}
 	#fin Glapplu  param=pprogress=print.it,b=b,prob=prob) 
 	#Test pour accelerer la procedure
-	if(class(matricephi) == "matrix") {
+	if("matrix" %in% class(matricephi)) {
 		ret <- FUN(matricephi, pprogress = print.it, b = b, prob = prob)
 		if(!named)
 			class(ret) <- "numeric"

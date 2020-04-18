@@ -1,4 +1,4 @@
-d87922503d9972b03a27300b43d73f84 *DESCRIPTION
+43923cda2b04e5f95336e41a3baa9989 *DESCRIPTION
 5d8dbfe5c4d0ec38581062b299747b26 *NAMESPACE
 ab34eeac5e0f05039ba2ef4ff1366f12 *R/classes_methodes.R
 7f03be17db7f1d841a0bbb50ed5bb3e0 *R/fonctionsBase.R
@@ -6,7 +6,7 @@ d57b702654e17af61c24a6e31d7f2306 *R/fonctionsGraph.R
 9f9178790ccf392006a415f54421c4ca *R/fonctionsPAR.R
 93010530f1fa2b84f152012c9d9bbd83 *R/fonctionsPriv.R
 7e4ae3c4a3bcd3008f954b9882fa5c7a *R/fonctionsSimul.R
-dd0b2d8c1595dee3b40ca768fd36f177 *R/fonctionsStat.R
+4026c7ee4668dd24a37b25edbf764e1e *R/fonctionsStat.R
 2eef6694e34f509f08f753277b7a105f *R/genlibDLL.R
 1ea0b9948189cbe52868ebafda743404 *data/genea140.rda
 7e43158f5e17c25bdda64ad04b69c28e *data/geneaJi.rda

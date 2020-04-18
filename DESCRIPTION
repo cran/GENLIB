@@ -1,8 +1,8 @@
 Package: GENLIB
 Type: Package
 Title: Genealogical Data Analysis
-Version: 1.0.7
-Date: 2020-02-13
+Version: 1.0.8
+Date: 2020-03-20
 Authors@R: c( person("Louis",			"Houde",        role="aut"),
 		    person("Jean-Francois",	"Lefebvre",	role="aut", email="jf_lef@yahoo.ca"),
 		    person("Valery",		"Roy-Lagace",	role="aut"),
@@ -16,7 +16,7 @@ Depends: R (>= 3.1.0), Rcpp (>= 0.9.10)
 Imports: kinship2, methods, bootstrap, Matrix, lattice, quadprog,
         foreach, parallel, doParallel
 LinkingTo: Rcpp
-Packaged: 2020-02-27 13:49:54 UTC; jarno
+Packaged: 2020-03-20 14:43:02 UTC; jarno
 NeedsCompilation: yes
 Author: Louis Houde [aut],
   Jean-Francois Lefebvre [aut],
@@ -26,4 +26,4 @@ Author: Louis Houde [aut],
   Marie-Helene Roy-Gagnon [cre]
 Maintainer: Marie-Helene Roy-Gagnon <mroygagn@uottawa.ca>
 Repository: CRAN
-Date/Publication: 2020-02-28 07:30:02 UTC
+Date/Publication: 2020-04-18 07:40:21 UTC
