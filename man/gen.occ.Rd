@@ -23,7 +23,7 @@
 \examples{
 data(geneaJi) 
 genJi<-gen.genealogy(geneaJi) 
-\dontrun{Number of occurences of ancestors in the specified proband's genealogy}
+# Number of occurences of ancestors in the specified proband's genealogy
 gen.occ(genJi, pro=c(1,29), ancestors=c(3,6,10,12,14,16,18,20,26,28))
 
 data(genea140) 

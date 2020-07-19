@@ -49,14 +49,14 @@ const char *stype[]=
 //     FONCTION DE CONTROLE
 //******************************************** 
 
-RcppExport void SPLUSFlushCacheGenealogie()
+RcppExport SEXP SPLUSFlushCacheGenealogie()
 {
 	//Flush la cache de la genealogie et autre
-	FlushGenealogie();	
-	return;		
+	FlushGenealogie();
+	return R_NilValue;
 }
 
-RcppExport void SPLUSGetTimer(SEXP sTimeInSec)
+RcppExport SEXP SPLUSGetTimer(SEXP sTimeInSec)
 {
 	//Flush la cache de la genealogie et autre
 	int * TimeInSec;
@@ -64,7 +64,7 @@ RcppExport void SPLUSGetTimer(SEXP sTimeInSec)
 	Rcpp::IntegerVector dat(sTimeInSec);
 	TimeInSec = &dat[0];
 	*TimeInSec = getLastTimer();
-	return;		
+	return R_NilValue;
 }
 
 RcppExport SEXP SPLUSValidateGenealogie(SEXP RGenealogie, SEXP RisValid)
@@ -88,7 +88,7 @@ RcppExport SEXP SPLUSValidateGenealogie(SEXP RGenealogie, SEXP RisValid)
 
 /// Fonction d'interface Splus pour change le temps maximum des fonctions longue
 /** \sa setCurrentMaxTime() getCurrentMaxTime() */
-RcppExport void SPLUSChangeMaxProcessingTime(SEXP snewMaximum,SEXP soldMaximum)
+RcppExport SEXP SPLUSChangeMaxProcessingTime(SEXP snewMaximum,SEXP soldMaximum)
 {	
 	double * newMaximum, * oldMaximum;
 	//newMaximum = NUMERIC_POINTER(snewMaximum);
@@ -101,7 +101,7 @@ RcppExport void SPLUSChangeMaxProcessingTime(SEXP snewMaximum,SEXP soldMaximum)
 	getCurrentMaxTime(oldMaximum);
 	if (*newMaximum>=0)
 		setCurrentMaxTime(*newMaximum);
-	return;	
+	return R_NilValue;
 }
 
 /// **********
@@ -111,7 +111,7 @@ RcppExport void SPLUSChangeMaxProcessingTime(SEXP snewMaximum,SEXP soldMaximum)
 
 /// Fonction d'interface Splus pour PhiMatrix
 /** \sa PhiMatrix()*/
-RcppExport void SPLUSPhiMatrix(SEXP sGenealogie, SEXP sProposant, SEXP sNProposant, SEXP sNiveau, SEXP sPDRetour, SEXP sPrintit)
+RcppExport SEXP SPLUSPhiMatrix(SEXP sGenealogie, SEXP sProposant, SEXP sNProposant, SEXP sNiveau, SEXP sPDRetour, SEXP sPrintit)
 {
 	STARTTIMER;
 	int * Genealogie, * proposant, * NProposant, * Niveau, * printit ;
@@ -135,12 +135,12 @@ RcppExport void SPLUSPhiMatrix(SEXP sGenealogie, SEXP sProposant, SEXP sNProposa
 	PhiMatrix(Genealogie, proposant,*NProposant,*Niveau, pdRetour,*printit);
 //	PhiMatrix(Genealogie, proposant, NProposant, Niveau, pdR, printit);
 	STOPTIMER;
-	return;
+	return R_NilValue;
 }
 
 /// Fonction d'interface Splus pour PhiMatrix
 /** \sa PhiMatrix()*/
-RcppExport void SPLUSPhiMatrixMT(SEXP sGenealogie, SEXP sproposant, SEXP sNProposant, SEXP sNiveau, SEXP spdRetour, SEXP sprintit)
+RcppExport SEXP SPLUSPhiMatrixMT(SEXP sGenealogie, SEXP sproposant, SEXP sNProposant, SEXP sNiveau, SEXP spdRetour, SEXP sprintit)
 {
 	STARTTIMER;
 	int * Genealogie, * proposant, * NProposant, * Niveau, * printit;
@@ -165,12 +165,12 @@ RcppExport void SPLUSPhiMatrixMT(SEXP sGenealogie, SEXP sproposant, SEXP sNPropo
 	//NProposant, Niveau, pdR,printit);
 	
 	STOPTIMER;
-	return;
+	return R_NilValue;
 }
 
 /// Fonction d'interface Splus pour Phis2
 /** \sa Phis2() Phis()*/
-RcppExport void SPLUSPhis(SEXP sGenealogie, SEXP sproposant, SEXP sNProposant,SEXP sNiveauMin, SEXP sNiveauMax, SEXP spdRetour, 
+RcppExport SEXP SPLUSPhis(SEXP sGenealogie, SEXP sproposant, SEXP sNProposant,SEXP sNiveauMin, SEXP sNiveauMax, SEXP spdRetour, 
 					 SEXP sMatrixArray, SEXP sprintit)
 {
 	STARTTIMER;
@@ -201,10 +201,10 @@ RcppExport void SPLUSPhis(SEXP sGenealogie, SEXP sproposant, SEXP sNProposant,SE
 	//NProposant,NiveauMin,NiveauMax,pdR,MArray,printit);
 	STOPTIMER;
 
-	return;
+	return R_NilValue;
 }
 
-RcppExport void SPLUSPhisMT(	SEXP sGenealogie , SEXP sproposant, SEXP sNProposant, SEXP sNiveauMin, SEXP sNiveauMax, SEXP spdRetour, 
+RcppExport SEXP SPLUSPhisMT(	SEXP sGenealogie , SEXP sproposant, SEXP sNProposant, SEXP sNiveauMin, SEXP sNiveauMax, SEXP spdRetour, 
 						SEXP sMatrixArray, SEXP sprintit)
 {
 	STARTTIMER;
@@ -236,7 +236,7 @@ RcppExport void SPLUSPhisMT(	SEXP sGenealogie , SEXP sproposant, SEXP sNProposan
 	//NProposant,NiveauMin,NiveauMax, pdR,MArray,printit);
 	STOPTIMER;
 
-	return;
+	return R_NilValue;
 }
 
 
@@ -246,7 +246,7 @@ RcppExport void SPLUSPhisMT(	SEXP sGenealogie , SEXP sproposant, SEXP sNProposan
 
 /// Fonction d'interface Splus pour consan (F)
 /** \sa consan()*/
-RcppExport void SPLUSF(SEXP sGenealogie, SEXP sproposant, SEXP sNProposant, SEXP sNiveau, SEXP spdRetour, SEXP sprintit)
+RcppExport SEXP SPLUSF(SEXP sGenealogie, SEXP sproposant, SEXP sNProposant, SEXP sNiveau, SEXP spdRetour, SEXP sprintit)
 {
 	STARTTIMER;
 	int * Genealogie, * proposant, * NProposant, * printit;
@@ -270,12 +270,12 @@ RcppExport void SPLUSF(SEXP sGenealogie, SEXP sproposant, SEXP sNProposant, SEXP
 	consan(Genealogie, proposant,*NProposant,*Niveau, pdRetour,*printit);
 	//,NProposant,Niveau, pdRetour,printit);
 	STOPTIMER;
-	return;
+	return R_NilValue;
 }
 
 /// Fonction d'interface Splus pour consanFs 
 /** \sa consanFs()*/
-RcppExport void SPLUSFS(SEXP sGenealogie, SEXP sproposant, SEXP sNProposant, SEXP sNiveauMin, SEXP sNiveauMax, SEXP spdRetour, SEXP sprintit)
+RcppExport SEXP SPLUSFS(SEXP sGenealogie, SEXP sproposant, SEXP sNProposant, SEXP sNiveauMin, SEXP sNiveauMax, SEXP spdRetour, SEXP sprintit)
 {
 	STARTTIMER;
 	int * Genealogie, * proposant, * NProposant, * printit;
@@ -300,8 +300,8 @@ RcppExport void SPLUSFS(SEXP sGenealogie, SEXP sproposant, SEXP sNProposant, SEX
 	
 	consanFs(Genealogie, proposant,*NProposant,*NiveauMin,*NiveauMax, pdRetour,*printit);
 	//NProposant,NiveauMin,NiveauMax, pdRetour,printit);
-	STOPTIMER;	
-	return;
+	STOPTIMER;
+	return R_NilValue;
 }
 
 /// **********
@@ -310,7 +310,7 @@ RcppExport void SPLUSFS(SEXP sGenealogie, SEXP sproposant, SEXP sNProposant, SEX
 
 /// Fonction d'interface Splus pour CountChild
 /** \sa CountChild()*/
-RcppExport void SPLUSChild(SEXP sGenealogie, SEXP splProposant,SEXP slNProposant, SEXP sretour)
+RcppExport SEXP SPLUSChild(SEXP sGenealogie, SEXP splProposant,SEXP slNProposant, SEXP sretour)
 {
 	STARTTIMER;
 	int * Genealogie, * plProposant, * retour, * lNProposant;
@@ -329,13 +329,13 @@ RcppExport void SPLUSChild(SEXP sGenealogie, SEXP splProposant,SEXP slNProposant
 	CountChild(Genealogie, plProposant, *lNProposant, retour);
 	//, lNProposant, retour);
 	STOPTIMER;
-	return;
+	return R_NilValue;
 } 
 
 
 /// Fonction d'interface Splus pour ebranche
 /** \sa ebranche()*/
-RcppExport  void  SPLUSebranche(SEXP sGenealogie, SEXP sProposant, SEXP sNProposant, SEXP sAncetre, SEXP sNAncetre, 
+RcppExport  SEXP  SPLUSebranche(SEXP sGenealogie, SEXP sProposant, SEXP sNProposant, SEXP sAncetre, SEXP sNAncetre, 
 						  SEXP sRetour, SEXP sTaille)
 {
 	STARTTIMER;
@@ -358,13 +358,13 @@ RcppExport  void  SPLUSebranche(SEXP sGenealogie, SEXP sProposant, SEXP sNPropos
 	ebranche(Genealogie, proposant, *nproposant, ancetre, *nancetre, retour, taille);
 	//nproposant, ancetre, nancetre, retour, taille);
 	STOPTIMER;
-	return ;
+	return R_NilValue;
 }
 
 
 /// Fonction d'interface Splus pour numeroGen
 /** \sa compareGen()*/
-RcppExport  void  SPLUSnumeroGen(SEXP sGenealogie, SEXP splProposant, SEXP sNProposant, SEXP sretour)		   
+RcppExport  SEXP  SPLUSnumeroGen(SEXP sGenealogie, SEXP splProposant, SEXP sNProposant, SEXP sretour)		   
 {
 
 	STARTTIMER;
@@ -384,11 +384,11 @@ RcppExport  void  SPLUSnumeroGen(SEXP sGenealogie, SEXP splProposant, SEXP sNPro
 	numeroGen(Genealogie, plProposant,*NProposant, retour);
 	//NProposant, retour);
 	STOPTIMER;
-	return ;
+	return R_NilValue;
 }
 /// Fonction d'interface Splus pour numeroGenMin
 /** \sa compareGen()*/
-RcppExport  void  SPLUSnumGenMin(SEXP sGenealogie, SEXP splProposant,SEXP sNProposant, SEXP sretour)		   
+RcppExport  SEXP  SPLUSnumGenMin(SEXP sGenealogie, SEXP splProposant,SEXP sNProposant, SEXP sretour)		   
 {
 
 	STARTTIMER;
@@ -409,12 +409,12 @@ RcppExport  void  SPLUSnumGenMin(SEXP sGenealogie, SEXP splProposant,SEXP sNProp
 	//NProposant, retour);
 	STOPTIMER;
 
-	return ;
+	return R_NilValue;
 }
 
 /// Fonction d'interface Splus pour numeroGenMoy
 /** \sa compareGen()*/
-RcppExport  void  SPLUSnumGenMoy(SEXP sGenealogie, SEXP splProposant,SEXP sNProposant, SEXP sretour)		   
+RcppExport  SEXP  SPLUSnumGenMoy(SEXP sGenealogie, SEXP splProposant,SEXP sNProposant, SEXP sretour)		   
 {
 
 	STARTTIMER;
@@ -436,7 +436,7 @@ RcppExport  void  SPLUSnumGenMoy(SEXP sGenealogie, SEXP splProposant,SEXP sNProp
 	//NProposant, retour);
 	STOPTIMER;
 
-	return ;
+	return R_NilValue;
 }
 /// **********
 //	CONTRIBUTION GENETIQUE
@@ -444,7 +444,7 @@ RcppExport  void  SPLUSnumGenMoy(SEXP sGenealogie, SEXP splProposant,SEXP sNProp
 
 /// Fonction d'interface Splus pour Congen
 /** \sa Congen()*/
-RcppExport void SPLUSConGen(SEXP sGenealogie, SEXP slProposant, SEXP sNProposant, SEXP slAncetre, SEXP sNAncetre, SEXP sdRetour, 
+RcppExport SEXP SPLUSConGen(SEXP sGenealogie, SEXP slProposant, SEXP sNProposant, SEXP slAncetre, SEXP sNAncetre, SEXP sdRetour, 
 					   SEXP sprintit)
 {
 	STARTTIMER;
@@ -471,12 +471,12 @@ RcppExport void SPLUSConGen(SEXP sGenealogie, SEXP slProposant, SEXP sNProposant
 	Congen(Genealogie, plProposant , *NProposant, plAncetre, *NAncetre, dRetour, *printit);
 	//NProposant, plAncetre, NAncetre, dRetour, printit);
 	STOPTIMER;
-	return;
+	return R_NilValue;
 }
 
 /// Fonction d'interface Splus pour Congen
 /** \sa Congen()*/
-RcppExport void SPLUSConGenPLUS(SEXP sGenealogie, SEXP splProposant,SEXP slNProposant, SEXP splAncetre, SEXP slNAncetre, SEXP spdSexe, 
+RcppExport SEXP SPLUSConGenPLUS(SEXP sGenealogie, SEXP splProposant,SEXP slNProposant, SEXP splAncetre, SEXP slNAncetre, SEXP spdSexe, 
 						  SEXP spdRetour, SEXP sprintit)
 {
 	STARTTIMER;
@@ -505,12 +505,12 @@ RcppExport void SPLUSConGenPLUS(SEXP sGenealogie, SEXP splProposant,SEXP slNProp
 	CongenPLUS(Genealogie, plProposant, *lNProposant, plAncetre, *lNAncetre, pdSexe, pdRetour, *printit);
 	// lNProposant, plAncetre, lNAncetre, pdSexe, pdRetour, printit);
 	STOPTIMER;
-	return;
+	return R_NilValue;
 }
 
 /// Fonction d'interface Splus pour CongenCumul
 /** \sa CongenCumul()*/
-RcppExport void SPLUSCGCumul(	SEXP sGenealogie, SEXP splProposant,SEXP slNProposant, SEXP splAncetre, SEXP slNAncetre, SEXP sAncRet,
+RcppExport SEXP SPLUSCGCumul(	SEXP sGenealogie, SEXP splProposant,SEXP slNProposant, SEXP splAncetre, SEXP slNAncetre, SEXP sAncRet,
 						SEXP spdRetour, SEXP spdRetourCumul, SEXP sprintit)
 {
 	STARTTIMER;
@@ -540,12 +540,12 @@ RcppExport void SPLUSCGCumul(	SEXP sGenealogie, SEXP splProposant,SEXP slNPropos
 	CongenCumul(Genealogie, plProposant, *lNProposant, plAncetre, *lNAncetre, AncRet, pdRetour, pdRetourCumul, *printit);
 	//lNProposant, plAncetre, lNAncetre, AncRet, pdRetour, pdRetourCumul, printit);
 	STOPTIMER
-	return;
+	return R_NilValue;
 }
 
 /// Fonction d'interface Splus pour CongenCumul
 /** \sa CongenCumuldirect()*/
-RcppExport void SPLUSCGCumuldirect(SEXP smatriceCG, SEXP slNProposant, SEXP splAncetre, SEXP slNAncetre, SEXP sAncRet, 
+RcppExport SEXP SPLUSCGCumuldirect(SEXP smatriceCG, SEXP slNProposant, SEXP splAncetre, SEXP slNAncetre, SEXP sAncRet, 
 							SEXP spdSomAnc, SEXP spdSomCumul)
 {
 	STARTTIMER;
@@ -570,7 +570,7 @@ RcppExport void SPLUSCGCumuldirect(SEXP smatriceCG, SEXP slNProposant, SEXP splA
 	CongenCumuldirect(matriceCG, *lNProposant, plAncetre, *lNAncetre, AncRet,pdSomAnc,pdSomCumul);
 	//lNProposant, plAncetre, lNAncetre, AncRet, pdSomAnc, pdSomCumul);
 	STOPTIMER
-	return;
+	return R_NilValue;
 }
 
 /// **********
@@ -581,7 +581,7 @@ RcppExport void SPLUSCGCumuldirect(SEXP smatriceCG, SEXP slNProposant, SEXP splA
 
 /// Fonction d'interface Splus pour simul
 /** \sa simul()*/
-//RcppExport void SPLUSSimul(SEXP sGenealogie, SEXP sproposant, SEXP setatproposant, SEXP snproposant, SEXP sancetre, SEXP setatancetre,
+//RcppExport SEXP SPLUSSimul(SEXP sGenealogie, SEXP sproposant, SEXP setatproposant, SEXP snproposant, SEXP sancetre, SEXP setatancetre,
 RcppExport SEXP SPLUSSimul(SEXP sGenealogie, SEXP sproposant, SEXP setatproposant, SEXP snproposant, SEXP sancetre, SEXP setatancetre,
 					  SEXP snancetre, SEXP snSimul, SEXP spdRetConj, SEXP spdRetSimul, SEXP spdRetProp, SEXP sprobRecomb,
 					  SEXP sprobSurvieHomo, SEXP sPrintProgress)
@@ -631,7 +631,7 @@ RcppExport SEXP SPLUSSimul(SEXP sGenealogie, SEXP sproposant, SEXP setatproposan
 
 /// Fonction d'interface Splus pour simulsingle
 /** \sa simulsingle()*/
-RcppExport void SPLUSSimulSingle(SEXP sGenealogie, SEXP sproposant, SEXP snproposant, SEXP sancetre, SEXP setatancetre, SEXP snancetre, 
+RcppExport SEXP SPLUSSimulSingle(SEXP sGenealogie, SEXP sproposant, SEXP snproposant, SEXP sancetre, SEXP setatancetre, SEXP snancetre, 
 						   SEXP sNSimul, SEXP spdRetour, SEXP sPrintProgress)
 {
 	STARTTIMER;
@@ -661,12 +661,12 @@ RcppExport void SPLUSSimulSingle(SEXP sGenealogie, SEXP sproposant, SEXP snpropo
 	simulsingle(Genealogie, proposant, *nproposant, ancetre, etatancetre, *nancetre, *NSimul, pdRetour, *PrintProgress);
 	//nproposant, ancetre, etatancetre, nancetre, NSimul, pdRetour, PrintProgress);
 	STOPTIMER;
-	return;
+	return R_NilValue;
 }
 
 /// Fonction d'interface Splus pour simulsingleFreq
 /** \sa simulsingleFreq()*/
-RcppExport void SPLUSSimulSingleFreq(SEXP sGenealogie, SEXP sproposant, SEXP snproposant, SEXP sancetre, SEXP setatancetre, SEXP snancetre,
+RcppExport SEXP SPLUSSimulSingleFreq(SEXP sGenealogie, SEXP sproposant, SEXP snproposant, SEXP sancetre, SEXP setatancetre, SEXP snancetre,
 							  SEXP sNSimul, SEXP spdRetour,SEXP sPrintProgress)
 {
 	STARTTIMER;
@@ -697,7 +697,7 @@ RcppExport void SPLUSSimulSingleFreq(SEXP sGenealogie, SEXP sproposant, SEXP snp
 	simulsingleFreq(Genealogie, proposant, *nproposant, ancetre, etatancetre, *nancetre, *NSimul, pdRetour, *PrintProgress);
 	//nproposant, ancetre, etatancetre, nancetre, NSimul, pdRetour, PrintProgress);
 	STOPTIMER;
-	return;
+	return R_NilValue;
 }
 
 /// Fonction d'interface Splus pour simulsingleProb
@@ -812,7 +812,7 @@ RcppExport SEXP SPLUSProb(SEXP sGenealogie, SEXP sproposant, SEXP setatproposant
 /// Fonction d'interface Splus pour CoefApparentement
 /** \sa CoefApparentement()*/
 
-RcppExport void SPLUSCoeffApparentement(SEXP sGenealogie, SEXP sproposant, SEXP snproposant, SEXP sancetre, SEXP sretour, 
+RcppExport SEXP SPLUSCoeffApparentement(SEXP sGenealogie, SEXP sproposant, SEXP snproposant, SEXP sancetre, SEXP sretour, 
 								SEXP sDuppDetection, SEXP sprintprogress)
 {
 	STARTTIMER
@@ -839,7 +839,7 @@ RcppExport void SPLUSCoeffApparentement(SEXP sGenealogie, SEXP sproposant, SEXP 
 	CoefApparentement(Genealogie, proposant, *nproposant, ancetre, retour, *DuppDetection, *printprogress);
 	//nproposant, ancetre, retour, DuppDetection, printprogress);
 	STOPTIMER;
-	return; 
+	return R_NilValue; 
 } 
 
 
@@ -1037,7 +1037,7 @@ RcppExport SEXP SPLUSOutgen(SEXP Rgenealogie, SEXP RplRetIndividu, SEXP RplRetPe
 
 	\sa LengthGenealogie()
 */
-RcppExport void SPLUSOutIndice(SEXP sgenealogie, SEXP splRetIndividu, SEXP splRetPere, SEXP splRetMere, SEXP splRetSexe, SEXP smustsort)
+RcppExport SEXP SPLUSOutIndice(SEXP sgenealogie, SEXP splRetIndividu, SEXP splRetPere, SEXP splRetMere, SEXP splRetSexe, SEXP smustsort)
 {
 
 	STARTTIMER;			
@@ -1082,7 +1082,7 @@ RcppExport void SPLUSOutIndice(SEXP sgenealogie, SEXP splRetIndividu, SEXP splRe
 		SortGenealogie3Vecteur(plRetIndividu,plRetPere,plRetMere,plRetSexe,lNIndividu);
 	STOPTIMER;
 
-	return;
+	return R_NilValue;
 }
 
 
@@ -1094,7 +1094,7 @@ RcppExport void SPLUSOutIndice(SEXP sgenealogie, SEXP splRetIndividu, SEXP splRe
 
 /// Fonction d'interface Splus pour FondParGen
 /** \sa initImplexe()*/
-RcppExport void SPLUSFondParGen(SEXP sgenealogie, SEXP sprop, SEXP snbProp, SEXP sretour)
+RcppExport SEXP SPLUSFondParGen(SEXP sgenealogie, SEXP sprop, SEXP snbProp, SEXP sretour)
 {
 	STARTTIMER;
 	int * genealogie, * prop, * retour, *nbProp;
@@ -1113,6 +1113,6 @@ RcppExport void SPLUSFondParGen(SEXP sgenealogie, SEXP sprop, SEXP snbProp, SEXP
 	FondParGen(genealogie, prop, *nbProp, retour); //nbProp, 
 	STOPTIMER;
 
-	return ;
+	return R_NilValue;
 }
 

@@ -29,7 +29,7 @@ gen.genealogy(gen.df)
 data(geneaJi) 
 geneaJi[1:5,]
 genJi<-gen.genealogy(geneaJi)
-\dontrun{Print basic information about the genealogy}
+# Print basic information about the genealogy
 genJi
 }
 \keyword{manip}

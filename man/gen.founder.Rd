@@ -17,13 +17,13 @@
 \examples{
 data(geneaJi) 
 genJi<-gen.genealogy(geneaJi) 
-\dontrun{There are 6 founders}
+# There are 6 founders
 gen.founder(genJi)
 
 data(genea140) 
 gen140<-gen.genealogy(genea140)
 founder140<-gen.founder(gen140)  
-\dontrun{There are 7399 founders}
+# There are 7399 founders
 length(founder140)
 
 }

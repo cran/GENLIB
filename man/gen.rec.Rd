@@ -22,7 +22,7 @@
 \examples{
 data(geneaJi) 
 genJi<-gen.genealogy(geneaJi) 
-\dontrun{Number of probands which are descendants of an ancestor}
+# Number of probands which are descendants of an ancestor
 gen.rec(genJi)
 
 

@@ -32,7 +32,7 @@ data(geneaJi)
 genJi<-gen.genealogy(geneaJi) 
 gen.implex(genJi)
 gen.implex(genJi, type="IND")
-\dontrun{For the 5th generation}
+# For the 5th generation
 gen.implex(genJi, type="IND", genNo=5) 
 
 \donttest{

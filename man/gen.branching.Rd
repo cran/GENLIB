@@ -21,7 +21,7 @@ data(geneaJi)
 genJi<-gen.genealogy(geneaJi)
 genJi_part<-gen.branching(genJi,pro=c(2,28)) 
 
-\dontrun{Plots of original genealogy and of the branched version}
+# Plots of original genealogy and of the branched version
 layout(matrix(1:2,c(1,2),byrow=TRUE))
 gen.graph(genJi) 
 mtext("Original", line=2, cex=1.2)

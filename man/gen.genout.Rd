@@ -22,20 +22,20 @@
 }
 \examples{
 data(geneaJi) 
-\dontrun{original data is a data.frame}
+# Original data is a data.frame
 geneaJi[1:12,]
 
 genJi<-gen.genealogy(geneaJi) 
-\dontrun{as a genealogy object}
+# As a genealogy object
 genJi
 
-\dontrun{Genealogy as a data.frame}
+# Genealogy as a data.frame
 genJi_df<-gen.genout(genJi)
 genJi_df[1:12,]
 
-\dontrun{Maternal lineage }
+# Maternal lineage
 genJi_MaLi<-gen.lineages(geneaJi, maternal = TRUE) 
-\dontrun{Maternal lineage as a data.frame}
+# Maternal lineage as a data.frame
 genJi_MaLi_df<-gen.genout(genJi_MaLi)
 genJi_MaLi_df
 }

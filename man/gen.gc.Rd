@@ -37,7 +37,7 @@ gen140<-gen.genealogy(genea140)
 gc<-gen.gc(gen140, pro=c(454422,676521,677273,717537,717634,717709,868572), 
            ancestors=c(18305,18528,31114,18325))
 gc
-\dontrun{Mother-daughter transmission only with probability=0.5}
+# Mother-daughter transmission only with probability=0.5
 gc_MoLi<-gen.gc(gen140, pro=c(217891,302718,409282,802424,409682,443151),
 		ancestors=c(18321,218231,296200,39066,18679,442607),vctProb=c(0,0,0,0.5))
 gc_MoLi

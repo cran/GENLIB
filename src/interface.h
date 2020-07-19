@@ -30,53 +30,53 @@
 extern "C" {
 //#endif
 
-GENLIBDLL_DLL_API(void) SPLUSFlushCacheGenealogie();
-GENLIBDLL_DLL_API(void) SPLUSGetTimer(SEXP TimeInSec);
+GENLIBDLL_DLL_API(SEXP) SPLUSFlushCacheGenealogie();
+GENLIBDLL_DLL_API(SEXP) SPLUSGetTimer(SEXP TimeInSec);
 GENLIBDLL_DLL_API(SEXP) SPLUSValidateGenealogie(SEXP Genealogie, SEXP isValid);
-GENLIBDLL_DLL_API(void) SPLUSChangeMaxProcessingTime(SEXP newMaximum, SEXP oldMaximum);
+GENLIBDLL_DLL_API(SEXP) SPLUSChangeMaxProcessingTime(SEXP newMaximum, SEXP oldMaximum);
 
-GENLIBDLL_DLL_API(void) SPLUSPhiMatrix(SEXP Genealogie, SEXP proposant, SEXP NProposant,SEXP Niveau, SEXP pdRetour, SEXP printit);
+GENLIBDLL_DLL_API(SEXP) SPLUSPhiMatrix(SEXP Genealogie, SEXP proposant, SEXP NProposant,SEXP Niveau, SEXP pdRetour, SEXP printit);
 
-GENLIBDLL_DLL_API(void) SPLUSPhiMatrixMT(SEXP Genealogie, SEXP proposant, SEXP NProposant,SEXP Niveau, SEXP pdRetour, SEXP printit);
+GENLIBDLL_DLL_API(SEXP) SPLUSPhiMatrixMT(SEXP Genealogie, SEXP proposant, SEXP NProposant,SEXP Niveau, SEXP pdRetour, SEXP printit);
 
-GENLIBDLL_DLL_API(void) SPLUSPhis( SEXP Genealogie, SEXP proposant, SEXP NProposant, SEXP NiveauMin, SEXP NiveauMax, SEXP pdRetour, 
+GENLIBDLL_DLL_API(SEXP) SPLUSPhis( SEXP Genealogie, SEXP proposant, SEXP NProposant, SEXP NiveauMin, SEXP NiveauMax, SEXP pdRetour, 
 							SEXP MatrixArray, SEXP printit);
 
-GENLIBDLL_DLL_API(void) SPLUSPhisMT(SEXP Genealogie, SEXP proposant, SEXP NProposant,SEXP NiveauMin,SEXP NiveauMax, SEXP pdRetour,
+GENLIBDLL_DLL_API(SEXP) SPLUSPhisMT(SEXP Genealogie, SEXP proposant, SEXP NProposant,SEXP NiveauMin,SEXP NiveauMax, SEXP pdRetour,
 							 SEXP MatrixArray, SEXP printit);
 
-GENLIBDLL_DLL_API(void) SPLUSF(SEXP Genealogie, SEXP proposant, SEXP NProposant,SEXP Niveau, SEXP pdRetour, SEXP printit);
+GENLIBDLL_DLL_API(SEXP) SPLUSF(SEXP Genealogie, SEXP proposant, SEXP NProposant,SEXP Niveau, SEXP pdRetour, SEXP printit);
 
-GENLIBDLL_DLL_API(void) SPLUSFS(SEXP Genealogie, SEXP proposant, SEXP NProposant,SEXP NiveauMin,SEXP NiveauMax, SEXP pdRetour, SEXP printit);
+GENLIBDLL_DLL_API(SEXP) SPLUSFS(SEXP Genealogie, SEXP proposant, SEXP NProposant,SEXP NiveauMin,SEXP NiveauMax, SEXP pdRetour, SEXP printit);
 
-GENLIBDLL_DLL_API(void) SPLUSChild(SEXP Genealogie, SEXP plProposant,SEXP lNProposant, SEXP retour);
+GENLIBDLL_DLL_API(SEXP) SPLUSChild(SEXP Genealogie, SEXP plProposant,SEXP lNProposant, SEXP retour);
 
-//GENLIBDLL_DLL_API(void) SPLUSTestEbranche(SEXP sGenealogie, SEXP sProposant, SEXP sNProposant, SEXP sAncetre, SEXP sNAncetre, SEXP sRetour, SEXP sTaille);
-GENLIBDLL_DLL_API(void) SPLUSebranche(SEXP sGenealogie, SEXP sProposant, SEXP sNProposant, SEXP sAncetre, SEXP sNAncetre, SEXP sRetour, SEXP sTaille);  
+//GENLIBDLL_DLL_API(SEXP) SPLUSTestEbranche(SEXP sGenealogie, SEXP sProposant, SEXP sNProposant, SEXP sAncetre, SEXP sNAncetre, SEXP sRetour, SEXP sTaille);
+GENLIBDLL_DLL_API(SEXP) SPLUSebranche(SEXP sGenealogie, SEXP sProposant, SEXP sNProposant, SEXP sAncetre, SEXP sNAncetre, SEXP sRetour, SEXP sTaille);  
 
-GENLIBDLL_DLL_API(void) SPLUSnumeroGen(SEXP Genealogie, SEXP plProposant,SEXP NProposant, SEXP retour);
-GENLIBDLL_DLL_API(void) SPLUSnumGenMin(SEXP Genealogie, SEXP plProposant,SEXP NProposant, SEXP retour);
-GENLIBDLL_DLL_API(void) SPLUSnumGenMoy(SEXP Genealogie, SEXP plProposant,SEXP NProposant, SEXP retour);
+GENLIBDLL_DLL_API(SEXP) SPLUSnumeroGen(SEXP Genealogie, SEXP plProposant,SEXP NProposant, SEXP retour);
+GENLIBDLL_DLL_API(SEXP) SPLUSnumGenMin(SEXP Genealogie, SEXP plProposant,SEXP NProposant, SEXP retour);
+GENLIBDLL_DLL_API(SEXP) SPLUSnumGenMoy(SEXP Genealogie, SEXP plProposant,SEXP NProposant, SEXP retour);
 
-GENLIBDLL_DLL_API(void) SPLUSConGen(SEXP slGenealogie, SEXP slProposant, SEXP sNProposant, SEXP slAncetre, SEXP sNAncetre, SEXP sdRetour, SEXP sprintit);
+GENLIBDLL_DLL_API(SEXP) SPLUSConGen(SEXP slGenealogie, SEXP slProposant, SEXP sNProposant, SEXP slAncetre, SEXP sNAncetre, SEXP sdRetour, SEXP sprintit);
 
-GENLIBDLL_DLL_API(void) SPLUSConGenPLUS(SEXP plGenealogie, SEXP plProposant,SEXP lNProposant, SEXP plAncetre, SEXP lNAncetre, SEXP pdSexe,
+GENLIBDLL_DLL_API(SEXP) SPLUSConGenPLUS(SEXP plGenealogie, SEXP plProposant,SEXP lNProposant, SEXP plAncetre, SEXP lNAncetre, SEXP pdSexe,
 								SEXP pdRetour, SEXP printit);
 
-GENLIBDLL_DLL_API(void) SPLUSCGCumul(SEXP Genealogie, SEXP plProposant,SEXP lNProposant, SEXP plAncetre, SEXP lNAncetre, SEXP AncRet,
+GENLIBDLL_DLL_API(SEXP) SPLUSCGCumul(SEXP Genealogie, SEXP plProposant,SEXP lNProposant, SEXP plAncetre, SEXP lNAncetre, SEXP AncRet,
 							  SEXP pdRetour  ,SEXP pdRetourCumul, SEXP printit);
 
-GENLIBDLL_DLL_API(void) SPLUSCGCumuldirect(SEXP matriceCG, SEXP lNProposant, SEXP plAncetre, SEXP lNAncetre, SEXP AncRet, SEXP  pdSomAnc, SEXP pdSomCumul);
+GENLIBDLL_DLL_API(SEXP) SPLUSCGCumuldirect(SEXP matriceCG, SEXP lNProposant, SEXP plAncetre, SEXP lNAncetre, SEXP AncRet, SEXP  pdSomAnc, SEXP pdSomCumul);
 
-//GENLIBDLL_DLL_API(void) SPLUSSimul(SEXP Genealogie, SEXP proposant, SEXP etatproposant,SEXP nproposant, SEXP ancetre, SEXP etatancetre, SEXP nancetre,
+//GENLIBDLL_DLL_API(SEXP) SPLUSSimul(SEXP Genealogie, SEXP proposant, SEXP etatproposant,SEXP nproposant, SEXP ancetre, SEXP etatancetre, SEXP nancetre,
 GENLIBDLL_DLL_API(SEXP) SPLUSSimul(SEXP Genealogie, SEXP proposant, SEXP etatproposant,SEXP nproposant, SEXP ancetre, SEXP etatancetre, SEXP nancetre,
 							SEXP nSimul, SEXP pdRetConj, SEXP pdRetSimul, SEXP pdRetProp, SEXP sprobRecomb, SEXP sprobSurvieHomo,
 							SEXP PrintProgress);
 
-GENLIBDLL_DLL_API(void) SPLUSSimulSingle(SEXP Genealogie, SEXP proposant, SEXP nproposant, SEXP ancetre, SEXP etatancetre, SEXP nancetre,
+GENLIBDLL_DLL_API(SEXP) SPLUSSimulSingle(SEXP Genealogie, SEXP proposant, SEXP nproposant, SEXP ancetre, SEXP etatancetre, SEXP nancetre,
 								 SEXP NSimul, SEXP pdRetour,SEXP PrintProgress);
 
-GENLIBDLL_DLL_API(void) SPLUSSimulSingleFreq(SEXP Genealogie, SEXP proposant, SEXP nproposant, SEXP ancetre, SEXP etatancetre, SEXP nancetre,
+GENLIBDLL_DLL_API(SEXP) SPLUSSimulSingleFreq(SEXP Genealogie, SEXP proposant, SEXP nproposant, SEXP ancetre, SEXP etatancetre, SEXP nancetre,
 									SEXP NSimul, SEXP pdRetour,SEXP PrintProgress);
 
 GENLIBDLL_DLL_API(SEXP) SPLUSSimulSingleProb(SEXP SGenealogie, SEXP SplProposant, SEXP SlNProposant, SEXP SplAncetre,SEXP SlNAncetres,
@@ -88,7 +88,7 @@ GENLIBDLL_DLL_API(SEXP) SPLUSSimulSingleFct(SEXP SGenealogie, SEXP Sindividus, S
 GENLIBDLL_DLL_API(SEXP) SPLUSProb(SEXP Genealogie, SEXP proposant, SEXP etatproposant,SEXP nproposant, SEXP ancetre, SEXP etatancetre, SEXP nancetre,
 						    SEXP pdRetConj, SEXP pdRetSimul,SEXP PrintProgress,SEXP onlyConj);
 
-GENLIBDLL_DLL_API(void) SPLUSCoeffApparentement(SEXP Genealogie, SEXP proposant, SEXP Nproposant, SEXP ancetre, SEXP Retour,
+GENLIBDLL_DLL_API(SEXP) SPLUSCoeffApparentement(SEXP Genealogie, SEXP proposant, SEXP Nproposant, SEXP ancetre, SEXP Retour,
 									   SEXP DuppDetection, SEXP printprogress);
 
 GENLIBDLL_DLL_API(SEXP) SPLUSCALLCreerObjetGenealogie(SEXP SIndividu, SEXP SPere, SEXP SMere, SEXP SSexe);
@@ -96,9 +96,9 @@ GENLIBDLL_DLL_API(SEXP) SPLUSCALLCreerObjetGenealogie(SEXP SIndividu, SEXP SPere
 //									  std::vector<double> SMere, std::vector<double> SSexe);
 GENLIBDLL_DLL_API(SEXP) SPLUSOutgen(SEXP genealogie, SEXP plRetIndividu,SEXP plRetPere,SEXP plRetMere, SEXP plRetSexe, SEXP mustsort);
 
-GENLIBDLL_DLL_API(void) SPLUSOutIndice(SEXP genealogie, SEXP plRetIndividu,SEXP plRetPere,SEXP plRetMere, SEXP plRetSexe, SEXP mustsort);
+GENLIBDLL_DLL_API(SEXP) SPLUSOutIndice(SEXP genealogie, SEXP plRetIndividu,SEXP plRetPere,SEXP plRetMere, SEXP plRetSexe, SEXP mustsort);
 
-GENLIBDLL_DLL_API(void) SPLUSFondParGen(SEXP Genealogie,SEXP prop,SEXP nbProp, SEXP retour);
+GENLIBDLL_DLL_API(SEXP) SPLUSFondParGen(SEXP Genealogie,SEXP prop,SEXP nbProp, SEXP retour);
 
 //#ifdef __cplusplus
 }

@@ -19,7 +19,7 @@ data(geneaJi)
 genJi<-gen.genealogy(geneaJi) 
 gen.completeness(genJi, type="IND")
 gen.completenessVar(genJi)
-\dontrun{For the 4th generation}
+# For the 4th generation
 gen.completenessVar(genJi, genNo=4)
 
 \donttest{

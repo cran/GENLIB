@@ -23,7 +23,7 @@ data(geneaJi)
 genJi<-gen.genealogy(geneaJi) 
 gen.implex(genJi, type="IND")
 gen.implexVar(genJi)
-\dontrun{For the 5th generation}
+# For the 5th generation
 gen.implexVar(genJi, genNo=5)
 
 \donttest{

@@ -27,13 +27,13 @@ kinship
 
 kinship_allgenerations<-gen.phi(genJi, depthmin =1)
 kinship_allgenerations
-\dontrun{7th generations back in time is equivalent to considering all generations}
+# 7th generations back in time is equivalent to considering all generations
 kinship_allgenerations <- unclass(kinship_allgenerations)
 kinship_allgenerations[,,7]==kinship
 
 kinship_allgenerations[1,2,]
 
-\dontrun{Plot of kinship varying according to number of generations considered}
+# Plot of kinship varying according to number of generations considered
 plot(1:7,kinship_allgenerations[1,2,], type="b", xlab="Generation", ylab="Kinship value", 
      ylim=c(0,0.6), pch=0)
 points(1:7,kinship_allgenerations[1,3,], type="b", lty=12, pch=1)
