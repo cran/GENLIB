@@ -1,10 +1,10 @@
 /*! \file fondateur.cc
 \brief Implementation des fonctions de simulation calcul de probabilite
 
-Calcul et Analyse de diverse valeur dérivé du gene fondateur
+Calcul et Analyse de diverse valeur dï¿½rivï¿½ du gene fondateur
 
 
-\author Sébastien Leclerc 
+\author Sï¿½bastien Leclerc 
 \contributor Jean-Francois Lefebvre
 */
 
@@ -22,6 +22,7 @@ Calcul et Analyse de diverse valeur dérivé du gene fondateur
 #include "userInterface.h"
 #include "fondateur.h"
 #include <iostream>
+#include <fstream>
 #include <time.h>
 #include <string.h> 
 #include <math.h> 
@@ -36,10 +37,9 @@ Calcul et Analyse de diverse valeur dérivé du gene fondateur
 #include <Rcpp.h>
 #include <Rcpp/as.h>
 #include <Rcpp/Function.h>
+#include <unordered_map>
 //#include <boost/random/random_device.hpp>
 
-#define R_NO_REMAP
-//using namespace std;
 
 #ifdef NEG
 	#undef NEG
@@ -58,10 +58,10 @@ extern "C"
 
 const int MEGAOCTET = 1048576;//octet
 
-///Liste de tableau de unsigned char.... Utilisé pour representer une liste de nombre binaire de longueur variable
+///Liste de tableau de unsigned char.... Utilisï¿½ pour representer une liste de nombre binaire de longueur variable
 struct CApPath
 {
-	///Grand nombre binaire en format mpi représentant le chemin....
+	///Grand nombre binaire en format mpi reprï¿½sentant le chemin....
 	mp_int num;
 	///Pointeur vers l'element suivant de la liste
 	CApPath *next;
@@ -69,12 +69,31 @@ struct CApPath
 
 //CONSTRUCTION ET DESTRUCTION DES PATHS
 static CIndSimul** g_ExpCoeff_CheminParcouru=NULL; 
-///Utilise par ExploreCoeff comme étant le dernier chemin remplis (ou le premiers)
+///Utilise par ExploreCoeff comme ï¿½tant le dernier chemin remplis (ou le premiers)
 static CApPath ** g_ExpCoeff_Path=NULL;
-///Utilise par ExploreCoeff comme étant la cible de l'exploration
+///Utilise par ExploreCoeff comme ï¿½tant la cible de l'exploration
 static CIndSimul* g_ExpCoeff_Cible=NULL;
 static void FASTCALL ExploreCoeff(CIndSimul* Noeud);
 static void PathDestruction(CApPath **Path,int npath);
+
+
+std::string dump_hapref(std::unordered_map<int,haplotype*> *hapRef)
+{
+	std::stringstream out;
+	out << "hapRef\n";
+	for(auto h : (*hapRef)) {
+		out << "  " << h.first << "\n";
+		haplotype *hap = h.second;
+		out << "    &hap:         " << hap << std::endl;
+//		out << "    hap:          " << hap->hap << "\n";
+		out << "    pos:          " << hap->pos << "\n";
+		out << "    fixe:         " << hap->fixe << "\n";
+		out << "    next_segment: " << hap->next_segment << "\n";
+	}
+
+	return out.str();
+}
+
 
 // ********************************************************************
 //
@@ -89,18 +108,18 @@ static void PathDestruction(CApPath **Path,int npath);
 	Calcule la probatilite que de un..n proposant soit atteint
 	Calcule la probabilie que chaque proposant soit atteint
 
-	\param Genealogie	[in] Une genealogie construite à l'aide de gen.genealogie 
+	\param Genealogie	[in] Une genealogie construite ï¿½ l'aide de gen.genealogie 
 
-	\param plProposant	[in] Vecteur des no de proposant à étudier
+	\param plProposant	[in] Vecteur des no de proposant ï¿½ ï¿½tudier
 	\param plProEtat    [in] vecteur de taille lNProposant et representant l'etat a considerer pour chaque proposant
 			<br>&nbsp; &nbsp;&nbsp; &nbsp;0: La condition est remplie si se proposant n'est pas malade 
 			<br>&nbsp; &nbsp;&nbsp; &nbsp;1: La condition est remplie si le proposant recois 1-2 allele 
 			<br>&nbsp; &nbsp;&nbsp; &nbsp;2: La condition est remplie si le proposant recois 2 allele 
-	\param lNProposant	[in] Nombre d'élément du vecteur proposant
+	\param lNProposant	[in] Nombre d'ï¿½lï¿½ment du vecteur proposant
   
-	\param plAncetre	[in] Vecteur des no des ancetres correspondant proposant à étudier
+	\param plAncetre	[in] Vecteur des no des ancetres correspondant proposant ï¿½ ï¿½tudier
 	\param plAncEtat	[in] Vecteur de taille plAncetre representant le nombre d'allele atteint pour chaque Ancetre (0,1,2) 
-	\param lNAncetre	[in] Nombre d'élément du vecteur ancetre
+	\param lNAncetre	[in] Nombre d'ï¿½lï¿½ment du vecteur ancetre
 
 	\param lSimul		[in] Nombre de simulation a effectuer
 
@@ -113,8 +132,626 @@ static void PathDestruction(CApPath **Path,int npath);
 									
 	\param printprogress [in] imprime un message indiquant les progress accomplies
 
-	\return 0 si la fonction est executé avec succès 
+	\return 0 si la fonction est executï¿½ avec succï¿½s 
 */ 
+void simulhaplo(int* Genealogie, int* plProposant, int lNProposant, int* plAncetre, int lNAncetre,
+						int lSimul, double* probRecomb, std::unordered_map<int,haplotype*> *hapRef, std::string WD, int seed,
+						int* NumRecomb, int* NumMeioses)
+{
+	double precision = 1000000000.0;
+	std::string stroutHaplo; 
+	std::string	stroutAllHaplo;
+	std::string WD1 = WD;
+	stroutHaplo = WD+="/Proband_Haplotypes.txt";
+	stroutAllHaplo = WD1+="/All_nodes_haplotypes.txt";
+	std::ofstream outHaplo(stroutHaplo.c_str());
+	std::ofstream outAllHaplo(stroutAllHaplo.c_str());
+	
+	outHaplo << lSimul << ";" << lNProposant << "\n";
+	outAllHaplo << lSimul << ";" << lNProposant << "\n";
+
+	std::mt19937 my_rng = std::mt19937(seed);
+	std::uniform_real_distribution<> u_dist(0, 1);
+	std::poisson_distribution<int> p1_dist(probRecomb[0]);
+	std::poisson_distribution<int> p2_dist(probRecomb[1]);
+
+	try{
+
+	//CREATION DE TABLEAU D'INDIVIDU
+	int lNIndividu;
+	CIndSimul *Noeud=NULL;
+	LoadGenealogie(Genealogie, GTRUE, &lNIndividu, &Noeud);
+
+	//CREATION D'UN VECTEUR DE PROPOSANT
+	CIndSimul **NoeudPro=NULL;
+	LoadProposant(plProposant,lNProposant,&NoeudPro);
+
+	//CREATION OF AN ANCESTOR VECTOR *** with the reference haplotypes for the chosen ancestors. ***
+	CIndSimul **NoeudAnc=NULL;
+	LoadAncetre(plAncetre,lNAncetre,&NoeudAnc);
+
+	//Creation des tableau
+	INITGESTIONMEMOIRE;
+	CIndSimul** Ordre = (CIndSimul**) memalloc(lNIndividu,sizeof(CIndSimul*));
+
+	//Pour le sort spï¿½cial		
+	int*	OrdreSaut	= (int*) memalloc(lNIndividu,sizeof(int*));				
+	int NOrdre;
+	
+	int i;
+
+	//Initialize all the nodes
+	for(i=0;i<lNIndividu;i++)
+	{
+		Noeud[i].allele = 0;
+		Noeud[i].etat=GENNONEXPLORER;
+		Noeud[i].bFlagSort=0;
+		Noeud[i].clesHaplo_1 = 0; //"0.1";
+		Noeud[i].clesHaplo_2 = 0; //"0.1";
+	}
+
+	//label the nodes that are probands
+	for(i=0;i<lNProposant;i++){
+		NoeudPro[i]->etat=GENPROPOSANTINUTILE;
+	}
+
+	int cleFixe = 1; // haplotype keys
+	
+	//identifier et etiqueter les points de departs et les haplos ancetres (starting points and ancestor haplotypes)
+	for(i=0;i<lNAncetre;i++)
+	{		
+		NoeudAnc[i]->allele = 0;
+		NoeudAnc[i]->etat=GENDEPART;
+	    NoeudAnc[i]->clesHaplo_1 = cleFixe++;
+	    NoeudAnc[i]->clesHaplo_2 = cleFixe++;
+
+		std::ostringstream nom;
+		nom << NoeudAnc[i]->nom << ".1";
+		haplotype *tmp1 = new haplotype();//[1];
+		tmp1->hap  = nom.str();
+		tmp1->pos  = -1.0;
+		tmp1->fixe = 1;
+		(*hapRef)[NoeudAnc[i]->clesHaplo_1] = tmp1;
+		
+		nom.str(std::string());
+		nom << NoeudAnc[i]->nom << ".2";
+		haplotype *tmp2 = new haplotype();//[1];
+		tmp2->hap  = nom.str();
+		tmp2->pos  = -1.0;
+		tmp2->fixe = 1;
+		(*hapRef)[NoeudAnc[i]->clesHaplo_2] = tmp2;
+
+	}
+
+	//identifier et marque les noeuds utile et ceux inutile a la recherche
+	for(i=0;i<lNAncetre;i++)
+		ExploreArbre(NoeudAnc[i]);
+		
+	//create the order of traversal and calculate the jumps (Jumps are unecessary, only for speeding up allele calculations, will test if it works without)
+	PrepareSortPrioriteArbre(Noeud,lNIndividu);	
+	NOrdre=0;
+
+	memset(OrdreSaut,0,sizeof(int)*lNIndividu);
+	for(i=0;i<lNAncetre;i++)		
+		StartSortPrioriteArbre(NoeudAnc[i],Ordre,&NOrdre,OrdreSaut); // les infos de NoeudAnc sont pointes par Ordre dans "le bon ordre".
+
+	//Simulation
+	for(int csimul=0;csimul<lSimul; csimul++)
+	{
+		int clesSim= cleFixe;
+
+		for(int i=0;i<NOrdre;i++) {
+
+			int nbRecomb1 = p1_dist(my_rng); //number of recombination events of father's chromosomes
+			int nbRecomb2 = p2_dist(my_rng); //number of recombination events of mother's chromosomes
+			
+			NumRecomb[csimul] += nbRecomb1 + nbRecomb2;
+			NumMeioses[csimul] += 2;
+
+			double pHap;
+
+			outAllHaplo <<"{"<< csimul+1 <<";"<< Ordre[i]->nom <<";" ;
+			
+			if(Ordre[i]->pere != NULL){
+				outAllHaplo << nbRecomb1 <<",";
+				if(nbRecomb1 > 0){ //Recombination event in the father
+					double tailleTot[20];
+					pHap = u_dist(my_rng);
+					outAllHaplo << pHap;
+
+					for(int j=0;j<nbRecomb1;j++){
+						tailleTot[j] = u_dist(my_rng);
+						outAllHaplo << std::fixed << "," << double(round(tailleTot[j]*precision)/precision);
+					}
+					std::sort(tailleTot,tailleTot + nbRecomb1);
+					makeRecombF(Ordre[i], hapRef, pHap, nbRecomb1, tailleTot, clesSim);
+					outAllHaplo << ";";
+				}			
+				else{ //If no recombination just pass one of father's chromosomes down 
+					pHap = u_dist(my_rng);
+					outAllHaplo << pHap << ",0;";
+					if(pHap<0.50){
+						Ordre[i]->clesHaplo_1=Ordre[i]->pere->clesHaplo_1;
+					}
+					else{
+						Ordre[i]->clesHaplo_1=Ordre[i]->pere->clesHaplo_2;
+					}
+				}
+			}
+			else{
+				outAllHaplo << "0,0,0;" ;
+				Ordre[i]->clesHaplo_1 = 0;
+			}
+
+			if(Ordre[i]->mere != NULL){
+				outAllHaplo << nbRecomb2 << ",";
+				if(nbRecomb2 > 0){ //Recombination event in mother
+					double tailleTot[20];
+					pHap = u_dist(my_rng);
+					outAllHaplo << pHap;
+
+					for(int j=0;j<nbRecomb2;j++){
+						tailleTot[j] = u_dist(my_rng);
+						outAllHaplo << std::fixed << "," <<  double(round(tailleTot[j]*precision)/precision);
+					}
+					std::sort(tailleTot,tailleTot + nbRecomb2);
+					makeRecombM(Ordre[i], hapRef, pHap, nbRecomb2, tailleTot, clesSim);
+					outAllHaplo << "}";
+				}	
+				else{
+					pHap = u_dist(my_rng);
+					outAllHaplo << pHap << ",0}";
+					if(pHap<0.50){
+						Ordre[i]->clesHaplo_2=Ordre[i]->mere->clesHaplo_1;
+					}
+					else{
+						Ordre[i]->clesHaplo_2=Ordre[i]->mere->clesHaplo_2;
+					}		
+				}
+			}
+			else{
+				outAllHaplo << "0,0,0}";
+				Ordre[i]->clesHaplo_2 = 0;
+			}			
+
+			std::stringstream hap;
+
+			haplotype* tmp = (*hapRef).find(Ordre[i]->clesHaplo_1)->second;
+			double pos = tmp->pos;
+			if(pos == -1.0) pos = 1;
+			for( int h=0; h<2; h++ ) {
+				hap <<std::fixed<< "{" << 0 << ";" << tmp->hap << ";" << double(round(pos*precision)/precision) ; // on normalise a 1 en divisant par taille_tot (*plus necessaire)
+				while( tmp->next_segment != NULL) { 
+					tmp = tmp->next_segment;
+					pos = tmp->pos;
+					if(pos == -1.0) pos = 1;
+					hap <<std::fixed<< ";" << tmp->hap << ";" <<  double(round(pos*precision)/precision) ;// on normalise a 1 en divisant par taille_tot (*plus necessaire)
+				}
+				
+				hap << "}";
+				tmp = (*hapRef).find(Ordre[i]->clesHaplo_2)->second;
+				pos = tmp->pos;
+				if(pos == -1.0) pos = 1;
+			}	
+			outAllHaplo << hap.str() << std::endl;
+
+		}
+		
+		for(i=0;i<lNProposant;i++){
+			std::stringstream hap;
+			haplotype* tmp = (*hapRef).find(NoeudPro[i]->clesHaplo_1)->second;
+			double pos = tmp->pos;
+			if(pos == -1.0) pos = 1;
+			for( int h=0; h<2; h++ ) {
+				hap <<std::fixed<< "{" << 0 << ";" << tmp->hap << ";" << double(round(pos*precision)/precision) ; // on normalise a 1 en divisant par taille_tot (*plus necessaire)
+				while( tmp->next_segment != NULL) { 
+					tmp = tmp->next_segment;
+					pos = tmp->pos;
+					if(pos == -1.0) pos = 1;
+					hap <<std::fixed<< ";" << tmp->hap << ";" <<  double(round(pos*precision)/precision) ;// on normalise a 1 en divisant par taille_tot (*plus necessaire)
+				}
+				
+				hap << "}";
+				tmp = (*hapRef).find(NoeudPro[i]->clesHaplo_2)->second;
+				pos = tmp->pos;
+				if(pos == -1.0) pos = 1;
+			}
+			outHaplo <<"{"<< csimul+1 <<";"<< NoeudPro[i]->nom << ";" << 0 << "}"<< hap.str() << std::endl;
+		}
+		//delete haplotypes from memory before next iteration of simulation
+		for( int i=cleFixe; i<clesSim; i++) {
+			haplotype* tmp = (*hapRef).find(i)->second; //hapKey.second;
+			while(tmp->next_segment != NULL) {
+				haplotype* tmp_back = tmp;
+				tmp = tmp->next_segment;
+				delete tmp_back;
+			}
+			delete tmp;
+		}
+
+
+	} // end of the for loop that goes through the # of simulations
+	
+	outHaplo.close();
+	outAllHaplo.close();
+
+	for(int i=0; i<cleFixe; i++) {
+		haplotype* tmp = (*hapRef).find(i)->second;//hapKey.second;
+		while(tmp->next_segment != NULL) {
+			haplotype* tmp_back = tmp;
+			tmp = tmp->next_segment;
+			delete tmp_back;
+		}
+	delete tmp;
+	}
+	
+
+ } catch(std::exception &ex) {
+ 	forward_exception_to_r(ex);
+ } catch(...){
+ 	::Rf_error("c++ exception (unknown reason)"); 
+ } 
+}
+
+// int getNumberRec(double* probRecomb, int sex, int seed)
+// {
+// //  #if defined _WIN32 || defined _WIN64
+// //    std::mt19937 gen(time(0));
+// //  #else
+// static  std::mt19937 mt_rand;
+// //  #endif
+//   if(sex==1) {
+//    std::poisson_distribution<int> distribution (probRecomb[0]);
+//    return distribution(mt_rand);
+//   }
+//   else {
+//    std::poisson_distribution<int> distribution (probRecomb[1]);
+//    return distribution(gen);
+//   }
+// }
+
+// double getRandomNumber(int exponential)
+// {
+// 	static std::random_device gen;
+// 	if(exponential == 0) {
+//     //#if defined _WIN32 || defined _WIN64
+//       //std::mt19937 gen(time(0));
+//     //#else
+//     //#endif
+//     return double(gen())/double(gen.max());
+	
+//   }
+//   else {
+// //    std::default_random_engine position_generator;
+//     std::exponential_distribution<double> alea_Exp(10.0);
+//     return alea_Exp( gen );//position_generator );
+//   }
+// }
+
+//no longer call this function in simulhaplo, do it directly in the main loop of simulhaplo
+// int descendreHaplotypes(CIndSimul* Ordre_tmp, double probHap)
+// {
+//   if(Ordre_tmp->pere != NULL && Ordre_tmp->mere != NULL) {
+//     if     (probHap < 0.25){ Ordre_tmp->clesHaplo_1 = Ordre_tmp->pere->clesHaplo_1; Ordre_tmp->clesHaplo_2 = Ordre_tmp->mere->clesHaplo_1; }
+//     else if(probHap < 0.50){ Ordre_tmp->clesHaplo_1 = Ordre_tmp->pere->clesHaplo_2; Ordre_tmp->clesHaplo_2 = Ordre_tmp->mere->clesHaplo_1; }
+//     else if(probHap < 0.75){ Ordre_tmp->clesHaplo_1 = Ordre_tmp->pere->clesHaplo_1; Ordre_tmp->clesHaplo_2 = Ordre_tmp->mere->clesHaplo_2; }
+//     else				  { Ordre_tmp->clesHaplo_1 = Ordre_tmp->pere->clesHaplo_2; Ordre_tmp->clesHaplo_2 = Ordre_tmp->mere->clesHaplo_2; }
+//   }
+//   else if( Ordre_tmp->pere != NULL ) {  // Faire qq chose ici pour la mere et le pere qui est NULL ...
+//     if(probHap < 0.5) Ordre_tmp->clesHaplo_1 = Ordre_tmp->pere->clesHaplo_1;
+//     else			  Ordre_tmp->clesHaplo_1 = Ordre_tmp->pere->clesHaplo_2;
+//     Ordre_tmp->clesHaplo_2 = 0;
+//   }
+//   else if( Ordre_tmp->mere != NULL ) {
+//     if(probHap < 0.5) Ordre_tmp->clesHaplo_2 = Ordre_tmp->mere->clesHaplo_1;
+//     else			  Ordre_tmp->clesHaplo_2 = Ordre_tmp->mere->clesHaplo_2;
+//     Ordre_tmp->clesHaplo_1 = 0;
+//   }
+//   else { // les 2 sont NULL
+//     Ordre_tmp->clesHaplo_1 = 0;
+//     Ordre_tmp->clesHaplo_2 = 0;
+//   }
+//   return 0;
+// }
+
+//no longer use this function for simulhaplo now it instead uses makeRecombF for recombination of father's chromosomes and makeRecombM for mother
+// void makeRecomb( CIndSimul *Ordre_tmp, std::unordered_map<int, haplotype*> *hapRef, double probHap, double posRecomb, int &cle )
+// {
+//   int pereHap = 0, mereHap = 0;
+//   if     (probHap < 0.25){ pereHap = 1; mereHap = 1; }
+//   else if(probHap < 0.50){ pereHap = 1; mereHap = 0; }
+//   else if(probHap < 0.75){ pereHap = 0; mereHap = 1; }
+
+//   haplotype *hapPere, *hapMere;
+//   if(Ordre_tmp->pere!= NULL && Ordre_tmp->mere!= NULL) {
+//   if(pereHap == 0) hapPere = (*hapRef).find(Ordre_tmp->pere->clesHaplo_1)->second;
+//   else             hapPere = (*hapRef).find(Ordre_tmp->pere->clesHaplo_2)->second;
+//   if(mereHap == 0) hapMere = (*hapRef).find(Ordre_tmp->mere->clesHaplo_1)->second;
+//   else             hapMere = (*hapRef).find(Ordre_tmp->mere->clesHaplo_2)->second;
+//   }
+//   else if( Ordre_tmp->pere != NULL ) {
+//     if(pereHap == 0) hapPere = (*hapRef).find(Ordre_tmp->pere->clesHaplo_1)->second;
+//     else             hapPere = (*hapRef).find(Ordre_tmp->pere->clesHaplo_2)->second;
+//     hapMere = (*hapRef).find(0)->second;
+//   }
+//   else if( Ordre_tmp->mere != NULL ) {
+//     hapPere = (*hapRef).find(0)->second;
+//     if(mereHap == 0) hapMere = (*hapRef).find(Ordre_tmp->mere->clesHaplo_1)->second;
+//     else             hapMere = (*hapRef).find(Ordre_tmp->mere->clesHaplo_2)->second;
+//   }
+//   else {
+//     hapPere = (*hapRef).find(0)->second;
+//     hapMere = (*hapRef).find(0)->second;
+//   }
+
+//   haplotype *hapChild_1 = new haplotype();
+//   haplotype *hapChild_deb1 = hapChild_1;
+//   recombine(hapPere, hapMere, hapChild_deb1, posRecomb);
+//   Ordre_tmp->clesHaplo_1 = cle;
+//   (*hapRef)[cle++] = hapChild_1;
+
+//   haplotype *hapChild_2 = new haplotype();
+//   haplotype *hapChild_deb2 = hapChild_2;
+//   recombine(hapMere, hapPere, hapChild_deb2, posRecomb);  
+//   Ordre_tmp->clesHaplo_2 = cle;
+//   (*hapRef)[cle++] = hapChild_2;
+  
+// }
+
+void makeRecombF( CIndSimul *Ordre_tmp, std::unordered_map<int, haplotype*> *hapRef, double probHap, int nbRecomb, double *posRecomb, int &cle )
+{
+
+    haplotype *perehap1, *perehap2;
+
+	if (probHap < 0.5){
+		perehap1=(*hapRef).find(Ordre_tmp->pere->clesHaplo_1)->second;
+		perehap2=(*hapRef).find(Ordre_tmp->pere->clesHaplo_2)->second;
+	} 
+	else{
+		perehap1=(*hapRef).find(Ordre_tmp->pere->clesHaplo_2)->second;
+		perehap2=(*hapRef).find(Ordre_tmp->pere->clesHaplo_1)->second;
+	}
+
+    haplotype *hapChild_1 = new haplotype();
+    haplotype *hapChild_deb1 = hapChild_1;
+    recombine(perehap1, perehap2, hapChild_deb1, nbRecomb, posRecomb);
+    Ordre_tmp->clesHaplo_1 = cle;
+    (*hapRef)[cle++] = hapChild_1;
+}
+
+
+void makeRecombM( CIndSimul *Ordre_tmp, std::unordered_map<int, haplotype*> *hapRef, double probHap, int nbRecomb, double *posRecomb, int &cle )
+{
+    haplotype *merehap1, *merehap2;
+ 
+	if (probHap < 0.5){
+		merehap1=(*hapRef).find(Ordre_tmp->mere->clesHaplo_1)->second;
+		merehap2=(*hapRef).find(Ordre_tmp->mere->clesHaplo_2)->second;
+	} 
+	else{
+		merehap1=(*hapRef).find(Ordre_tmp->mere->clesHaplo_2)->second;
+		merehap2=(*hapRef).find(Ordre_tmp->mere->clesHaplo_1)->second;
+	}
+
+    haplotype *hapChild_2 = new haplotype();
+    haplotype *hapChild_deb2 = hapChild_2;
+    recombine(merehap1, merehap2, hapChild_deb2, nbRecomb, posRecomb);
+    Ordre_tmp->clesHaplo_2 = cle;
+    (*hapRef)[cle++] = hapChild_2;
+}
+
+void recombine(haplotype* hapBegin, haplotype* hapEnd, haplotype* hapChild, int nbRecomb, double* posRecomb )
+{
+	haplotype* hap_active = hapBegin;
+
+	for (int i=0; i < nbRecomb; i++){
+		
+		double position = posRecomb[i];
+		// de 0 a posRecomb on prend hapBegin
+		while(position > hap_active->pos && hap_active->pos != -1) {
+			(*hapChild).hap          = hap_active->hap;
+			(*hapChild).pos          = hap_active->pos;
+			(*hapChild).fixe         = 0;
+			(*hapChild).next_segment = new haplotype();//[1];
+			hapChild                 = hapChild->next_segment;
+			hap_active               = hap_active->next_segment;
+		}
+
+		// on ajoute la recomb pour hapChild
+		(*hapChild).hap          = hap_active->hap;
+		(*hapChild).pos          = position;
+		(*hapChild).fixe         = 0;
+
+		if(i%2 == 0){
+			hap_active = hapEnd;
+		}
+		else hap_active = hapBegin;
+
+		// on met le pointeur de hapEnd a la bonne place.
+		while(position > hap_active->pos && hap_active->pos != -1) hap_active = hap_active->next_segment;
+
+		// on verifie que l'haplotype qui suit n'est pas le meme. Si oui, on met la nouvelle position.
+		if(hap_active->hap == hapChild->hap){
+			(*hapChild).pos          = hap_active->pos;
+		}
+		else{
+			(*hapChild).next_segment = new haplotype();//[1];
+			hapChild                 = hapChild->next_segment;
+			(*hapChild).hap          = hap_active->hap;
+			(*hapChild).pos          = hap_active->pos;
+			(*hapChild).fixe         = 0;
+		}
+	}
+
+	while(hap_active->pos != -1.0) {
+		hap_active               = hap_active->next_segment;
+		(*hapChild).next_segment = new haplotype();//[1]; 
+		hapChild                 = hapChild->next_segment;
+		(*hapChild).hap          = hap_active->hap;
+		(*hapChild).pos          = hap_active->pos;
+		(*hapChild).fixe         = 0;
+	}
+
+}
+
+
+bool reconstruct(std::string WD, const std::string &simufilename,const std::string &hapfilename, const std::string &SNPposfilename,const int &BPsize){
+
+	try{
+
+    std::ifstream in (simufilename.c_str());
+    if(!in)
+    {
+        Rcpp::stop ("Cannot open the proband_haplotypes file ");
+    }
+
+	WD += "/reconstructed_haplotypes.txt";
+    std::ofstream reconstructed(WD.c_str());
+    if(!reconstructed.is_open()){
+        Rcpp::stop("Can't open output file to write to. Check permissions of output directory");
+    }
+
+    std::vector<int> SNPpos = readSNPpos(SNPposfilename);
+    int numSNPs = SNPpos.size();
+
+    std::unordered_map <float, std::string> haploseqs;
+    ancestralseq(hapfilename, haploseqs);
+
+    std::string line;
+    std::getline(in,line); //waste first line
+    while (std::getline(in, line))
+    {
+        std::size_t tokenPos, tokenPos1; 
+        tokenPos=line.find(";");
+        tokenPos1=line.find(";", tokenPos+1);
+        reconstructed << line.substr(1,tokenPos-1) << " " << line.substr(tokenPos+1,tokenPos1-tokenPos-1) << " ";
+
+        
+        tokenPos= line.find("}");   
+        tokenPos1= line.find("}",tokenPos+1);
+        std::string hap1(line.substr(tokenPos+2,tokenPos1-tokenPos-2));
+        tokenPos=line.find("}",tokenPos1+1);
+        std::string hap2(line.substr(tokenPos1+2,tokenPos-tokenPos1-2));
+        //reconstructing haplotype1
+        tokenPos=hap1.find(";");
+        tokenPos1=hap1.find(";",tokenPos+1);
+
+        int SNPpos_ind =0; 
+        float ancID;
+        int seg_end =0;
+
+        ancID = std::stof(hap1.substr(tokenPos+1,tokenPos1-tokenPos-1));
+        tokenPos1 = hap1.find(";", tokenPos1 +1);
+
+        while (tokenPos1 != std::string::npos){
+            tokenPos = hap1.find(";",tokenPos+1);
+            seg_end = std::stof(hap1.substr(tokenPos+1,tokenPos1-tokenPos-1))*BPsize;
+            tokenPos1=hap1.find(";",tokenPos1+1);
+
+            while(SNPpos[SNPpos_ind]<seg_end && SNPpos_ind < numSNPs){
+                reconstructed << haploseqs[ancID].at(SNPpos_ind);
+                SNPpos_ind++;
+            }
+            tokenPos = hap1.find(";", tokenPos +1);
+            ancID = std::stof(hap1.substr(tokenPos+1,tokenPos1-tokenPos-1));
+            tokenPos1 = hap1.find(";", tokenPos1+1);
+        }
+        
+        if (seg_end == 0){
+            reconstructed << haploseqs[ancID] << std::endl;
+        }
+        else{
+            reconstructed << haploseqs[ancID].substr(SNPpos_ind, std::string::npos) <<std::endl;
+        } 
+        
+        //reconstructing haplotype2
+        tokenPos=line.find(";");
+        tokenPos1=line.find(";", tokenPos+1);
+        reconstructed << line.substr(1,tokenPos-1) << " " << line.substr(tokenPos+1,tokenPos1-tokenPos-1) << " ";
+
+        tokenPos=hap2.find(";");
+        tokenPos1=hap2.find(";",tokenPos+1);
+
+        SNPpos_ind =0; 
+        seg_end =0;
+
+        ancID = std::stof(hap2.substr(tokenPos+1,tokenPos1-tokenPos-1));
+        tokenPos1 = hap2.find(";", tokenPos1 +1);
+        
+        while (tokenPos1 != std::string::npos){
+            tokenPos = hap2.find(";",tokenPos+1);
+            seg_end = std::stof(hap2.substr(tokenPos+1,tokenPos1-tokenPos-1))*BPsize;
+            tokenPos1=hap2.find(";",tokenPos1+1);
+
+            while(SNPpos[ SNPpos_ind]<seg_end && SNPpos_ind < numSNPs){
+                reconstructed << haploseqs[ancID].at(SNPpos_ind);
+                SNPpos_ind++;
+            }
+
+            tokenPos = hap2.find(";", tokenPos +1);
+            ancID = std::stof(hap2.substr(tokenPos+1,tokenPos1-tokenPos-1));
+            tokenPos1 = hap2.find(";", tokenPos1+1);
+        }
+        
+        if (seg_end == 0){
+            reconstructed << haploseqs[ancID] << std::endl;
+        }
+        else{
+            reconstructed << haploseqs[ancID].substr(SNPpos_ind, std::string::npos) << std::endl;
+        } 
+    }
+    
+
+    in.close();
+    reconstructed.close();
+    return true;
+
+	} catch(std::exception &ex) {
+ 	forward_exception_to_r(ex);
+ 	} catch(...){
+ 	::Rf_error("c++ exception (unknown reason)"); 
+ 	}
+	return false; 
+}
+
+bool ancestralseq(const std::string &fileName, std::unordered_map<float, std::string> &haploseqs)
+{
+    std::ifstream in(fileName.c_str());
+
+    if(!in)
+    {
+        Rcpp::stop("Cannot open the hapfile");
+        return false;
+    }
+
+    float anc_id;
+    std::string anc_haplo;
+
+    while (in>>anc_id>>anc_haplo)
+    {
+        haploseqs[anc_id]=anc_haplo;
+    }
+
+    in.close();
+    return true;
+}
+
+std::vector<int> readSNPpos(const std::string &fileName){
+    
+	std::ifstream in(fileName.c_str());
+    
+    if(!in)
+    {
+        Rcpp::stop("Cannot open the mapfile");
+    }
+
+    std::vector<int> vec(std::istream_iterator<int>(in), {});
+
+    in.close();
+    return vec;
+}
+
+
 int simul(int* Genealogie, int* plProposant, int* plProEtat,int lNProposant, int* plAncetre, int* plAncEtat, int lNAncetre,
 		int lSimul, double* pdRetConj, double* pdRetSimul, double* pdRetProp, double* probRecomb, double probSurvieHomo,
 		int printprogress)
@@ -124,7 +761,7 @@ int simul(int* Genealogie, int* plProposant, int* plProEtat,int lNProposant, int
 	if (lSimul<=0){
 //		GENError("Number of simulation must be greater than zero");
 		throw std::range_error("Number of simulation must be greater than zero");
-		//GENError("Le nombre de simulation doit-être supérieur à zero");
+		//GENError("Le nombre de simulation doit-ï¿½tre supï¿½rieur ï¿½ zero");
 	}
 	//CREATION DE TABLEAU D'INDIVIDU
 	int lNIndividu;
@@ -143,7 +780,7 @@ int simul(int* Genealogie, int* plProposant, int* plProEtat,int lNProposant, int
 	INITGESTIONMEMOIRE;
 	CIndSimul** Ordre		=(CIndSimul**) memalloc(lNIndividu,sizeof(CIndSimul*));	
 	
-	//Pour le sort spécial		
+	//Pour le sort spï¿½cial		
 	int*		OrdreSaut	=(int*) memalloc(lNIndividu,sizeof(int*));				
 	int NOrdre;
 	
@@ -239,7 +876,7 @@ int simul(int* Genealogie, int* plProposant, int* plProEtat,int lNProposant, int
 			{
 				double alea    = (double)gen()/(double)gen.max();//(double)rd()/(double)rd.max(); // pour la recombinaison.**chgt IGES**
 				int sex = Ordre[i]->sex;
-				if(alea < probRecomb[1]) // tx femme (plus élevé)
+				if(alea < probRecomb[1]) // tx femme (plus ï¿½levï¿½)
 				{
 				// si femme ou si prob < au taux male et inconnu (le plus petit)
 				// si le morceau recombine (selon tx male et aussi sexe inconnu) OU si le morceau recombine (selon tx femelle)
@@ -318,23 +955,23 @@ int simul(int* Genealogie, int* plProposant, int* plProEtat,int lNProposant, int
 
 	Calcule un etat possible pour chaque proposant en tenant compte de chaque ancetre et son etat
 
-	\param Genealogie	[in] Une genealogie construite à l'aide de gen.genealogie 
+	\param Genealogie	[in] Une genealogie construite ï¿½ l'aide de gen.genealogie 
 
-	\param plProposant	[in] Vecteur des no de proposant à étudier
-	\param lNProposant	[in] Nombre d'élément du vecteur proposant
+	\param plProposant	[in] Vecteur des no de proposant ï¿½ ï¿½tudier
+	\param lNProposant	[in] Nombre d'ï¿½lï¿½ment du vecteur proposant
   
-	\param plAncetre	[in] Vecteur des no des ancetres correspondant proposant à étudier
+	\param plAncetre	[in] Vecteur des no des ancetres correspondant proposant ï¿½ ï¿½tudier
 	\param plAncEtat	[in] Vecteur de taille plAncetre representant le nombre d'allele atteint pour chaque Ancetre (0,1,2) 
-	\param lNAncetre	[in] Nombre d'élément du vecteur ancetre
+	\param lNAncetre	[in] Nombre d'ï¿½lï¿½ment du vecteur ancetre
 	
-	\param lSimul		[in] Nombre de simulation à effectuer
+	\param lSimul		[in] Nombre de simulation ï¿½ effectuer
 
 	\retval pdRetour	[out] Pointeur vers un vecteur de NProposant x lSimul
 								En cas de succes, ce vecteur le nombre d'allele assigne a chaque proposant pour la simulation
 	
 	\param printprogress imprime un message indiquant les progress accomplies
 
-	\return 0 si la fonction est executé avec succès
+	\return 0 si la fonction est executï¿½ avec succï¿½s
 */
 int simulsingle(int* Genealogie, int* plProposant, int lNProposant, int* plAncetre, int* plAncEtat, int lNAncetre, int lSimul,
 			 double* pdRetour,int printprogress)
@@ -344,7 +981,7 @@ int simulsingle(int* Genealogie, int* plProposant, int lNProposant, int* plAncet
 	if (lSimul<=0){
 //		GENError("Number of simulation must be greater than zero");
 		throw std::range_error("Number of simulation must be greater than zero");
-		//GENError("Le nombre de simulation doit-être supérieur à zero");
+		//GENError("Le nombre de simulation doit-ï¿½tre supï¿½rieur ï¿½ zero");
 	}
 	//CREATION DE TABLEAU D'INDIVIDU
 	int lNIndividu;
@@ -364,7 +1001,7 @@ int simulsingle(int* Genealogie, int* plProposant, int lNProposant, int* plAncet
 	INITGESTIONMEMOIRE;
 	CIndSimul** Ordre		=(CIndSimul**) memalloc(lNIndividu,sizeof(CIndSimul*));	
 	
-	//Pour le sort spécial		
+	//Pour le sort spï¿½cial		
 	int*		OrdreSaut	=(int*) memalloc(lNIndividu,sizeof(int*));				
 	int NOrdre;
 	/**F***/
@@ -499,38 +1136,38 @@ int simulsingle(int* Genealogie, int* plProposant, int lNProposant, int* plAncet
 
 	Calcule un etat possible pour chaque proposant en tenant en comple chaque ancetre et son etat
 
-	\param Genealogie	[in] Une genealogie construite à l'aide de gen.genealogie 
+	\param Genealogie	[in] Une genealogie construite ï¿½ l'aide de gen.genealogie 
 
-	\param plProposant	[in] Vecteur des no de proposant à étudier
-	\param lNProposant	[in] Nombre d'élément du vecteur proposant
+	\param plProposant	[in] Vecteur des no de proposant ï¿½ ï¿½tudier
+	\param lNProposant	[in] Nombre d'ï¿½lï¿½ment du vecteur proposant
   
-	\param plAncetre	[in] Vecteur des no des ancetres correspondant proposant à étudier
+	\param plAncetre	[in] Vecteur des no des ancetres correspondant proposant ï¿½ ï¿½tudier
 	\param plAncEtat	[in] Vecteur de taille plAncetre representant le nombre d'allele atteint pour chaque Ancetre (0,1,2) 
-	\param lNAncetre	[in] Nombre d'élément du vecteur ancetre
+	\param lNAncetre	[in] Nombre d'ï¿½lï¿½ment du vecteur ancetre
 	
-	\param lSimul		[in] Nombre de simulation à effectuer
-	\param mtProb		[in] Matrice S-PLUS: tableau des probabilités
+	\param lSimul		[in] Nombre de simulation ï¿½ effectuer
+	\param mtProb		[in] Matrice S-PLUS: tableau des probabilitï¿½s
 
 	\retval pdRetour	[out] Pointeur vers un vecteur de NProposant x lSimul
 								En cas de succes, ce vecteur le nombre d'allele assigne a chaque proposant pour la simulation
 	
 	\param printprogress imprime un message indiquant les progress accomplies
 
-	\return 0 si la fonction est executé avec succès
+	\return 0 si la fonction est executï¿½ avec succï¿½s
 */
 
 SEXP simulsingleProb(int* Genealogie, int* plProposant, int lNProposant, int* plAncetre, int lNAncetre, int* plAncEtat, SEXP mtProb,
 				 int lSimul, int printprogress)
 {
 	try{
-	//Conversion des paramètres
+	//Conversion des paramï¿½tres
 	Rcpp::NumericMatrix matprob(mtProb);
 
 	//VALIDATION GENEALOGIE
 	if (lSimul<=0){
 //		GENError("Number of simulation must be greater than zero");
 		throw std::range_error("Number of simulation must be greater than zero");
-		//GENError("Le nombre de simulations doit-être supérieur à zero");
+		//GENError("Le nombre de simulations doit-ï¿½tre supï¿½rieur ï¿½ zero");
 	}
 	//CREATION DE TABLEAU D'INDIVIDU
 	int lNIndividu;
@@ -634,27 +1271,27 @@ SEXP simulsingleProb(int* Genealogie, int* plProposant, int lNProposant, int* pl
 
 /*! 
 	\brief Execute une plusieur simulation et retourne le nombre d'allele transmit a chaque proposant en tableau
-			de fréquences pour toutes les simulations.
+			de frï¿½quences pour toutes les simulations.
 
 	Calcule un etat possible pour chaque proposant en tenant en compte chaque ancetre et son etat
 
-	\param Genealogie	[in] Une genealogie construite à l'aide de gen.genealogie 
+	\param Genealogie	[in] Une genealogie construite ï¿½ l'aide de gen.genealogie 
 
-	\param plProposant	[in] Vecteur des no de proposant à étudier
-	\param lNProposant	[in] Nombre d'élément du vecteur proposant
+	\param plProposant	[in] Vecteur des no de proposant ï¿½ ï¿½tudier
+	\param lNProposant	[in] Nombre d'ï¿½lï¿½ment du vecteur proposant
   
-	\param plAncetre	[in] Vecteur des no des ancetres correspondant proposant à étudier
+	\param plAncetre	[in] Vecteur des no des ancetres correspondant proposant ï¿½ ï¿½tudier
 	\param plAncEtat	[in] Vecteur de taille plAncetre representant le nombre d'allele atteint pour chaque Ancetre (0,1,2) 
-	\param lNAncetre	[in] Nombre d'élément du vecteur ancetre
+	\param lNAncetre	[in] Nombre d'ï¿½lï¿½ment du vecteur ancetre
 	
-	\param lSimul		[in] Nombre de simulations à effectuer
+	\param lSimul		[in] Nombre de simulations ï¿½ effectuer
 
-	\retval pdRetour	[out] Pointeur vers un vecteur de NProposant x 0-1-2 pour la fréquence d'allèles tramises pour toutes les
+	\retval pdRetour	[out] Pointeur vers un vecteur de NProposant x 0-1-2 pour la frï¿½quence d'allï¿½les tramises pour toutes les
 							  simulations. 
 	
 	\param printprogress imprime un message indiquant les progress accomplies
 
-	\return 0 si la fonction est executé avec succès
+	\return 0 si la fonction est executï¿½ avec succï¿½s
 */
 int simulsingleFreq(int* Genealogie, int* plProposant, int lNProposant, int* plAncetre, int* plAncEtat, int lNAncetre,
 				int lSimul, double* pdRetour,int printprogress)
@@ -664,7 +1301,7 @@ int simulsingleFreq(int* Genealogie, int* plProposant, int lNProposant, int* plA
 	if (lSimul<=0) {
 //		GENError("Number of simulation must be greater than zero");
 		throw std::range_error("Number of simulation must be greater than zero");
-		//GENError("Le nombre de simulation doit-être supérieur à zero");
+		//GENError("Le nombre de simulation doit-ï¿½tre supï¿½rieur ï¿½ zero");
 	}
 	//CREATION DE TABLEAU D'INDIVIDU
 	int lNIndividu;
@@ -699,9 +1336,9 @@ int simulsingleFreq(int* Genealogie, int* plProposant, int lNProposant, int* plA
 	}
 
 	//Indice de tableau pour la variable de sortie
-	const int tmp0 = 0*lNProposant; //Fréquence de 0 allèle
-	const int tmp1 = 1*lNProposant; //Fréquence de 1 allèle
-	const int tmp2 = 2*lNProposant; //Fréquence de 2 allèle
+	const int tmp0 = 0*lNProposant; //Frï¿½quence de 0 allï¿½le
+	const int tmp1 = 1*lNProposant; //Frï¿½quence de 1 allï¿½le
+	const int tmp2 = 2*lNProposant; //Frï¿½quence de 2 allï¿½le
 
 	//INITIALISATION
 	//initrand(); 
@@ -769,23 +1406,23 @@ int simulsingleFreq(int* Genealogie, int* plProposant, int lNProposant, int* plA
 
 	Calcule un etat possible pour chaque proposant en tenant en comple chaque ancetre et son etat
 
-	\param Genealogie	[in] Une genealogie construite à l'aide de gen.genealogie 
+	\param Genealogie	[in] Une genealogie construite ï¿½ l'aide de gen.genealogie 
 
-	\param plProposant	[in] Vecteur des no de proposant à étudier
-	\param lNProposant	[in] Nombre d'élément du vecteur proposant
+	\param plProposant	[in] Vecteur des no de proposant ï¿½ ï¿½tudier
+	\param lNProposant	[in] Nombre d'ï¿½lï¿½ment du vecteur proposant
   
-	\param plAncetre	[in] Vecteur des no des ancetres correspondant proposant à étudier
+	\param plAncetre	[in] Vecteur des no des ancetres correspondant proposant ï¿½ ï¿½tudier
 	\param plAncEtat	[in] Vecteur de taille plAncetre representant le nombre d'allele atteint pour chaque Ancetre (0,1,2) 
-	\param lNAncetre	[in] Nombre d'élément du vecteur ancetre
+	\param lNAncetre	[in] Nombre d'ï¿½lï¿½ment du vecteur ancetre
 	
-	\param lSimul		[in] Nombre de simulation à effectuer
+	\param lSimul		[in] Nombre de simulation ï¿½ effectuer
 
 	\retval pdRetour	[out] Pointeur vers un vecteur de NProposant x lSimul
 								En cas de succes, ce vecteur le nombre d'allele assigne a chaque proposant pour la simulation
 	
 	\param printprogress imprime un message indiquant les progress accomplies
 
-	\return 0 si la fonction est executé avec succès
+	\return 0 si la fonction est executï¿½ avec succï¿½s
 */
 SEXP simulsingleFct(int * Genealogie, int * proposant, int lproposant, int * plAncetre, int * plAncEtatAll1, int * plAncEtatAll2, int lNAncetre, int lSimul, SEXP SfctSousGrp, int printprogress)
 {	
@@ -794,7 +1431,7 @@ SEXP simulsingleFct(int * Genealogie, int * proposant, int lproposant, int * plA
 	if (lSimul<=0){
 //		GENError("Number of simulation must be greater than zero");
 		throw std::range_error("Number of simulation must be greater than zero");
-		//GENError("Le nombre de simulation doit-être supérieur à zero");
+		//GENError("Le nombre de simulation doit-ï¿½tre supï¿½rieur ï¿½ zero");
 	}
 	//CREATION DE TABLEAU D'INDIVIDU
 	int lNIndividu;
@@ -833,7 +1470,7 @@ SEXP simulsingleFct(int * Genealogie, int * proposant, int lproposant, int * plA
 	int lptrAm[2];
 
 	//Partie 3: SIMULATION	
-	//Déclaration de la liste de résultats de la fonction de l'utilisation pour chaque simulation
+	//Dï¿½claration de la liste de rï¿½sultats de la fonction de l'utilisation pour chaque simulation
 	//CSPlist resultFct;
 	Rcpp::List resultFct; //(lSimul);
 	Rcpp::Function f(SfctSousGrp);
@@ -869,7 +1506,7 @@ SEXP simulsingleFct(int * Genealogie, int * proposant, int lproposant, int * plA
 
 		}// fin for pour chaque noeud	
 		/*
-		//Déclaration de la liste de résultats
+		//Dï¿½claration de la liste de rï¿½sultats
 		//CSPlist resultGrp;
 		Rcpp::List resultGrp(igrp);
 		//Pour chaque groupe
@@ -894,9 +1531,9 @@ SEXP simulsingleFct(int * Genealogie, int * proposant, int lproposant, int * plA
 			
 			for(int j=0;j<lind.length();j++)//Pour chaque individus du groupe
 			{
-				 // **tmp(j+1) = NoeudPro[i][j]->allele2Pos[0];	//Résultat dans un tableau	
+				 // **tmp(j+1) = NoeudPro[i][j]->allele2Pos[0];	//Rï¿½sultat dans un tableau	
 				 ans(j+1, 0) = NoeudPro[i][j]->allele2Pos[0];
-				 // **tmp2(j+1) = NoeudPro[i][j]->allele2Pos[1];	//Résultat dans un tableau	
+				 // **tmp2(j+1) = NoeudPro[i][j]->allele2Pos[1];	//Rï¿½sultat dans un tableau	
 				 ans(j+1, 1) = NoeudPro[i][j]->allele2Pos[1];
 			}
 			// **ans.SetJthColumnDirect(0, tmp.Detach());
@@ -908,7 +1545,7 @@ SEXP simulsingleFct(int * Genealogie, int * proposant, int lproposant, int * plA
 		}
 		// **CSPfunction f(SfctSousGrp); //Call the S function.
 		//Rcpp::Function f(SfctSousGrp);
-		//En liste de résultats de la fct de l'utilisateur
+		//En liste de rï¿½sultats de la fct de l'utilisateur
 		// **resultFct.Add(f.Eval(resultGrp));
 		resultFct.push_back(f(resultGrp));
 		*/
@@ -936,7 +1573,7 @@ SEXP simulsingleFct(int * Genealogie, int * proposant, int lproposant, int * plA
 
 	///nettoyer
 	//outrand();
-	//Retourne la liste de résultat pour chaque simulation de la fct de l'utilisateur
+	//Retourne la liste de rï¿½sultat pour chaque simulation de la fct de l'utilisateur
 	return Rcpp::wrap(resultFct); //.Detach();
  			} catch(std::exception &ex) {
  				forward_exception_to_r(ex);
@@ -950,29 +1587,29 @@ SEXP simulsingleFct(int * Genealogie, int * proposant, int lproposant, int * plA
 //	CALCUL DE LA PROBABILITE EXACTE
 // ************************************************************************* 
 //const int PBARINTERVAL_PROB=9;
-//100 devrais être plus que suffisant pour occupé un ordinateur moderne un bon bout de temps
+//100 devrais ï¿½tre plus que suffisant pour occupï¿½ un ordinateur moderne un bon bout de temps
 //const int PROB_MAXIMUM_NORDRE = 100; //646 Taille maximale d'un double (utiliser numeric_limits<double>::max() ? )
 
 /*! 
 	\brief Evalue la probabilite exacte de transfert d'un allele a une serie de proposant
 
-	Cette fonction détermine la probabilité conjointe qu'un ou plusieurs proposant reçoivent  un certain nombre d'allèle malade.
-	En prenant pour acquis qu'un ou plusieurs ancêtre possède un ou deux d'allèle malade. 
-	Pour ce faire, cette fonction calcule la valeur de toute les branches de manière à obtenir la probabilité EXACT. 
-	Le temps de calcul peut-être très prohibitif.
+	Cette fonction dï¿½termine la probabilitï¿½ conjointe qu'un ou plusieurs proposant reï¿½oivent  un certain nombre d'allï¿½le malade.
+	En prenant pour acquis qu'un ou plusieurs ancï¿½tre possï¿½de un ou deux d'allï¿½le malade. 
+	Pour ce faire, cette fonction calcule la valeur de toute les branches de maniï¿½re ï¿½ obtenir la probabilitï¿½ EXACT. 
+	Le temps de calcul peut-ï¿½tre trï¿½s prohibitif.
 
-	\param Genealogie	[in] Une genealogie construite à l'aide de gen.genealogie 
+	\param Genealogie	[in] Une genealogie construite ï¿½ l'aide de gen.genealogie 
 
-	\param plProposant	[in] Vecteur des no de proposant à étudier
+	\param plProposant	[in] Vecteur des no de proposant ï¿½ ï¿½tudier
 	\param plProEtat    [in] vecteur de taille lNProposant et representant l'etat a considerer pour chaque proposant
 			<br>&nbsp; &nbsp;&nbsp; &nbsp;0: La condition est remplie si se proposant n'est pas malade 
 			<br>&nbsp; &nbsp;&nbsp; &nbsp;1: La condition est remplie si le proposant recois 1-2 allele 
 			<br>&nbsp; &nbsp;&nbsp; &nbsp;2: La condition est remplie si le proposant recois 2 allele 
-	\param lNProposant	[in] Nombre d'élément du vecteur proposant
+	\param lNProposant	[in] Nombre d'ï¿½lï¿½ment du vecteur proposant
   
-	\param plAncetre	[in] Vecteur des no des ancetres correspondant proposant à étudier
+	\param plAncetre	[in] Vecteur des no des ancetres correspondant proposant ï¿½ ï¿½tudier
 	\param plAncEtat	[in] Vecteur de taille plAncetre representant le nombre d'allele atteint pour chaque Ancetre (0,1,2) 
-	\param lNAncetre	[in] Nombre d'élément du vecteur ancetre
+	\param lNAncetre	[in] Nombre d'ï¿½lï¿½ment du vecteur ancetre
 
 	\param OrdreMaximum [in] Le nombre de noeud touche au maximum, si le nombre de noeud touche est trop grand alors la procedure s'interromp automatiquement
 
@@ -981,7 +1618,7 @@ SEXP simulsingleFct(int * Genealogie, int * proposant, int lproposant, int * plA
 	\retval pdRetSimul	[out] Un pointeur vers une vecteur de taille lNProposant.. 
 								En cas de succes, Probabilite que la condition de chaque proposant soit remplis
 							
-	\return 0 si la fonction est executé avec succès
+	\return 0 si la fonction est executï¿½ avec succï¿½s
 */
 SEXP prob( int* Genealogie, int* plProposant, int* plProEtat,int lNProposant, int* plAncetre, int* plAncEtat, int lNAncetre,
 		double* pdRetConj,double* pdRetSimul,int printprogress,int onlyConj)
@@ -1054,7 +1691,7 @@ SEXP prob( int* Genealogie, int* plProposant, int* plProEtat,int lNProposant, in
 		throw std::range_error("There is no link between any ancetres and any probands");
 		//GENError("Il n'y a pas de lien entre aucun des ancetres et aucun proposant");
 	}
-	//Liste de tableau dépendante de l'ordre
+	//Liste de tableau dï¿½pendante de l'ordre
 	double *Cumul		= (double*) memalloc(NOrdre+1,sizeof(double));
 
 	// Valeur cumulative courante
@@ -1069,13 +1706,13 @@ SEXP prob( int* Genealogie, int* plProposant, int* plProEtat,int lNProposant, in
 	const int Lastindex=NOrdre-1;
 	double ConjProb=0;
 	
-	//Initialisation de début de simulation
+	//Initialisation de dï¿½but de simulation
 	for(i=0;i<NOrdre;i++)	
 	{
 		Ordre[i]->allele=-1;		
 	}
 	
-	//On réutilise la variable bFlagSort pour indique si la condition d'un proposant
+	//On rï¿½utilise la variable bFlagSort pour indique si la condition d'un proposant
 	//est acceptable ou non (1 oui, non =0)
 	int nbCritereValid=0;
 	for(i=0;i<lNProposant;i++)
@@ -1092,11 +1729,11 @@ SEXP prob( int* Genealogie, int* plProposant, int* plProEtat,int lNProposant, in
 		}
 	}
 	
-	//Verifie que la durée d'execution ne sera pas trop intue
+	//Verifie que la durï¿½e d'execution ne sera pas trop intue
 //	if (NOrdre > PROB_MAXIMUM_NORDRE){
 //		GENError("Execution time is too great to launch this function call");
 //		throw std::exception();
-		//GENError("La durée d'exécution de cet appel de fonction serait surement comparable à l'âge de l'univers");
+		//GENError("La durï¿½e d'exï¿½cution de cet appel de fonction serait surement comparable ï¿½ l'ï¿½ge de l'univers");
 //	}
 	//PROGRESS BAR	
 	//Construction du vecteur de valeur
@@ -1118,7 +1755,7 @@ SEXP prob( int* Genealogie, int* plProposant, int* plProEtat,int lNProposant, in
 */
 
 #ifdef USESDEBUG
-	//Informatin de débuggage
+	//Informatin de dï¿½buggage
 	SXLONG iter =0;
 	//printf("\nThe order is = %d\n",NOrdre);
 	//printf("Maximum number of iterations used:%.15G\n",pow(3,NOrdre)/2);
@@ -1131,7 +1768,7 @@ SEXP prob( int* Genealogie, int* plProposant, int* plProEtat,int lNProposant, in
 			//n niveau de l'ordre qui est en traitement
 			//a nombre d'allele du noeud courant
 
-			//pour économiser du code
+			//pour ï¿½conomiser du code
 			CIndSimul& nd = *Ordre[n];
 			int &a = nd.allele;
 
@@ -1160,14 +1797,14 @@ SEXP prob( int* Genealogie, int* plProposant, int* plProEtat,int lNProposant, in
 				
 				//ebranchage (C'est ce qui empeche de calcule atteint)
 				if (TransGen[ap][am][a]!=0.0) {
-					//Probabilité d'être dans l'état courant					
+					//Probabilitï¿½ d'ï¿½tre dans l'ï¿½tat courant					
 					Cumul[n+1]=Cumul[n]*TransGen[ap][am][a];
 					
-					//Si on désirer la probabilié individuel décoché en dessous		
+					//Si on dï¿½sirer la probabiliï¿½ individuel dï¿½cochï¿½ en dessous		
 					if (nd.etat==GENPROPOSANT){
 						nd.prob[a]+=Cumul[n+1];							
 
-						//Evaluation des criteres pour probabilité conjointe
+						//Evaluation des criteres pour probabilitï¿½ conjointe
 						if (nd.bFlagSort==1) {
 							--nbCritereValid;
 							nd.bFlagSort=0;
@@ -1178,20 +1815,20 @@ SEXP prob( int* Genealogie, int* plProposant, int* plProEtat,int lNProposant, in
 							nd.bFlagSort=1;							
 						}						
 
-						//Si tous les proposants sont considéré comme valide alors...
-						//Compet dans la propabilité conjointe
+						//Si tous les proposants sont considï¿½rï¿½ comme valide alors...
+						//Compet dans la propabilitï¿½ conjointe
 						if (n==Lastindex && nbCritereValid==lNProposant)												
 							ConjProb+=Cumul[n+1];
 
-						//Passe à la sous-étape suivante	
+						//Passe ï¿½ la sous-ï¿½tape suivante	
 						if (n!=Lastindex && (!onlyConj || (onlyConj && nd.bFlagSort==1) ) )	++n;
 					}//fin si proposant
 					else
 					{
-						//Passe à la sous-étape suivante	
+						//Passe ï¿½ la sous-ï¿½tape suivante	
 						if (n!=Lastindex)	++n;
 					}//fin else proposant
-				} //Fin ébranchage
+				} //Fin ï¿½branchage
 			}//Fin de la boucle pour iteration valide
 	}//Fin de la boucle principale
 	//END_FLOAT_PROGRESS_BAR();
@@ -1240,27 +1877,27 @@ SEXP prob( int* Genealogie, int* plProposant, int* plProEtat,int lNProposant, in
  */
 const double COAPPMOD_HASHAGECHARGEMAXIMAL=.8;
 
-///Mémoire utilisable au grand maximum en octet;
+///Mï¿½moire utilisable au grand maximum en octet;
 const long double COAPPMOD_MAXMEMORY_USABLE=(long double) 4000*MEGAOCTET; //800*MEGAOCTET;
-///Nombre maximal de possibilité autorisé par l'algorithme...
-//COAPPMOD_NBPOSSMAX_DUPP doit-être plus petit qu'un unsigned long (d'une bonne marge)
-const long double COAPPMOD_NBPOSSMAX_DUPP=(long double)ULONG_MAX*COAPPMOD_HASHAGECHARGEMAXIMAL*.7;  //.7 = Facteur sécurité
-//COAPPMOD_NBPOSSMAX_DUPP doit-être plus petit qu'un XLONG (pour la progresse bar et autre)
+///Nombre maximal de possibilitï¿½ autorisï¿½ par l'algorithme...
+//COAPPMOD_NBPOSSMAX_DUPP doit-ï¿½tre plus petit qu'un unsigned long (d'une bonne marge)
+const long double COAPPMOD_NBPOSSMAX_DUPP=(long double)ULONG_MAX*COAPPMOD_HASHAGECHARGEMAXIMAL*.7;  //.7 = Facteur sï¿½curitï¿½
+//COAPPMOD_NBPOSSMAX_DUPP doit-ï¿½tre plus petit qu'un XLONG (pour la progresse bar et autre)
 const long double COAPPMOD_NBPOSSMAX_NODUPP=(long double)1E16;  //SERIEUSEMENT LONG SUR QUOI QUE CE SOIT  ( avant 1E12 ) **JFL**
 
 
 /*! 
 	\brief Calcul de l'apparentement modifier entre un ancetre et quelques proposants
 
-	Cette fonction calcule l'apparentement modifier d'entre un ancêtre et n proposant. 
-	Plusieurs calcul à partir d'ancêtre différent vers le même nombre n de proposant peuvent-être fait lors du même appel de fonction.
+	Cette fonction calcule l'apparentement modifier d'entre un ancï¿½tre et n proposant. 
+	Plusieurs calcul ï¿½ partir d'ancï¿½tre diffï¿½rent vers le mï¿½me nombre n de proposant peuvent-ï¿½tre fait lors du mï¿½me appel de fonction.
 
-	\param Genealogie	[in] Une genealogie construite à l'aide de gen.genealogie 
+	\param Genealogie	[in] Une genealogie construite ï¿½ l'aide de gen.genealogie 
 
 	\param plInput	 [in] Vecteur representant une matrice d'entier (Selon Formule: col * NLigne + ligne)
-						Matrice d'entier de n colonne,  sur chaque ligne, on retrouve n proposant à étudier p/r à un ancêtre. 
-						<br>Chaque ligne représente un calcul complètement distinct
-						<br>Le nombre de ligne de la matrice doit être égale au nombre d'élément du vecteur ancêtre pour faire la correspondance.
+						Matrice d'entier de n colonne,  sur chaque ligne, on retrouve n proposant ï¿½ ï¿½tudier p/r ï¿½ un ancï¿½tre. 
+						<br>Chaque ligne reprï¿½sente un calcul complï¿½tement distinct
+						<br>Le nombre de ligne de la matrice doit ï¿½tre ï¿½gale au nombre d'ï¿½lï¿½ment du vecteur ancï¿½tre pour faire la correspondance.
 						<br>Ex :  
 							<br>ancetre =  Vecteur 10, 20
 							<br>
@@ -1279,9 +1916,9 @@ const long double COAPPMOD_NBPOSSMAX_NODUPP=(long double)1E16;  //SERIEUSEMENT L
 								</tr>
 							</table>
 						<br>Dans ce cas, la fonction calculera.
-							<br>&nbsp;&nbsp;1- 	L'apparentement modifié des proposant 1, 2, 3 avec l'ancêtre 10
-							<br>&nbsp;&nbsp;2- 	Et l'apparentement modifié des proposant 4, 5, 6 avec l'ancêtre 20
-						<br><br>La valeur de retour sera un vecteur avec les deux résultats précédents.
+							<br>&nbsp;&nbsp;1- 	L'apparentement modifiï¿½ des proposant 1, 2, 3 avec l'ancï¿½tre 10
+							<br>&nbsp;&nbsp;2- 	Et l'apparentement modifiï¿½ des proposant 4, 5, 6 avec l'ancï¿½tre 20
+						<br><br>La valeur de retour sera un vecteur avec les deux rï¿½sultats prï¿½cï¿½dents.
 
 	\param lNColonne [in] Nombre de Colone de la matrice (Incluant la 1e colonne des ancetres)
 	\param lNLigne	 [in] Nombre de ligne de la matrice
@@ -1298,7 +1935,7 @@ const long double COAPPMOD_NBPOSSMAX_NODUPP=(long double)1E16;  //SERIEUSEMENT L
 
 	\param printprogress	[in] imprime un message indiquant les progress accomplies
 
-	\return 0 si la fonction est executé avec succès 
+	\return 0 si la fonction est executï¿½ avec succï¿½s 
 	
 	 \sa CoPro
 */ 
@@ -1359,7 +1996,7 @@ int CoefApparentement(int* Genealogie,	int* plProposant, int NProposant, int* pl
 			Noeud[i].iind=++cbit;
 		}
 	}
-	//Nombre de noeud touché, taille de la chaine de char 8 bit
+	//Nombre de noeud touchï¿½, taille de la chaine de char 8 bit
 	//const long NOrdre=cbit;
 	const int taille=(int) ceil(double(cbit)/MP_DIGIT_BIT); //MPI
 	
@@ -1395,7 +2032,7 @@ int CoefApparentement(int* Genealogie,	int* plProposant, int NProposant, int* pl
 			tmp=tmp->next;
 		}
 		dnbposs *= tmpcountpath;
-		NbIteration *= tmpcountpath; //Peut débordé
+		NbIteration *= tmpcountpath; //Peut dï¿½bordï¿½
 	}
 	
 	//VALIDE SI LE NOMBRE DE COMBINAISON EST TROP GRAND
@@ -1407,7 +2044,7 @@ int CoefApparentement(int* Genealogie,	int* plProposant, int NProposant, int* pl
 			PathDestruction(Path,NProposant);
 //			GENError("Number of combination to evaluate is too great for duplicata detection\nDeactivate it if you want to continue.");
 			throw std::range_error("Number of combination to evaluate is too great for duplicata detection\nDeactivate it if you want to continue.");
-			//GENError("Le nombre de combinaison a évaluer est trop grand pour pouvoir utilisé la détection de dupplicata\n Déactivé la détection de dupplication si vous désiré continuer"); 
+			//GENError("Le nombre de combinaison a ï¿½valuer est trop grand pour pouvoir utilisï¿½ la dï¿½tection de dupplicata\n Dï¿½activï¿½ la dï¿½tection de dupplication si vous dï¿½sirï¿½ continuer"); 
 		}
 
 		if (MaxMemoryUsed>COAPPMOD_MAXMEMORY_USABLE)
@@ -1425,8 +2062,8 @@ int CoefApparentement(int* Genealogie,	int* plProposant, int NProposant, int* pl
 			//sprintf(erreur, "Memory usage is too great for duplicata detection\nDeactivate it if you want to continue\nMaximum memory allowed: %Lf Mo  memory needed: %Lf Mo\n\n",
 				// (COAPPMOD_MAXMEMORY_USABLE/MEGAOCTET),(MaxMemoryUsed/MEGAOCTET));
 			throw std::range_error(erreur);
-			//GENError("La quantite de mémoire utilisé par la détection de dupplicata est trop importante\n Déactivé la détection de dupplication si vous désiré continuer"
-					 //"\nTaille maximal permise : %lG Mo   Mémoire demandé : %lG Mo\n\n",	 COAPPMOD_MAXMEMORY_USABLE/MEGAOCTET,MaxMemoryUsed/MEGAOCTET);
+			//GENError("La quantite de mï¿½moire utilisï¿½ par la dï¿½tection de dupplicata est trop importante\n Dï¿½activï¿½ la dï¿½tection de dupplication si vous dï¿½sirï¿½ continuer"
+					 //"\nTaille maximal permise : %lG Mo   Mï¿½moire demandï¿½ : %lG Mo\n\n",	 COAPPMOD_MAXMEMORY_USABLE/MEGAOCTET,MaxMemoryUsed/MEGAOCTET);
 		}
 	}
 	else
@@ -1436,7 +2073,7 @@ int CoefApparentement(int* Genealogie,	int* plProposant, int NProposant, int* pl
 			PathDestruction(Path,NProposant);
 //			GENError("Execution time of this function call is too great");
 			throw std::range_error("Execution time of this function call is too great");
-			//GENError("La durée d'exécution de cet appel de fonction serait surement comparable à l'âge de l'univers");
+			//GENError("La durï¿½e d'exï¿½cution de cet appel de fonction serait surement comparable ï¿½ l'ï¿½ge de l'univers");
 		}
 	}
 
@@ -1445,7 +2082,7 @@ int CoefApparentement(int* Genealogie,	int* plProposant, int NProposant, int* pl
 	if (NbIteration==0)
 	{
 		PathDestruction(Path,NProposant);
-		return 0;  //Operation réussi mais le résultat est simplement zero
+		return 0;  //Operation rï¿½ussi mais le rï¿½sultat est simplement zero
 	}
 
 	//CREATION DE LA TABLE ANTI DUPPLICATA	
@@ -1466,13 +2103,13 @@ int CoefApparentement(int* Genealogie,	int* plProposant, int NProposant, int* pl
 		//sprintf(erreur, "Insufficient memory to create an anti-duplicata table\n Deactivate duplicata detection if you want to continue\nMemory needed: %Lf Mo\n",
 		//	 (MaxMemoryUsed/MEGAOCTET));
 		throw std::range_error(erreur);
-		//GENError("Mémoire insuffisante pour utilisé créer une table anti-dupplicata\n Déactivé la détection de dupplication si vous désiré continuer"
-				 //"\nMémoire nécessaire : %lG Mo\n",MaxMemoryUsed/MEGAOCTET);
+		//GENError("Mï¿½moire insuffisante pour utilisï¿½ crï¿½er une table anti-dupplicata\n Dï¿½activï¿½ la dï¿½tection de dupplication si vous dï¿½sirï¿½ continuer"
+				 //"\nMï¿½moire nï¿½cessaire : %lG Mo\n",MaxMemoryUsed/MEGAOCTET);
 	}
 
 	//SOMMATION DE LA PROBABILITE CONJOINTE DE CHAQUE CHEMIN POSSIBLE
-	//l'équivalent d'un ensemble de nbproposant boucle imbriqué.
-	//Chaque boucle représente l'ensemble des chemins partant de l'ancetre
+	//l'ï¿½quivalent d'un ensemble de nbproposant boucle imbriquï¿½.
+	//Chaque boucle reprï¿½sente l'ensemble des chemins partant de l'ancetre
 	//et ce rendant au proposant de cette boucle
 	
 	//Initialisation
@@ -1481,7 +2118,7 @@ int CoefApparentement(int* Genealogie,	int* plProposant, int NProposant, int* pl
 
 	int n=0; //Curseur qui indique sur que chemin on est actuellement
 		
-	mp_int tmpResult; //La solution courante à étudier
+	mp_int tmpResult; //La solution courante ï¿½ ï¿½tudier
 	mp_int tmp; 
 	mp_init(&tmpResult);
 	mp_init(&tmp);
@@ -1508,7 +2145,7 @@ int CoefApparentement(int* Genealogie,	int* plProposant, int NProposant, int* pl
 				{						
 					//OR pour combiner le tout
 					mpl_or(&tmpResult, &(Current[cCol]->num), &tmp);
-					//Remet le résultat dans tmpResult					
+					//Remet le rï¿½sultat dans tmpResult					
 					mp_exch(&tmpResult, &tmp);									
 				}
 				
@@ -1516,7 +2153,7 @@ int CoefApparentement(int* Genealogie,	int* plProposant, int NProposant, int* pl
 				if (!DuppDetection ||
 					 (DuppDetection && ptrHashTable->Add(tmpResult)==GTRUE) )
 				{
-					//Calcul et ajout de la distance au résultat		
+					//Calcul et ajout de la distance au rï¿½sultat		
 					int distance=0;
 					mpl_num_set(&tmpResult, &distance);  
 					*pdRetour += pow2(distance-1); //Me rappelle plus pourquoi -1... 
@@ -1532,7 +2169,7 @@ int CoefApparentement(int* Genealogie,	int* plProposant, int NProposant, int* pl
 	//VALEUR DE RETOUR
 	//*pdRetour
 
-	//NETTOYER LES ASSIGNEMENTS DE MÉMOIRES			
+	//NETTOYER LES ASSIGNEMENTS DE Mï¿½MOIRES			
 	//outrand();
 	PathDestruction(Path,NProposant);
 
@@ -1587,12 +2224,12 @@ static void PathDestruction(CApPath **Path,int npath)
 }
 
 
-///Utilise par ExploreCoeff pour représenté le chemin parcouru
+///Utilise par ExploreCoeff pour reprï¿½sentï¿½ le chemin parcouru
 /*
 static CIndSimul** g_ExpCoeff_CheminParcouru=NULL; 
-///Utilise par ExploreCoeff comme étant le dernier chemin remplis (ou le premiers)
+///Utilise par ExploreCoeff comme ï¿½tant le dernier chemin remplis (ou le premiers)
 static CApPath ** g_ExpCoeff_Path=NULL;
-///Utilise par ExploreCoeff comme étant la cible de l'exploration
+///Utilise par ExploreCoeff comme ï¿½tant la cible de l'exploration
 static CIndSimul* g_ExpCoeff_Cible=NULL;*/
 /*! 
 	\brief (INTERNE) Explore une genealogie et construit une liste CapPath
@@ -1614,7 +2251,7 @@ static CIndSimul* g_ExpCoeff_Cible=NULL;*/
 	\param profondeur	[in] Profondeur actuel (au depart:0 normalement)
 	\param Cible		[in] Noeud Cible 
 	\param Array2		[in] Pointeur vers un vecteur de cindsimul* de taille nombre de noeud max implique 
-							 (utilisé pour mémorisé le chemin utilisé)
+							 (utilisï¿½ pour mï¿½morisï¿½ le chemin utilisï¿½)
 	\param InputPath	[in] Taille du vecteur Path
 	\param taille2		[in] Taille du vecteur Path
 	
@@ -1622,7 +2259,7 @@ static CIndSimul* g_ExpCoeff_Cible=NULL;*/
 */
 static void FASTCALL ExploreCoeff(CIndSimul* Noeud)
 {
-	//Explore l'arbre et retourne tous les path utilisé		
+	//Explore l'arbre et retourne tous les path utilisï¿½		
 	static int profondeur=0;
 
 	//Trace le chemin parcouru
@@ -1638,11 +2275,11 @@ static void FASTCALL ExploreCoeff(CIndSimul* Noeud)
 		mp_init( &tmp->num );		
 		tmp->next=NULL;
 
-		//Complete la série
+		//Complete la sï¿½rie
 		*g_ExpCoeff_Path=tmp;
 		g_ExpCoeff_Path=&(tmp->next);	//Avance le curseur
 		
-		//Ajuste le nombre en conséquence....
+		//Ajuste le nombre en consï¿½quence....
 		for(int i=0;i<=profondeur;i++)
 		{
 #ifdef USESDEBUG
@@ -1660,7 +2297,7 @@ static void FASTCALL ExploreCoeff(CIndSimul* Noeud)
 	}	
 	else
 	{
-		//Non.. on continue a cherché
+		//Non.. on continue a cherchï¿½
 		Clist *current=Noeud->fils;
 		if (current!=NULL)
 		{

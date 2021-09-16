@@ -1,7 +1,7 @@
 #5- gen.graph									-> garde article
 
 gen.graph <- function(gen, pro = gen.pro(gen), ancestors = gen.founder(gen), indVarAffected = gen.genout(gen)$ind, 
-					varAffected = gen.genout(gen)$ind, cex = 1, col = 0, symbolsize = 1, width = 1, packed = F, align = T, ...)
+					varAffected = gen.genout(gen)$ind, cex = 1, col = 0, symbolsize = 1, width = 1, packed = FALSE, align = TRUE, ...)
 {
 	num.max = max(gen.genout(gen)$ind) + 1
 	#On divise les ascendances pour qu'elles soient plus petites

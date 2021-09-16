@@ -2,11 +2,11 @@
 \alias{gen.genout}
 \title{Create pedigree data}
 \description{Creates data frame in pedigree format from an object of class GLgen}
-\usage{gen.genout( gen, sorted = "F")}
+\usage{gen.genout( gen, sorted = FALSE)}
 \arguments{
 \item{gen}{An object of class GLgen obtained with gen.genealogy, gen.lineages or gen.branching. Required.}
-\item{sorted}{If sorted="F" (default), individual id number are not sorted in output data. Id numbers for parents will be placed before their children ids.
-	If sorted="T", individual id numbers will be sorted.}
+\item{sorted}{If sorted=FALSE (default), individual id number are not sorted in output data. Id numbers for parents will be placed before their children ids.
+	If sorted=FALSE, individual id numbers will be sorted.}
 }
 \value{returns a data.frame containing the following:
 \strong{ind} 

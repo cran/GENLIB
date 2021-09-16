@@ -46,9 +46,9 @@
 # 86 - GLPrivOcc					-> garde article
 # 102 - gen.formatage...				-> garde article
 
-data.sum = function(dfData, bLine = T)
+data.sum = function(dfData, bLine = TRUE)
 {
-	if(bLine == T)
+	if(bLine == TRUE)
 		countOut = apply(dfData, 1, sum)
 	else countOut = apply(dfData, 2, sum)
 	data.frame(countOut)
@@ -68,7 +68,7 @@ gen.detectionErreur = function(gen, sorted, pro, named, ancestors, nouvtempsmax,
 	if(length(par...) > 0) {
 		for(i in 1:length(par...))
 			if(!is.element(par...[i], c("mother", "father", "sex")))
-				return(list(erreur = T, messageErreur = "Invalid '...' parameter: unknown parameter name"))
+				return(list(erreur = TRUE, messageErreur = "Invalid '...' parameter: unknown parameter name"))
 				#"Parametre '...' invalide : nom d'un parametre inconnu"))
 	}
 	#Contient les objets en retour
@@ -77,7 +77,7 @@ gen.detectionErreur = function(gen, sorted, pro, named, ancestors, nouvtempsmax,
 	if(is.element(1, check) || is.element(2, check)) {
 		ret1 = gen.validationGen(gen = gen, ..., check = check)
 	#return(1)
-		if(ret1$erreur == T)
+		if(ret1$erreur == TRUE)
 			return(ret1)
 		else {
 			retour$erreur = ret1$erreur
@@ -87,7 +87,7 @@ gen.detectionErreur = function(gen, sorted, pro, named, ancestors, nouvtempsmax,
 	}
 	else if(is.element(3, check)) {
 		ret3 = gen.validationGLgen(gen)
-		if(ret3$erreur == T)
+		if(ret3$erreur == TRUE)
 			return(ret3)
 		else
 		{
@@ -98,7 +98,7 @@ gen.detectionErreur = function(gen, sorted, pro, named, ancestors, nouvtempsmax,
 	#Parametre 'sorted'
 	if(is.element(4, check)) {
 		if(!is(sorted, "logical"))
-			return(list(erreur = T, messageErreur = "Invalid 'sorted' parameter: must be a logical value"))
+			return(list(erreur = TRUE, messageErreur = "Invalid 'sorted' parameter: must be a logical value"))
 			#"Parametre 'sorted' invalide: doit etre une valeur logique"))
 		retour$sorted = sorted
 	}
@@ -110,17 +110,17 @@ gen.detectionErreur = function(gen, sorted, pro, named, ancestors, nouvtempsmax,
 			if(sum(as.numeric(pro)) == 0)
 				pro = gen.pro(gen)
 			if(!is(pro, "numeric"))
-				return(list(erreur = T, messageErreur = "Invalid 'pro' parameter: must be a numerical vector"))
+				return(list(erreur = TRUE, messageErreur = "Invalid 'pro' parameter: must be a numerical vector"))
 				#"Parametre 'pro' invalide: doit etre un vecteur numerique"))
 			if(is(gen, "GLgen")) {
 				#print("check 5 -> gen.genout(gen, check = 0)")
 				if(!is.na(match(NA, match(pro, gen.genout(gen)$ind)))) #, check = 0
-					return(list(erreur = T, messageErreur = "Invalid 'pro' parameter: one of the proband is not part of the individuals list"))
+					return(list(erreur = TRUE, messageErreur = "Invalid 'pro' parameter: one of the proband is not part of the individuals list"))
 						#"Parametre 'prop' invalide: L'un des proposants ne fait pas parti de la liste des individuals"))
 			}
 			else {
 				if(!is.na(match(NA, match(pro, gen$ind))))
-					return(list(erreur = T, messageErreur = "Invalid 'pro' parameter: one of the proband is not part of the individuals list"))
+					return(list(erreur = TRUE, messageErreur = "Invalid 'pro' parameter: one of the proband is not part of the individuals list"))
 						#"Parametre 'prop' invalide: L'un des proposants ne fait pas parti de la liste des individuals"))
 			}
 			retour$pro = pro
@@ -133,7 +133,7 @@ gen.detectionErreur = function(gen, sorted, pro, named, ancestors, nouvtempsmax,
 		if(sum(as.numeric(pro)) == 0)
 			pro <- as.integer(dimnames(vectF <- temp)[[1]])
 		if(!is.numeric(pro) || length(pro) != dim(vectF <- temp)[1])
-			return(list(erreur = T, messageErreur = "Invalid 'pro' parameter: must be a vector with the same probands as 'VectF'"))
+			return(list(erreur = TRUE, messageErreur = "Invalid 'pro' parameter: must be a vector with the same probands as 'VectF'"))
 				#"Parametre 'prop' invalide: doit etre un vecteur contenant les memes proposants que 'VectF'"))
 		retour$pro = pro
 	}
@@ -142,16 +142,16 @@ gen.detectionErreur = function(gen, sorted, pro, named, ancestors, nouvtempsmax,
 		if(sum(as.numeric(pro)) == 0)
 			pro = gen.pro(gen)
 		if(!is(pro, "numeric"))
-			return(list(erreur = T, messageErreur = "Invalid 'pro' parameter: must be a numerical vector"))
+			return(list(erreur = TRUE, messageErreur = "Invalid 'pro' parameter: must be a numerical vector"))
 			#"Parametre 'prop' invalide: doit etre un vecteur numerique"))
 		if(is(gen, "GLgen")) {
 			if(!is.na(match(NA, match(pro, gen.genout(gen)$ind)))) #, check = 0
-				return(list(erreur = T, messageErreur = "Invalid 'pro' parameter: one of the proband is not part of the individuals list"))
+				return(list(erreur = TRUE, messageErreur = "Invalid 'pro' parameter: one of the proband is not part of the individuals list"))
 					#"Parametre 'prop' invalide: L'un des proposants ne fait pas parti de la liste des individuals"))
 		}
 		else {
 			if(!is.na(match(NA, match(pro, gen$ind))))
-				return(list(erreur = T, messageErreur = "Invalid 'pro' parameter: one of the proband is not part of the individuals list"))
+				return(list(erreur = TRUE, messageErreur = "Invalid 'pro' parameter: one of the proband is not part of the individuals list"))
 					#"Parametre 'prop' invalide: L'un des proposants ne fait pas parti de la liste des individuals"))
 		}
 		retour$pro = pro
@@ -160,12 +160,12 @@ gen.detectionErreur = function(gen, sorted, pro, named, ancestors, nouvtempsmax,
 	if(is.element(8, check)) {
 		if(sum(as.numeric(pro)) == 0) {
 			if(is.null(dimnames(matricephi)))
-				return(list(erreur = T, messageErreur = "Invalid 'pro' parameter: must be a vector with the same probands as 'matricephi'"))
+				return(list(erreur = TRUE, messageErreur = "Invalid 'pro' parameter: must be a vector with the same probands as 'matricephi'"))
 					#"Parametre 'prop' invalide: doit etre un vecteur contenant les memes proposants que 'matricephi'"))
 			pro <- as.integer(dimnames(matricephi)[[1]])
 		}
 		if(!is(pro, "numeric"))
-			return(list(erreur = T, messageErreur = "Invalid 'pro' parameter: must be a numerical vector"))
+			return(list(erreur = TRUE, messageErreur = "Invalid 'pro' parameter: must be a numerical vector"))
 			#"Parametre 'prop' invalide: doit etre un vecteur numerique"))
 		retour$pro = pro
 	}
@@ -173,13 +173,13 @@ gen.detectionErreur = function(gen, sorted, pro, named, ancestors, nouvtempsmax,
 	if(is.element(9, check)) {
 		if(is(grppro, "GLgroup"))
 			retour$grppro = grppro
-		else return(list(erreur = T, messageErreur = "Invalid 'grppro' parameter: must be a 'GLgroup' object"))
+		else return(list(erreur = TRUE, messageErreur = "Invalid 'grppro' parameter: must be a 'GLgroup' object"))
 		#"Parametre 'grpprop' invalide: doit etre un objet 'GLgroup'"))
 	}
 	#Parametre 'named'
 	if(is.element(10, check)) {
 		if(!is(named, "logical"))
-			return(list(erreur = T, messageErreur = "Invalid 'named' parameter: must be a logical value"))
+			return(list(erreur = TRUE, messageErreur = "Invalid 'named' parameter: must be a logical value"))
 			#"Parametre 'named' invalide: doit etre une valeur logique"))
 		retour$named = named
 	}
@@ -196,7 +196,7 @@ gen.detectionErreur = function(gen, sorted, pro, named, ancestors, nouvtempsmax,
 				ancestors = gen[gen[,"father"]==0 & gen[,"mother"]==0,"ind"]
 		}
 		if(!is(ancestors, "numeric"))
-			return(list(erreur = T, messageErreur = "Invalid 'ancestors' parameter: must be a numerical vector"))
+			return(list(erreur = TRUE, messageErreur = "Invalid 'ancestors' parameter: must be a numerical vector"))
 				#"Parametre 'ancestors' invalide: doit etre un vecteur numerique"))
 		retour$ancestors = ancestors
 	}
@@ -210,7 +210,7 @@ gen.detectionErreur = function(gen, sorted, pro, named, ancestors, nouvtempsmax,
 				newTemps <- as.double(0.)
 			else {
 				if(!is(nouvtempsmax, "numeric"))
-					return(list(erreur = T, messageErreur = "Invalid 'nouvtempsmax' parameter: must be a numerical vector"))
+					return(list(erreur = TRUE, messageErreur = "Invalid 'nouvtempsmax' parameter: must be a numerical vector"))
 						#"Parametre 'nouvtempsmax' invalide: doit etre un vecteur numerique"))
 				newTemps <- as.double(nouvtempsmax)[1]
 			}
@@ -220,7 +220,7 @@ gen.detectionErreur = function(gen, sorted, pro, named, ancestors, nouvtempsmax,
 	#Parametre 'individuals'
 	if(is.element(13, check)) {
 		if(!is(individuals, "numeric"))
-			return(list(erreur = T, messageErreur = "Invalid 'individuals' parameter: must be a numerical vector"))
+			return(list(erreur = TRUE, messageErreur = "Invalid 'individuals' parameter: must be a numerical vector"))
 				#"Parametre 'individuals' invalide: doit etre un vecteur numerique"))
 		if(is(gen, "GLgen")) {
 			genTmp = gen.genout(gen)#, check = 0)
@@ -228,7 +228,7 @@ gen.detectionErreur = function(gen, sorted, pro, named, ancestors, nouvtempsmax,
 		}
 		else posTrouve = match(individuals, unique(c(gen$ind, gen$mother, gen$father)))
 		if(length(posTrouve[is.na(posTrouve)]) > 0)
-			return(list(erreur = T, 
+			return(list(erreur = TRUE, 
 					messageErreur = "Invalid 'individuals' parameter: all individuals must be present in the ascendance table"))
 				#"Parametre 'individuals' invalide: tous les individuals doivent etre presents dans la table d'ascendance"))
 		retour$individuals = individuals
@@ -236,27 +236,27 @@ gen.detectionErreur = function(gen, sorted, pro, named, ancestors, nouvtempsmax,
 	#Parametre 'halfSibling'
 	if(is.element(14, check)) {
 		if(!is(halfSibling, "logical"))
-			return(list(erreur = T, messageErreur = "Invalid 'halfSibling' parameter: must be a logical value"))
+			return(list(erreur = TRUE, messageErreur = "Invalid 'halfSibling' parameter: must be a logical value"))
 				#"Parametre 'halfSibling' invalide: doit etre une valeur logique"))
 		retour$halfSibling = halfSibling
 	}
 	#Parametre 'output' 
 	if(is.element(15, check)) {
 		if(!(output == "Fa" || output == "Mo" || output == "FaMo"))
-			return(list(erreur = T, messageErreur = "Invalid 'output' parameter: choices are 'Fa', 'Mo', or 'FaMo' (see documentation)"))
+			return(list(erreur = TRUE, messageErreur = "Invalid 'output' parameter: choices are 'Fa', 'Mo', or 'FaMo' (see documentation)"))
 				#"Parametre 'sortie' invalide: les choix disponibles sont 'P' , 'M' et 'PM' (voir la documentation)"))
 		retour$output = output
 	}
 	#Parametre 'genNo'
 	if(is.element(16, check)) {
 		if(!is(genNo, "numeric"))
-			return(list(erreur = T, messageErreur = "Invalid 'genNo' parameter: must be a numerical vector"))
+			return(list(erreur = TRUE, messageErreur = "Invalid 'genNo' parameter: must be a numerical vector"))
 			#"Parametre 'genNo' invalide: doit etre un vecteur numerique"))
 		depthMax = gen.depth(gen.genealogy(gen))
 		if(length(genNo) == 1 && genNo == -1)
 			genNo = 0:(depthMax - 1)
 		if(max(genNo) > (depthMax - 1))
-			return(list(erreur = T, messageErreur = "Invalid 'genNo' parameter: can not be deeper than maximal depth"))
+			return(list(erreur = TRUE, messageErreur = "Invalid 'genNo' parameter: can not be deeper than maximal depth"))
 				#"Parametre 'genNo' invalide: ne doit pas depasser la depth maximale"))
 		retour$genNo = genNo
 	}
@@ -264,7 +264,7 @@ gen.detectionErreur = function(gen, sorted, pro, named, ancestors, nouvtempsmax,
 	if(is.element(171, check)) {
 		#print(typecomp)
 		if(!(typecomp == "MEAN" || typecomp == "IND")) # || typecomp == "MOYSUJETS")) #typecomp == "CUM" || typecomp == "REL" || typecomp == "EGO" || 
-			return(list(erreur = T, 
+			return(list(erreur = TRUE, 
 				messageErreur = "Invalid 'typecomp' parameter: choices are 'IND' and 'MEAN' (see documentation)"))#, 'CUM', 'REL' et 'EGO' "))
 				#"Parametre 'typecomp' invalide: les choix disponibles sont 'MOYSUJETS','SUJETS','BRUT', 'CUM', 'REL' et 'EGO' (voir la documentation)"))
 		retour$typecomp = typecomp
@@ -272,7 +272,7 @@ gen.detectionErreur = function(gen, sorted, pro, named, ancestors, nouvtempsmax,
 	if(is.element(17, check)) {
 		#print(typecomp)
 		if(!(typecomp == "ALL" || typecomp == "IND" || typecomp == "MEAN")) #typecomp == "CUM" || typecomp == "REL" || typecomp == "EGO" || 
-			return(list(erreur = T, 
+			return(list(erreur = TRUE, 
 				messageErreur = "Invalid 'typecomp' parameter: choices are 'MEAN','IND','ALL' (see documentation)"))#, 'CUM', 'REL' et 'EGO'"))
 				#"Parametre 'typecomp' invalide: les choix disponibles sont 'MOYSUJETS','SUJETS','BRUT', 'CUM', 'REL' et 'EGO' (voir la documentation)"))
 		retour$typecomp = typecomp
@@ -280,27 +280,27 @@ gen.detectionErreur = function(gen, sorted, pro, named, ancestors, nouvtempsmax,
 	#Parametre 'print.it'
 	if(is.element(18, check)) {
 		if(!is(print.it, "logical"))
-			return(list(erreur = T, messageErreur = "Invalid 'print.it' parameter: must be a logical value"))
+			return(list(erreur = TRUE, messageErreur = "Invalid 'print.it' parameter: must be a logical value"))
 			#"Parametre 'print.it' invalide: doit etre une valeur logique"))
 		retour$print.it = print.it
 	}
 	#Parametre 'nbgenerations'
 	if(is.element(19, check)) {
 		if(!is(nbgenerations, "numeric"))
-			return(list(erreur = T, messageErreur = "Invalid 'nbgenerations' parameter: must be a numerical vector"))
+			return(list(erreur = TRUE, messageErreur = "Invalid 'nbgenerations' parameter: must be a numerical vector"))
 				#"Parametre 'nbgenerations' invalide: doit etre un vecteur numerique"))
 		retour$nbgenerations = nbgenerations
 	}
 	#Parametre depthmin et depthmax (un ne peux pas aller sans l'autre)
 	if(is.element(20, check)) {
 		if(!is(depthmin, "numeric"))
-			return(list(erreur = T, messageErreur = "Invalid 'depthmin' parameter: must be a numerical vector"))
+			return(list(erreur = TRUE, messageErreur = "Invalid 'depthmin' parameter: must be a numerical vector"))
 				#"Parametre 'depthmin' invalide: doit etre un vecteur numerique"))
 		if(!is(depthmax, "numeric"))
-			return(list(erreur = T, messageErreur = "Invalid 'depthmax' parameter: must be a numerical vector"))
+			return(list(erreur = TRUE, messageErreur = "Invalid 'depthmax' parameter: must be a numerical vector"))
 				#"Parametre 'depthmax' invalide: doit etre un vecteur numerique"))
 		if(as.integer(depthmax) < as.integer(depthmin))
-			return(list(erreur = T, messageErreur = "'depthmax' must be bigger than 'depthmin'"))
+			return(list(erreur = TRUE, messageErreur = "'depthmax' must be bigger than 'depthmin'"))
 			#"'depthmax' doit etre plus grand que 'depthmin'"))
 		retour$depthmin = depthmin
 		retour$depthmax = depthmax
@@ -308,42 +308,42 @@ gen.detectionErreur = function(gen, sorted, pro, named, ancestors, nouvtempsmax,
 	#Parametre prob
 	if(is.element(21, check)) {
 		if(!is(prob, "numeric"))
-			return(list(erreur = T, messageErreur = "Invalid 'prob' parameter: must be a numerical vector"))
+			return(list(erreur = TRUE, messageErreur = "Invalid 'prob' parameter: must be a numerical vector"))
 				#"Parametre 'prob' invalide:  doit etre un vecteur numerique"))
 		retour$prob = prob
 	}
 	#Parametre b
 	if(is.element(22, check)) {
 		if(!is(b, "numeric") || any(b <= 0))
-			return(list(erreur = T, messageErreur = "Invalid 'b' parameter: must be an integer"))
+			return(list(erreur = TRUE, messageErreur = "Invalid 'b' parameter: must be an integer"))
 			#"Parametre 'b' invalide:  doit etre un nombre entier positif"))
 		retour$b = b
 	}
 	#Parametre 'icmatricephi'
 	if(is.element(23, check)) {
 		if((!is(icmatricephi, "GLmultiVector")) & (!is.null(icmatricephi)) & (!is(icmatricephi, "named")))
-			return(list(erreur = T, messageErreur = "Invalid 'icmatricephi' parameter: must be a 'GLmultiVector' object"))
+			return(list(erreur = TRUE, messageErreur = "Invalid 'icmatricephi' parameter: must be a 'GLmultiVector' object"))
 				#"Parametre 'icmatricephi' invalide:  doit etre un objet 'GLmultiVector' "))
 		retour$icmatricephi = icmatricephi
 	}
 	#Parametre 'inter'
 	if(is.element(24, check)) {
 		if(!is(inter, "logical"))
-			return(list(erreur = T, messageErreur = "Invalid 'inter' parameter: must be a logical value"))
+			return(list(erreur = TRUE, messageErreur = "Invalid 'inter' parameter: must be a logical value"))
 			#"Parametre 'inter' invalide: doit etre une valeur logique"))
 		retour$inter = inter
 	}
 	#Parametre 'correct'
 	if(is.element(25, check)) {
 		if(!is(correct, "logical"))
-			return(list(erreur = T, messageErreur = "Invalid 'correct' parameter: must be a logical value"))
+			return(list(erreur = TRUE, messageErreur = "Invalid 'correct' parameter: must be a logical value"))
 			#"Parametre 'correct' invalide: doit etre une valeur logique"))
 		retour$correct = correct
 	}
 	#Parametre 'correctinterval'
 	if(is.element(26, check)) {
 		if(!is(correctinterval, "numeric"))
-			return(list(erreur = T, messageErreur = "Invalid 'correctinterval' parameter: must be a numerical vector"))
+			return(list(erreur = TRUE, messageErreur = "Invalid 'correctinterval' parameter: must be a numerical vector"))
 				#"Parametre 'correctinterval' invalide:  doit etre un vecteur numerique"))
 		retour$correctinterval = correctinterval
 	}
@@ -353,14 +353,14 @@ gen.detectionErreur = function(gen, sorted, pro, named, ancestors, nouvtempsmax,
 			if(is.null(label))
 				label <- dimnames(matricephi)[[1]]
 			if(length(label) != dim(matricephi)[1])
-				return(list(erreur = T, messageErreur = "Invalid 'label' parameter: label vector length must equal proband number in 'matricephi'"))
+				return(list(erreur = TRUE, messageErreur = "Invalid 'label' parameter: label vector length must equal proband number in 'matricephi'"))
 					#"Parametre 'label' invalide: La longueur du vecteur 'label' doit etre egale au nombre de proposants dans 'matricephi'"))
 		}
 		else {
 			if(is.null(label))
 				label <- names(group(matricephi))
 			if(length(label) != length(matricephi@group))
-				return(list(erreur = T, messageErreur = "Invalid 'label' parameter: label number must equal group number in 'matricephi'"))
+				return(list(erreur = TRUE, messageErreur = "Invalid 'label' parameter: label number must equal group number in 'matricephi'"))
 					#"Parametre 'label' invalide: Le nombre d'etiquette doit etre egale au nombre de group dans 'matricephi'"))
 		}
 		retour$label = label
@@ -378,15 +378,15 @@ gen.detectionErreur = function(gen, sorted, pro, named, ancestors, nouvtempsmax,
 		}
 		else if(is(matricephi, "matrix")) {
 			if(!is.array(matricephi))
-				return(list(erreur = T, messageErreur = "Invalid 'matricephi' parameter: must be a kinship matrix for only one depth"))
+				return(list(erreur = TRUE, messageErreur = "Invalid 'matricephi' parameter: must be a kinship matrix for only one depth"))
 					#"Parametre 'matricephi' invalide: doit etre une matrice d'kinship pour une seule depth"))
 			if(!is.numeric(matricephi) || is.null(dim(matricephi)) || dim(matricephi)[1] != dim(matricephi)[2])
-				return(list(erreur = T, messageErreur = "Invalid 'matricephi' parameter: line number must equal column number"))
+				return(list(erreur = TRUE, messageErreur = "Invalid 'matricephi' parameter: line number must equal column number"))
 					#"Parametre 'matricephi' invalide: doit contenir autant de lignes que de colonnes (matrice carree)"))
 			retour$matricephi = matricephi
 		}
 		else {
-			return(list(erreur = T, messageErreur = "Invalid 'matricephi' parameter: must be one of 'matrix','GLmultimatrix', 'GLmultiPhiGroup' or 'GLmultiPhiGroupSingle' valid object"))
+			return(list(erreur = TRUE, messageErreur = "Invalid 'matricephi' parameter: must be one of 'matrix','GLmultimatrix', 'GLmultiPhiGroup' or 'GLmultiPhiGroupSingle' valid object"))
 				#"Parametre 'matricephi' invalide: doit etre un objet 'matrix','GLmultimatrix', 'GLmultiPhiGroup' ou 'GLmultiPhiGroupSingle' valide"))
 		}
 	}
@@ -397,15 +397,15 @@ gen.detectionErreur = function(gen, sorted, pro, named, ancestors, nouvtempsmax,
 		}
 		else if(is(matricephi, "matrix")) {
 			if(!is.array(matricephi))
-				return(list(erreur = T, messageErreur = "Invalid 'matricephi' parameter: must be a kinship matrix for only one depth"))
+				return(list(erreur = TRUE, messageErreur = "Invalid 'matricephi' parameter: must be a kinship matrix for only one depth"))
 					#"Parametre 'matricephi' invalide: doit etre une matrice d'kinship pour une seule depth"))
 			if(!is.numeric(matricephi) || is.null(dim(matricephi)) || dim(matricephi)[1] != dim(matricephi)[2])
-				return(list(erreur = T, messageErreur = "Invalid 'matricephi' parameter: line number must equal column number"))
+				return(list(erreur = TRUE, messageErreur = "Invalid 'matricephi' parameter: line number must equal column number"))
 					#"Parametre 'matricephi' invalide: doit contenir autant de lignes que de colonnes (matrice carree)"))
 			retour$matricephi = matricephi
 		}
 		else {
-			return(list(erreur = T, messageErreur = "Invalid 'matricephi' parameter: must be one of 'matrix' or 'GLmultimatrix' valid object"))
+			return(list(erreur = TRUE, messageErreur = "Invalid 'matricephi' parameter: must be one of 'matrix' or 'GLmultimatrix' valid object"))
 				#"Parametre 'matricephi' invalide: doit etre un objet 'matrix' ou 'GLmultimatrix' valide"))
 		}
 	}
@@ -416,14 +416,14 @@ gen.detectionErreur = function(gen, sorted, pro, named, ancestors, nouvtempsmax,
 		}
 		else if(is(matricephi, "matrix")) {
 			if(!is.array(matricephi))
-				return(list(erreur = T, messageErreur = "Invalid 'matricephi' parameter: must be a kinship matrix for only one depth"))
+				return(list(erreur = TRUE, messageErreur = "Invalid 'matricephi' parameter: must be a kinship matrix for only one depth"))
 					#"Parametre 'matricephi' invalide: doit etre une matrice d'kinship pour une seule depth"))
 			if(!is.numeric(matricephi) || is.null(dim(matricephi)) || dim(matricephi)[1] != dim(matricephi)[2])
-				return(list(erreur = T, messageErreur = "Invalid 'matricephi' parameter: line number must equal column number"))
+				return(list(erreur = TRUE, messageErreur = "Invalid 'matricephi' parameter: line number must equal column number"))
 					#"Parametre 'matricephi' invalide: doit contenir autant de lignes que de colonnes (matrice carree)"))
 			retour$matricephi = matricephi
 		}
-		else return(list(erreur = T, messageErreur = "Invalid 'matricephi' parameter: must be one of 'matrix' or 'GLmultiPhiGroupSingle' valid object"))
+		else return(list(erreur = TRUE, messageErreur = "Invalid 'matricephi' parameter: must be one of 'matrix' or 'GLmultiPhiGroupSingle' valid object"))
 				#"Parametre 'matricephi' invalide: doit etre un objet 'matrix' ou 'GLmultiPhiGroupSingle' valide"))
 	}
 	#Parametre 'matricephi' (2 cas sur 2)
@@ -432,17 +432,17 @@ gen.detectionErreur = function(gen, sorted, pro, named, ancestors, nouvtempsmax,
 			retour$matricephi = matricephi
 		else if(is(matricephi, "GLmultiPhiGroup"))
 			retour$matricephi = matricephi
-		else return(list(erreur = T, messageErreur = "Invalid 'matricephi' parameter: must be one of 'GLmultiMatrix' or 'GLmultiPhiGroup' valid object"))
+		else return(list(erreur = TRUE, messageErreur = "Invalid 'matricephi' parameter: must be one of 'GLmultiMatrix' or 'GLmultiPhiGroup' valid object"))
 				#"Parametre 'matricephi' invalide: doit etre un objet 'GLmultiMatrix' ou 'GLmultiPhiGroup' valide"))
 	}
 	#Parametre 'vectF'  
 	if(is.element(32, check)) {
 		if(!is.numeric(vectF))
-			return(list(erreur = T, messageErreur = "Invalid 'vectF' parameter: must be a numeric vector or a 'GLmultiVector'"))
+			return(list(erreur = TRUE, messageErreur = "Invalid 'vectF' parameter: must be a numeric vector or a 'GLmultiVector'"))
 				#"Parametre 'vectF' invalide: doit etre un vecteur numerique ou un 'GLmultiVector'"))
 		if(sum(as.numeric(pro)) == 0)
 			if(!(is(vectF, "named") || is(vectF, "GLmultiVector")))
-				return(list(erreur = T,
+				return(list(erreur = TRUE,
 					messageErreur = "Invalid 'vectF' parameter: must be a labeled numeric vector or the 'pro' parameter becomes obligatory"))
 					#"Parametre 'vectF' invalide: doit etre un vecteur numerique etiquette ou le parametre 'prop' devient obligatoire"))
 		retour$vectF = vectF
@@ -452,14 +452,14 @@ gen.detectionErreur = function(gen, sorted, pro, named, ancestors, nouvtempsmax,
 		if(is.numeric(vectF) || is(vectF, "GLmultiVector") || is(vectF, "GLmultiFGroupSingle") || is(vectF, "GLmultiFGroup")
 			)
 			retour$vectF = vectF
-		else return(list(erreur = T, 
+		else return(list(erreur = TRUE, 
 			messageErreur = "Invalid 'vectF' parameter: must be a numeric vector or one of 'GLmultiVector', 'GLmultiFGroupSingle' or 'GLmultiFGroup'"))
 			#"Parametre 'vectF' invalide: doit etre un vecteur numerique, un 'GLmultiVector', un 'GLmultiFGroupSingle' ou un 'GLmultiFGroup'"))
 	}
 	#Parametre 'typeCG'
 	if(is.element(34, check)) {
 		if(!(typeCG == "IND" || typeCG == "MEAN" || typeCG == "CUMUL" || typeCG == "TOTAL" || typeCG == "PRODUCT"))
-			return(list(erreur = T, 
+			return(list(erreur = TRUE, 
 				messageErreur = "Invalid 'typeCG' parameter: choices are 'IND', 'MEAN', 'CUMUL' , 'TOTAL' or 'PRODUCT' (see documentation)"))
 				#"Parametre 'typeCG' invalide: les choix disponibles sont 'BRUT', 'MOYEN', 'CUMUL' , 'TOTAL' et 'PRODUIT' (voir la documentation)"))
 		retour$typeCG = typeCG
@@ -467,21 +467,21 @@ gen.detectionErreur = function(gen, sorted, pro, named, ancestors, nouvtempsmax,
 	#Parametre 'nogrp'
 	if(is.element(35, check)) {
 		if(!is(nogrp, "numeric"))
-			return(list(erreur = T, messageErreur = "Invalid 'nogrp' parameter: must be a numerical vector"))
+			return(list(erreur = TRUE, messageErreur = "Invalid 'nogrp' parameter: must be a numerical vector"))
 				#"Parametre 'nogrp' invalide:  doit etre un vecteur numerique"))
 		retour$nogrp = nogrp
 	}
 	#Parametre 'pro'
 	if(is.element(36, check)) {
 		if(!is(pro, "numeric"))
-			return(list(erreur = T, messageErreur = "Invalid 'pro' parameter: must be a numerical vector"))
+			return(list(erreur = TRUE, messageErreur = "Invalid 'pro' parameter: must be a numerical vector"))
 				#"Parametre 'prop' invalide: doit etre un vecteur numerique"))
 		retour$pro = pro
 	}
 	#Parametre 'ancestors'
 	if(is.element(37, check)) {
 		if(!is(ancestors, "numeric"))
-			return(list(erreur = T, messageErreur = "Invalid 'ancestors' parameter: must be a numerical vector"))
+			return(list(erreur = TRUE, messageErreur = "Invalid 'ancestors' parameter: must be a numerical vector"))
 				#"Parametre 'ancestors' invalide: doit etre un vecteur numerique"))
 		retour$ancestors = ancestors
 	}
@@ -492,7 +492,7 @@ gen.detectionErreur = function(gen, sorted, pro, named, ancestors, nouvtempsmax,
 	#Parametre 'symbole'
 	if(is.element(39, check)) {
 		if(!is(symbole, "numeric"))
-			return(list(erreur = T, messageErreur = "Invalid 'symbole' parameter: must be a numerical vector"))
+			return(list(erreur = TRUE, messageErreur = "Invalid 'symbole' parameter: must be a numerical vector"))
 				#"Parametre 'symbole' invalide: doit etre un vecteur numerique"))
 		retour$symbole = symbole
 	}
@@ -503,35 +503,35 @@ gen.detectionErreur = function(gen, sorted, pro, named, ancestors, nouvtempsmax,
 	#Parametre 'maxindpage'
 	if(is.element(41, check)) {
 		if(!(is(maxindpage, "numeric") && length(maxindpage) == 1))
-			return(list(erreur = T, messageErreur = "Invalid 'maxindpage' parameter: must be a numerical vector of size 1"))
+			return(list(erreur = TRUE, messageErreur = "Invalid 'maxindpage' parameter: must be a numerical vector of size 1"))
 				#"Parametre 'maxindpage' invalide: doit etre un vecteur numerique de longueur 1"))
 		retour$maxindpage = maxindpage
 	}
 	#Parametre 'fond'
 	if(is.element(42, check)) {
 		if(!is(fond, "logical"))
-			return(list(erreur = T, messageErreur = "Invalid 'fond' parameter: must be a logical value"))
+			return(list(erreur = TRUE, messageErreur = "Invalid 'fond' parameter: must be a logical value"))
 				#"Parametre 'fond' invalide: doit etre une valeur logique"))
 		retour$fond = fond
 	}
 	#Parametre 'grapheg'
 	if(is.element(43, check)) {
 		if(!is(grapheg, "logical"))
-			return(list(erreur = T, messageErreur = "Invalid 'grapheg' parameter: must be a logical value"))
+			return(list(erreur = TRUE, messageErreur = "Invalid 'grapheg' parameter: must be a logical value"))
 			 #"Parametre 'grapheg' invalide: doit etre une valeur logique"))
 		retour$grapheg = grapheg
 	}
 	#Parametre 'cex'
 	if(is.element(44, check)) {
 		if(!(is(cex, "numeric") && length(cex) == 1))
-			return(list(erreur = T, messageErreur = "Invalid 'cex' parameter: must be a numerical vector of size 1"))
+			return(list(erreur = TRUE, messageErreur = "Invalid 'cex' parameter: must be a numerical vector of size 1"))
 				#"Parametre 'cex' invalide: doit etre un vecteur numerique de longueur 1"))
 		retour$cex = cex
 	}
 	#Parametre 'font'
 	if(is.element(45, check)) {
 		if(!(is(font, "numeric") && length(font) == 1))
-			return(list(erreur = T, messageErreur = "Invalid 'font' parameter: must be a numerical vector of size 1"))
+			return(list(erreur = TRUE, messageErreur = "Invalid 'font' parameter: must be a numerical vector of size 1"))
 				#"Parametre 'font' invalide: doit etre un vecteur numerique de longueur 1"))
 		retour$font = font
 	}
@@ -544,7 +544,7 @@ gen.detectionErreur = function(gen, sorted, pro, named, ancestors, nouvtempsmax,
 	#  2- dataframe valide
 	# ...
 	#Si cette fonction est rendu la, il n'y  a pas d'erreur
-	retour$erreur = F
+	retour$erreur = FALSE
 	return(retour)
 }
 
@@ -556,7 +556,7 @@ gen.etiquetteGenMinuscule = function(gen)
 			names(gen)[names(gen) == "IND"] = "ind"
 	}
 	else {
-		retour$erreur = T
+		retour$erreur = TRUE
 		retour$messageErreur = "Invalid 'gen' parameter: ascendance table must contain one column named 'ind' or 'IND'"
 			#"Parametre 'gen' invalide : la table d'ascendance doit contenir une colonne se nommant 'ind' ou 'IND'"
 		return(retour)
@@ -566,7 +566,7 @@ gen.etiquetteGenMinuscule = function(gen)
 			names(gen)[names(gen) == "FATHER"] = "father"
 	}
 	else {
-		retour$erreur = T
+		retour$erreur = TRUE
 		retour$messageErreur = "Invalid 'gen' parameter: ascendance table must contain one column named 'father' or 'FATHER'"
 			#"Parametre 'gen' invalide : la table d'ascendance doit contenir une colonne se nommant 'pere' ou 'PERE'"
 		return(retour)
@@ -576,7 +576,7 @@ gen.etiquetteGenMinuscule = function(gen)
 			names(gen)[names(gen) == "MOTHER"] = "mother"
 	}
 	else {
-		retour$erreur = T
+		retour$erreur = TRUE
 		retour$messageErreur = "Invalid 'gen' parameter: ascendance table must contain one column named 'mother' or 'MOTHER'"
 			#"Parametre 'gen' invalide : la table d'ascendance doit contenir une colonne se nommant 'mere' ou 'MERE'"
 		return(retour)
@@ -585,12 +585,12 @@ gen.etiquetteGenMinuscule = function(gen)
 		if(length(gen$SEX) > 0)
 			names(gen)[names(gen) == "SEX"] = "sex"
 	}
-	retour$erreur = F
+	retour$erreur = FALSE
 	retour$gen = gen
 	return(retour)
 }
 
-gen.implex3V = function(ind, father, mother, pro = gen.pro(ind, father, mother), genNo = NULL, named = T)
+gen.implex3V = function(ind, father, mother, pro = gen.pro(ind, father, mother), genNo = NULL, named = TRUE)
 {
 	if(!gen.isGen3V(ind, father, mother))
 		stop("at least one of ind, father or mother parameter is invalid")
@@ -599,9 +599,9 @@ gen.implex3V = function(ind, father, mother, pro = gen.pro(ind, father, mother),
 		stop("Invalid parameter: second parameter (genNo) must be an integer.")
 		#stop("Parametre invalide : le deuxieme parametre (genNo) doit etre un entier.")
 	if(!is.null(genNo))
-		num = gen.initImp3V(ind, father, mother, pro, named = F)[genNo + 1]
+		num = gen.initImp3V(ind, father, mother, pro, named = FALSE)[genNo + 1]
 	else {
-		num = gen.initImp3V(ind, father, mother, pro, named = F)
+		num = gen.initImp3V(ind, father, mother, pro, named = FALSE)
 		genNo <- 0:(length(num) - 1)
 	}
 	den = length(pro) * (2^genNo)
@@ -612,7 +612,7 @@ gen.implex3V = function(ind, father, mother, pro = gen.pro(ind, father, mother),
 	complet
 }
 
-gen.initImp3V = function(ind, father, mother, pro = gen.pro(ind, father, mother), named = T)
+gen.initImp3V = function(ind, father, mother, pro = gen.pro(ind, father, mother), named = TRUE)
 {
 	if(!gen.isGen3V(ind, father, mother))
 		stop("at least one of ind, father or mother parameter is invalid")
@@ -650,7 +650,7 @@ gen.validationAsc = function(gen, pro = 0)
 		pro = gen.pro(gen)
 	#VeRIFICATION DES ASCENDANCES
 	#1. Verification s'il y existe des individuals egal a 0
-	if(sum(asc$ind == 0) != 0) print("Error: some individuals are equal to 0 in the table d'ascendance")
+	if(sum(asc$ind == 0) != 0) warning("Error: some individuals are equal to 0 in the table d'ascendance")
 	# print("Erreur: Il y a des individuals egal a 0 dans la table d ascendance")
 	#2. Le nombre des fathers et des mothers == 0 doit etre identique
 	#if(sum(asc$father == 0 & asc$mother == 0) != sum(asc$father == 0)) print(
@@ -666,7 +666,7 @@ gen.validationAsc = function(gen, pro = 0)
 	#}
 	#3. Les parents doivent se retrouver dans la liste des individuals de la table d'ascendance
 	if(sum(is.na(match(c(asc$father[asc$father != 0], asc$mother[asc$mother != 0]), asc$ind))) != 0) {
-		print("Error: some parents are not found in the table d'ascendance")
+		warning("Error: some parents are not found in the table d'ascendance")
 		#print("Erreur: Il y a des parents qui ne retrouvent pas dans la table d ascendance")
 	}
 	#4. Les fathers et mothers ne peuvent pas etre les memes individuals ...bon c'est vrai aujourd'hui c'est possible!!! ;)
@@ -688,18 +688,18 @@ gen.validationAsc = function(gen, pro = 0)
 	#6. Il ne doit pas y avoir de doublons de probands
 	#if(length(pro$ind) != length(unique(pro$ind))) {
 	if(length(pro) != length(unique(pro))) {
-		print("Error: there are probands duplicates")
+		warning("Error: there are probands duplicates")
 		#print("Erreur: Il existe des doublons de proposants")
 	}
 	#7. Les probands doivent faire partie des individuals de la table d'ascendance
 	#if(sum(is.na(match(pro$ind, asc$ind))) != 0) {
 	if(sum(is.na(match(pro, asc$ind))) != 0) {
-		print("Error: some probands are not in the table d'ascendance")
+		warning("Error: some probands are not in the table d'ascendance")
 		#print("Erreur: Il y a des proposants qui ne retrouvent pas dans la table d'ascendance")
 	}
 	#8. Les probands doivent etre les seuls individuals a ne pas avoir d'enfant dans la table d\'ascendance
 	if(length(gen.pro(gen)) != length(pro)) {
-		print("Error: probands are not the only ones without children in the table d'ascendance")
+		warning("Error: probands are not the only ones without children in the table d'ascendance")
 		#print("Erreur: Les proposants ne sont pas les seuls individuals a ne pas avoir d'enfant dans la table d'ascendance")
 	}
 }
@@ -728,19 +728,19 @@ gen.validationGen = function(gen, ..., check)
 		posPere = match("father", par...[[1]])
 		posSex = match("sex", par...[[1]])
 		if(is.na(posMere) || is.na(posPere))
-			return(list(erreur = T, messageErreur="Invalid '...' parameter: 'father' and 'mother' parameter names are obligatory"))
+			return(list(erreur = TRUE, messageErreur="Invalid '...' parameter: 'father' and 'mother' parameter names are obligatory"))
 			#"Parametre '...' invalide : indication du nom des parametres 'pere' et 'mere' est obligatoire"))
 		ind = gen
 		father = par...[[2]][[posPere]]
 		mother = par...[[2]][[posMere]]
 		if(!(length(ind) == length(father) && length(ind) == length(mother)))
-			return(list(erreur = T, messageErreur = "Invalid 'gen' parameter: ind, father and mother columns must have the same size"))
+			return(list(erreur = TRUE, messageErreur = "Invalid 'gen' parameter: ind, father and mother columns must have the same size"))
 				#"Parametre 'gen' invalide : les colonnes ind, pere, mere doivent etre de meme taille"))
 		if(is.na(posSex))
 			gen = data.frame(ind = ind, father = par...[[2]][[posPere]], mother = par...[[2]][[posMere]])
 		else {
 			if(!(length(ind) == length(par...[[2]][[posSex]])))
-				return(list(erreur = T, messageErreur = "Invalid 'gen' parameter: ind, father and mother columns must have the same size"))
+				return(list(erreur = TRUE, messageErreur = "Invalid 'gen' parameter: ind, father and mother columns must have the same size"))
 					#"Parametre 'gen' invalide : les colonnes ind, pere, mere doivent etre de meme taille"))
 			gen = data.frame(ind = ind, father = par...[[2]][[posPere]], mother = par...[[2]][[posMere]], sex = par...[[2]][[posSex]])
 		}
@@ -748,36 +748,36 @@ gen.validationGen = function(gen, ..., check)
 	else if(is(gen, "data.frame")) {
 		#print("gen est data.frame")
 		gen = gen.etiquetteGenMinuscule(gen)
-		if(gen$erreur == T)
+		if(gen$erreur == TRUE)
 			return(gen)
-		else if(gen$erreur == F)
+		else if(gen$erreur == FALSE)
 			gen = gen$gen
-		else return(list(erreur = T, messageErreur = "Invalid 'gen.etiquetteGenMinuscule' function return value"))
+		else return(list(erreur = TRUE, messageErreur = "Invalid 'gen.etiquetteGenMinuscule' function return value"))
 				#"La valeur de retour de la fonction 'gen.etiquetteGenMinuscule' n'est pas valide"))
 		if(!(length(gen$ind) == length(gen$father) && length(gen$ind) == length(gen$mother)))
-			return(list(erreur = T, messageErreur = "Invalid 'gen' parameter: ind, father and mother columns must have the same size"))
+			return(list(erreur = TRUE, messageErreur = "Invalid 'gen' parameter: ind, father and mother columns must have the same size"))
 				#"Parametre 'gen' invalide : les colonnes ind, pere, mere doivent etre de meme taille"))
 	}
 	else
-	 return(list(erreur = T, messageErreur = "Invalid 'gen' parameter: must be one of GLgen object, dataframe (ind,father,mother) or numeric vector"))
+	 return(list(erreur = TRUE, messageErreur = "Invalid 'gen' parameter: must be one of GLgen object, dataframe (ind,father,mother) or numeric vector"))
 	 	#"Parametre 'gen' invalide : doit etre un objet GLgen, un dataframe (ind, pere, mere), ou un vecteur numerique (numeros d'individu)"))
 	if(objet.glgen == 0) {
 		ind = gen$ind
 		father = gen$father
 		mother = gen$mother
 		if(!(is.numeric(ind) && is.numeric(father) && is.numeric(mother)))
-			return(list(erreur = T, messageErreur = "Invalid 'gen' parameter: ind, father and mother columns must be numeric vectors"))
+			return(list(erreur = TRUE, messageErreur = "Invalid 'gen' parameter: ind, father and mother columns must be numeric vectors"))
 				#"Parametre 'gen' invalide : les colonnes ind, pere, mere doivent etre des vecteurs numeriques"))
 		if(!(1 == length(intersect(mother, father))))
-			return(list(erreur = T, messageErreur = "Invalid 'gen' parameter: identical individual number for both 'father' and 'mother'"))
+			return(list(erreur = TRUE, messageErreur = "Invalid 'gen' parameter: identical individual number for both 'father' and 'mother'"))
 				#"Parametre 'gen' invalide : un meme numero d'individu se retrouve dans les colonnes 'father' et 'mere'"))
 		if(!is.element(2, check))
 			if(!(all(is.element(father[father != 0], ind)) && all(is.element(mother[mother != 0], ind))))
-				return(list(erreur = T, messageErreur = "Invalid 'gen' parameter: some father or mother number are not in the 'ind' column"))
+				return(list(erreur = TRUE, messageErreur = "Invalid 'gen' parameter: some father or mother number are not in the 'ind' column"))
 					#"Parametre 'gen' invalide : des numeros de peres ou de meres ne se retrouvent pas dans la colonne 'ind'"))
 		if(length(gen$sex) != 0) {
 			if(!(length(gen$ind) == length(gen$sex)))
-				return(list(erreur = T, messageErreur = "Invalid 'gen' parameter: sex column must have the same size as ind, father and mother"))
+				return(list(erreur = TRUE, messageErreur = "Invalid 'gen' parameter: sex column must have the same size as ind, father and mother"))
 					#"Parametre 'gen' invalide : la colonne sex doit etre de meme taille que celle des colonnes ind, pere et mere"))
 			sex = gen$sex
 			tmp <- factor(sex, levels = c("H", "h", 1, "F", "f", 2))
@@ -785,30 +785,30 @@ gen.validationGen = function(gen, ..., check)
 			tmp2[tmp2 == 2 | tmp2 == 3] <- 1
 			tmp2[tmp2 == 4 | tmp2 == 5 | tmp2 == 6] <- 2
 			if(any(is.na(tmp2)))
-				return(list(erreur = T, messageErreur = "Invalid 'sex' parameter: bad data type"))
+				return(list(erreur = TRUE, messageErreur = "Invalid 'sex' parameter: bad data type"))
 					#"Parametre 'sex' invalide : mauvais type de donnees"))
 			if(is.element(2, check)) {
 				if(all(tmp2[match(father[father != 0], ind, nomatch = T)] == 1) && all(tmp2[match(mother[mother != 0], ind,
-					nomatch = T)] == 2))
-					return(list(erreur = F, gen = gen))
-				else return(list(erreur = T,messageErreur= "Error: some father or mother sex information do not concur with the 'sex' vector"))
+					nomatch = TRUE)] == 2))
+					return(list(erreur = FALSE, gen = gen))
+				else return(list(erreur = TRUE,messageErreur= "Error: some father or mother sex information do not concur with the 'sex' vector"))
 						#"Erreur : le sex de certains individuals (meres ou peres) ne concorde pas avec les informations du vecteur 'sex'"))
 			}
 			else {
 				if(all(tmp2[match(father[father != 0], ind)] == 1) && all(tmp2[match(mother[mother != 0], ind)] == 2))
-					return(list(erreur = F, gen = gen))
-				else return(list(erreur = T,messageErreur= "Error: some father or mother sex information do not concur with 'sex' vector"))
+					return(list(erreur = FALSE, gen = gen))
+				else return(list(erreur = TRUE,messageErreur= "Error: some father or mother sex information do not concur with 'sex' vector"))
 						#"Erreur : le sex de certains individuals (meres ou peres) ne concorde pas avec les informations du vecteur 'sex'"))
 			}
 		}
 	}
-	return(list(erreur = F, gen = gen))
+	return(list(erreur = FALSE, gen = gen))
 }
 
 gen.validationGLgen = function(object)
 {
 	#Verifie que 'object' est de la classe 'GLgen'
-	if(!is(object, "GLgen")) return(list(erreur = T, messageErreur = "Invalid 'gen' parameter: must be a GLgen object"))
+	if(!is(object, "GLgen")) return(list(erreur = TRUE, messageErreur = "Invalid 'gen' parameter: must be a GLgen object"))
 			#"Parametre 'gen' invalide : doit etre un objet GLgen"))
 	
 	#La signature (MD5) des genealogies est calculee et comparee avec celles contenues dans l'objet GLgen a valider.
@@ -818,14 +818,14 @@ gen.validationGLgen = function(object)
 
 	isValid = ret$isValid
 	if(class(ret) == "Error")
-		return(list(erreur = T, messageErreur = "Error from dll return value")) #"Erreur de retour provenant de la dll"))
+		return(list(erreur = TRUE, messageErreur = "Error from dll return value")) #"Erreur de retour provenant de la dll"))
 	if(as.logical(isValid))
-		return(list(erreur = F, gen = object))
-	else return(list(erreur = T, messageErreur = "Invalid 'gen' parameter: GLgen object altered after creation"))
+		return(list(erreur = FALSE, gen = object))
+	else return(list(erreur = TRUE, messageErreur = "Invalid 'gen' parameter: GLgen object altered after creation"))
 			#"Parametre 'gen' invalide : objet GLgen modifie apres la creation"))
 }
 
-GLapplyCG = function(x, FUN, ..., FunReturnLength = 1, mirror = T, named = T, namesVector = NULL)
+GLapplyCG = function(x, FUN, ..., FunReturnLength = 1, mirror = TRUE, named = TRUE, namesVector = NULL)
 {
 	#Si c'est une matrice applique la fonction a la matrice entiere
 	#Si c'est un vecteur applique la fonction au vecteur en entier
@@ -873,7 +873,7 @@ GLapplyCG = function(x, FUN, ..., FunReturnLength = 1, mirror = T, named = T, na
 	}
 }
 
-GLapplyF = function(x, FUN, ..., FunReturnLength = 1, mirror = T, named = T, namesVector = NULL)
+GLapplyF = function(x, FUN, ..., FunReturnLength = 1, mirror = TRUE, named = TRUE, namesVector = NULL)
 {
 	#Si c'est un matrice, applique la fonction a la matrice entiere
 	#Si c'est un vecteur, applique la fonction au vecteur entier
@@ -951,7 +951,7 @@ GLapplyF = function(x, FUN, ..., FunReturnLength = 1, mirror = T, named = T, nam
 	}
 }
 
-GLapplyGroup = function(Matrice, GroupIndex, FUN, ..., named = T)
+GLapplyGroup = function(Matrice, GroupIndex, FUN, ..., named = TRUE)
 {
 	#Applique une fonction a une grande matrice en fct du group
 	Matrice = unclass(Matrice)
@@ -970,7 +970,7 @@ GLapplyGroup = function(Matrice, GroupIndex, FUN, ..., named = T)
 	return(ret)
 }
 
-GLapplyPhi = function(x, FUN, ..., FunReturnLength = 1, mirror = T, named = T, namesVector = NULL)
+GLapplyPhi = function(x, FUN, ..., FunReturnLength = 1, mirror = TRUE, named = TRUE, namesVector = NULL)
 {
 	#Si c'est une matrice appliquer la fonction a la matrice entiere
 	#Si c'est un vecteur appliquer la fonction au vecteur en entier
@@ -1053,7 +1053,7 @@ GLapplyPhi = function(x, FUN, ..., FunReturnLength = 1, mirror = T, named = T, n
 	}
 }
 
-GLapplyPhi.mat = function(x, FUN, ..., FunReturnLength = 1, mirror = T, named = T, namesVector = NULL)
+GLapplyPhi.mat = function(x, FUN, ..., FunReturnLength = 1, mirror = TRUE, named = TRUE, namesVector = NULL)
 {
 	#Applique a une matrice de phi ayant une seule depth
 	#Pas de group
@@ -1076,12 +1076,12 @@ GLCGGroup = function(MatriceCG, Group, proband)
 			#"Parametre invalide: proposant doit etre la liste de proposants utilises pour generer la MatricePhi")
 	if(length(dim(MatriceCG)) == 2) {
 		#COMPACTAGE
-		ind <- unique(unlist(Group, use.names = T))
+		ind <- unique(unlist(Group, use.names = TRUE))
 		ind2 <- match(ind, proband)
 		if(any(is.na(ind2)))
 			stop("Invalid parameter: all probands of Group must be part of the probands")
 			#stop("Parametre invalide: tous les probands du Group doit faire partie des probands")
-		MatriceCG <- MatriceCG[ind2,  , drop = F]
+		MatriceCG <- MatriceCG[ind2,  , drop = FALSE]
 		#pro,anc (tous les ancestors sont conserve)
 		#GENERATION DES INDICES DES PROPOSANTS
 		indice <- lapply(Group, function(x, pro)
@@ -1108,12 +1108,12 @@ GLFGroup = function(VecteurF, Group, depth = NULL, proband)
 		if(is.null(depth) && !is.null(depth(VecteurF))) depth = depth(VecteurF)
 		VecteurF <- as(VecteurF, "matrix")
 		#Compactage
-		ind <- unique(unlist(Group, use.names = T))
+		ind <- unique(unlist(Group, use.names = TRUE))
 		ind2 <- match(ind, proband)
 		if(any(is.na(ind2)))
 			stop("Invalid grpPro parameter (function GLFGroup): all probands of 'grpPro' must be part of probands")
 			#stop("Parametre 'grpPro' invalide (Fct : GLFGroup): tous les probands de 'grpPro' doivent faire partie des probands")
-		VecteurF <- VecteurF[ind2,  , drop = F]
+		VecteurF <- VecteurF[ind2,  , drop = FALSE]
 		#Generation des indices des probands
 		indice <- lapply(Group, function(x, pro)
 		{
@@ -1126,12 +1126,12 @@ GLFGroup = function(VecteurF, Group, depth = NULL, proband)
 	else if(dim(VecteurF)[2] == 1) {
 		#C'est un vecteur
 		#une depth, compactage
-		ind <- unique(unlist(Group, use.names = T))
+		ind <- unique(unlist(Group, use.names = TRUE))
 		ind2 <- match(ind, proband)
 		if(any(is.na(ind2)))
 			stop("Invalid grpPro parameter (function GLFGroup): all probands of 'grpPro' must be part of probands")
 			#stop("Parametre 'grpPro' invalide (Fct : GLFGroup): tous les probands de 'grpPro' doivent faire partie des probands")
-		VecteurF <- VecteurF[ind2,  , drop = F]
+		VecteurF <- VecteurF[ind2,  , drop = FALSE]
 		#Generation des indices des probands
 		indice <- lapply(Group, function(x, pro)
 		{
@@ -1152,7 +1152,7 @@ GLgen = function(...)
 
 is.all.white <- function(listeNoms)
 {
-  unlist(lapply(listeNoms,function(n){gsub(" ", "", n, fixed=T)==""}))
+  unlist(lapply(listeNoms,function(n){gsub(" ", "", n, fixed=TRUE)==""}))
 }
 
 GLgroup = function(liste)
@@ -1162,20 +1162,20 @@ GLgroup = function(liste)
 	defaultname <- sapply(1:length(liste), function(i)
 	paste("Group", i))
 	if(is.null(names(liste)))
-		toreplace <- rep(T, length(liste))
+		toreplace <- rep(TRUE, length(liste))
 	else toreplace <- is.all.white(names(liste)) #is.all.white(names(liste), empty = T)
 	names(liste)[toreplace] <- defaultname[toreplace]
 	return(new("GLgroup", liste))
 }
 
-GLmulti = function(Array, depth, drop = T, addDim = F)
+GLmulti = function(Array, depth, drop = TRUE, addDim = FALSE)
 {
 	#construit un objet GLmultiMatrix ou GLmultiVector a l'aide de l'array fournie
 	#trouve la dimension correspondante
 	#Si Array n'est pas une liste 
 	if(!is.list(Array)) {
 		dimen <- length(dim(Array))
-		if(length(depth) > 1 || drop == F) {
+		if(length(depth) > 1 || drop == FALSE) {
 			#s'il y a plus d'une depth alors c'est un objet GLmulti 
 			if(drop == T && is.array(Array) && dim(Array)[dimen] != length(depth)) 
 				stop("Error: depth size must be the Array's last dimension")
@@ -1183,7 +1183,7 @@ GLmulti = function(Array, depth, drop = T, addDim = F)
 			if(drop == T && !is.array(Array) && length(Array) != length(depth))
 				stop("Error: depth size must be the Array's last dimension")
 				#stop("Erreur: la taille de depth doit correspondre \340 la derniere dimension d'Array")
-			if(drop == F && addDim == T && length(depth) == 1) {
+			if(drop == FALSE && addDim == TRUE && length(depth) == 1) {
 				if(is.null(dim(Array))) {
 					tmpnom <- list(names(Array))
 					names(Array) <- NULL
@@ -1236,7 +1236,7 @@ GLOverGroup2 = function(dim1, dim2, ..., named)
 	if(missing(dim2))
 		dim2 <- GLnoone
 	if(missing(named)) {
-		n <- T
+		n <- TRUE
 		p <- nargs()
 	}
 	else {
@@ -1257,7 +1257,7 @@ GLOverGroup3 = function(pro, dim1, dim2, ..., named, abs)
 	if(missing(dim2))
 		dim2 <- GLnoone
 	if(missing(named)) {
-		n <- T
+		n <- TRUE
 		p <- nargs()
 	}
 	else {
@@ -1265,7 +1265,7 @@ GLOverGroup3 = function(pro, dim1, dim2, ..., named, abs)
 		p <- nargs() - 1
 	}
 	if(missing(abs)) {
-		ab <- F
+		ab <- FALSE
 	}
 	else {
 		ab <- abs
@@ -1285,7 +1285,7 @@ GLOverGroup4 = function(pro, dim1, dim2, dim3, ..., named, abs)
 	if(missing(dim3))
 		dim3 <- GLnoone
 	if(missing(named)) {
-		n <- T
+		n <- TRUE
 		p <- nargs()
 	}
 	else {
@@ -1293,7 +1293,7 @@ GLOverGroup4 = function(pro, dim1, dim2, dim3, ..., named, abs)
 		p <- nargs() - 1
 	}
 	if(missing(abs)) {
-		ab <- F
+		ab <- FALSE
 	}
 	else {
 		ab <- abs
@@ -1307,7 +1307,7 @@ GLOverNumber1 = function(pro, ..., named, abs)
 	if(missing(pro))
 		pro <- GLnoone
 	if(missing(named)) {
-		n <- T
+		n <- TRUE
 		p <- nargs()
 	}
 	else {
@@ -1315,7 +1315,7 @@ GLOverNumber1 = function(pro, ..., named, abs)
 		p <- nargs() - 1
 	}
 	if(missing(abs)) {
-		ab <- F
+		ab <- FALSE
 	}
 	else {
 		ab <- abs
@@ -1331,7 +1331,7 @@ GLOverVector2 = function(pro, dim1, ..., named, abs)
 	if(missing(dim1))
 		dim1 <- GLnoone
 	if(missing(named)) {
-		n <- T
+		n <- TRUE
 		p <- nargs()
 	}
 	else {
@@ -1339,7 +1339,7 @@ GLOverVector2 = function(pro, dim1, ..., named, abs)
 		p <- nargs() - 1
 	}
 	if(missing(abs)) {
-		ab <- F
+		ab <- FALSE
 	}
 	else {
 		ab <- abs
@@ -1356,7 +1356,7 @@ GLPhiGroup = function(MatricePhi, Group, depth = NULL, proband)
 		if(is.null(depth) && !is.null(depth(MatricePhi))) depth = depth(MatricePhi)
 		MatricePhi <- as(MatricePhi, "array")
 		#compactage
-		ind <- unique(unlist(Group, use.names = T))
+		ind <- unique(unlist(Group, use.names = TRUE))
 		ind2 <- match(ind, proband)
 		if(any(is.na(ind2)))
 			stop("Invalid parameter: all probands of Group must be part of proband")
@@ -1373,7 +1373,7 @@ GLPhiGroup = function(MatricePhi, Group, depth = NULL, proband)
 	}
 	else if(length(dim(MatricePhi)) == 2) {
 		#compactage
-		ind <- unique(unlist(Group, use.names = T))
+		ind <- unique(unlist(Group, use.names = TRUE))
 		ind2 <- match(ind, proband)
 		if(any(is.na(ind2)))
 			stop("Invalid parameter: all probands of Group must be part of proband")
@@ -1394,7 +1394,7 @@ GLPhiGroup = function(MatricePhi, Group, depth = NULL, proband)
 
 GLPriv.completeness3V = function(ind, father, mother, pro, genNo, named)
 {
-	num = GLPriv.initcomp3V(ind, father, mother, pro, named = F)
+	num = GLPriv.initcomp3V(ind, father, mother, pro, named = FALSE)
 	num = num[genNo + 1]
 	den = length(pro) * (2^genNo)
 	complet = (100 * num)/den
@@ -1407,9 +1407,9 @@ GLPriv.completeness3V = function(ind, father, mother, pro, genNo, named)
 GLPriv.entropie3V = function(ind, father, mother, pro)
 {
 	#Nombre de fondateurs
-	vctF <- GLPriv.initfon3V(ind, father, mother, pro, named = F)
+	vctF <- GLPriv.initfon3V(ind, father, mother, pro, named = FALSE)
 	#Nombre de demi-fondateurs
-	vctDF <- GLPriv.initDemifon3V(ind, father, mother, pro, named = F)
+	vctDF <- GLPriv.initDemifon3V(ind, father, mother, pro, named = FALSE)
 	genNoF <- 0:(length(vctF) - 1)
 	#Nombre de generations des fondateurs
 	genNoDF <- 0:(length(vctDF) - 1)
@@ -1429,7 +1429,7 @@ error.bar <- function(x, y, type, lty, lwd, col, upper, lower=upper, length=0.1,
 
 GLPriv.implex3V = function(ind, father, mother, pro, genNo, named)
 {
-	num = GLPriv.initImp3V(ind, father, mother, pro, named = F)
+	num = GLPriv.initImp3V(ind, father, mother, pro, named = FALSE)
 	num = num[genNo + 1]
 	den = length(pro) * (2^genNo)
 	complet = (100 * num)/den
@@ -1457,7 +1457,7 @@ GLPriv.initcomp3V = function(ind, father, mother, pro, named)
 	return(retour)
 }
 
-GLPriv.initDemifon3V = function(ind, father, mother, pro = gen.pro(ind, father, mother), named = T)
+GLPriv.initDemifon3V = function(ind, father, mother, pro = gen.pro(ind, father, mother), named = TRUE)
 {
 	#Validation des parametres (a mettre dans gen.detectionErreur)
 	if(!gen.isGen3V(ind, father, mother)) stop("At least one of the ind, father or mother parameter is invalid")
@@ -1530,9 +1530,9 @@ GLPriv.initImp3V = function(ind, father, mother, pro, named)
 GLPriv.variance3V = function(ind, father, mother, pro)
 {
 	#Nombre de fondateurs
-	vctF <- GLPriv.initfon3V(ind, father, mother, pro, named = F)
+	vctF <- GLPriv.initfon3V(ind, father, mother, pro, named = FALSE)
 	#Nombre de demi-fondateurs
-	vctDF <- GLPriv.initDemifon3V(ind, father, mother, pro, named = F)
+	vctDF <- GLPriv.initDemifon3V(ind, father, mother, pro, named = FALSE)
 	genNoF <- 0:(length(vctF) - 1)
 	#Nombre de generations des fondateurs
 	genNoDF <- 0:(length(vctDF) - 1)
@@ -1546,12 +1546,12 @@ GLPriv.variance3V = function(ind, father, mother, pro)
 	return(varP)
 }
 
-GLPrivCG = function(gen, pro, ancestors, print.it = F, named = T)
+GLPrivCG = function(gen, pro, ancestors, print.it = FALSE, named = TRUE)
 {
 	#Structure necessaire pour emmagasiner le resultat la fonction de la dll
 	tmp <- double(length(ancestors) * length(pro))
 	#Call de la fonction en C
-	.Call("SPLUSConGen", gen@.Data, pro, length(pro), ancestors, length(ancestors), tmp, print.it, specialsok = T)	
+	.Call("SPLUSConGen", gen@.Data, pro, length(pro), ancestors, length(ancestors), tmp, print.it, specialsok = TRUE)	
 	#Creation de la matrice de resultat
 	dim(tmp) <- c(length(pro), length(ancestors))
 	if(named)
@@ -1564,7 +1564,7 @@ GLPrivCG = function(gen, pro, ancestors, print.it = F, named = T)
 	return(invisible(tmp))
 }
 
-GLPrivCGcumul = function(CG, named = T)
+GLPrivCGcumul = function(CG, named = TRUE)
 {
 	#Calcule la somme par group
 	somme <- GLapplyCG(CG, sum, named = named)
@@ -1583,17 +1583,17 @@ GLPrivCGgroup = function(CG, grppro, pro)
 	if(missing(pro)) GLCGGroup(CG, grppro) else GLCGGroup(CG, grppro, proband = pro)
 }
 
-GLPrivCGmoyen = function(CG, named = T)
+GLPrivCGmoyen = function(CG, named = TRUE)
 {
 	GLapplyCG(CG, mean, named = named)
 }
 
-GLPrivCGPLUS = function(gen, pro, ancestors, vctProb, print.it = F, named = T)
+GLPrivCGPLUS = function(gen, pro, ancestors, vctProb, print.it = FALSE, named = TRUE)
 {
 	#Structure necessaire pour emmagasiner le resultat la fonction de la dll
 	tmp <- double(length(ancestors) * length(pro))
 	#Call de la fonction en C
-	.Call("SPLUSConGenPLUS", gen@.Data, pro, length(pro), ancestors, length(ancestors), vctProb, tmp, print.it, specialsok = T)
+	.Call("SPLUSConGenPLUS", gen@.Data, pro, length(pro), ancestors, length(ancestors), vctProb, tmp, print.it, specialsok = TRUE)
 	#Creation de la matrice de resultat
 	dim(tmp) <- c(length(pro), length(ancestors))
 	if(named)
@@ -1606,7 +1606,7 @@ GLPrivCGPLUS = function(gen, pro, ancestors, vctProb, print.it = F, named = T)
 	return(invisible(tmp))
 }
 
-GLPrivCGproduit = function(CG, named = T)
+GLPrivCGproduit = function(CG, named = TRUE)
 {
 	if(is.null(group(CG))) {
 		#La formule   
@@ -1629,7 +1629,7 @@ GLPrivCGproduit = function(CG, named = T)
 		for(a in 1:ng) {
 			#Trouve la matrice sur laquel applique la fonction
 			ind = xgrindex[[a]]
-			mat = x[ind,  , drop = F]
+			mat = x[ind,  , drop = FALSE]
 			#La formule
 			ret[a,  ] <- drop(exp(t(rep(1, length(ind))) %*% log(mat)))
 		}
@@ -1639,7 +1639,7 @@ GLPrivCGproduit = function(CG, named = T)
 	}
 }
 
-GLPrivCGtotal = function(CG, named = T)
+GLPrivCGtotal = function(CG, named = TRUE)
 {
 	GLapplyCG(CG, sum, named = named)
 }
@@ -1652,7 +1652,7 @@ GLPrivExtCG = function(x, ..., drop)
 	#Group
 	dim2 <- l2$dim2
 	#Ancestor
-	if(missing(drop)) drop <- T
+	if(missing(drop)) drop <- TRUE
 	#fin if un parametre
 	#Valeur par defaults
 	if(l2$param < 3) {
@@ -1685,8 +1685,8 @@ GLPrivExtCG = function(x, ..., drop)
 			#extraction
 			lg <- xgroupe[dim1]
 			#Regeneration de la liste de proband
-			gind <- unlist(xgrindex, use.names = F)
-			ggrou <- unlist(xgroupe, use.names = F)
+			gind <- unlist(xgrindex, use.names = FALSE)
+			ggrou <- unlist(xgroupe, use.names = FALSE)
 			pro <- ggrou[match(1:(dim(x)[1]), gind)]
 			if(any(is.na(pro))) stop("Can not use Drop=T for this particular object")
 				#stop("Vous ne pouvez pas utilise Drop=T pour cette objet en particulier")
@@ -1711,7 +1711,7 @@ GLPrivExtF = function(x, ..., drop)
 	#depth
 	dim1 <- l2$dim1
 	#Group
-	if(missing(drop)) drop <- T
+	if(missing(drop)) drop <- TRUE
 	#Valeur par defaults
 	if(is(dim1, "GLnothing")) class(dim1) <- "missing"
 	if(drop) {
@@ -1748,7 +1748,7 @@ GLPrivExtF = function(x, ..., drop)
 			#Else dans ce cas garde pro comme il etait      
 			if(is(dim1, "GLnothing")) class(dim1) <- "missing"
 			#Peut-importe dim1 et dim2 ca passe a l'operateur 
-			GLmulti(getMethod("[", "array")(m, dim1, pro, drop = T), xdepth[pro])
+			GLmulti(getMethod("[", "array")(m, dim1, pro, drop = TRUE), xdepth[pro])
 		}
 		else stop("You can only use one or two subscript (depth alone or depth, group)")
 			#stop("Vous ne pouvez utiliser qu'un ou deux subscripts (depth seul ou depth,group)")
@@ -1782,8 +1782,8 @@ GLPrivExtF = function(x, ..., drop)
 			lg <- xgroupe[dim1]
 			#Nouveau Group a construire
 			#Regeneration de la liste de proband
-			gind <- unlist(xgrindex, use.names = F)
-			ggrou <- unlist(xgroupe, use.names = F)
+			gind <- unlist(xgrindex, use.names = FALSE)
+			ggrou <- unlist(xgroupe, use.names = FALSE)
 			pro <- ggrou[match(1:(dim(x)[1]), gind)]
 			if(any(is.na(pro)))
 				stop("Can not use Drop=T for this particular object")
@@ -1807,7 +1807,7 @@ GLPrivExtFSINGLE = function(x, ..., drop)
 	l2 <- GLOverNumber1(...)
 	pro <- l2$pro
 	if(missing(drop))
-		drop <- T
+		drop <- TRUE
 	#Valeur par defaults
 	if(l2$param <= 1) {
 		#Pour un seul parametre = Sous-ensemble d'element           
@@ -1829,7 +1829,7 @@ GLPrivExtFSINGLE = function(x, ..., drop)
 			if(l2$named)
 				names(m) <- names(xgroupe)
 			#Fin construction de m
-			getMethod("[", "matrix")(m, pro, drop = T)
+			getMethod("[", "matrix")(m, pro, drop = TRUE)
 		}
 		else {
 			#Si 'drop = F', alors retourne un objet 'GLmultiPhiGroupSingle' modifie
@@ -1851,8 +1851,8 @@ GLPrivExtFSINGLE = function(x, ..., drop)
 				lg <- xgroupe[pro]
 				#Nouveau Groupe a construire
 				#Regeneration de la liste de proband
-				gind <- unlist(xgrindex, use.names = F)
-				ggrou <- unlist(xgroupe, use.names = F)
+				gind <- unlist(xgrindex, use.names = FALSE)
+				ggrou <- unlist(xgroupe, use.names = FALSE)
 				pro <- ggrou[match(1:(dim(x)[1]), gind)]
 				if(any(is.na(pro)))
 					stop("you can not use Drop=T for this particular object")
@@ -1880,7 +1880,7 @@ GLPrivExtPHI = function(x, ..., drop)
 	dim1 <- l2$dim1
 	dim2 <- l2$dim2
 	if(missing(drop))
-		drop <- T
+		drop <- TRUE
 	#Valeur par defaults
 	if(is(dim1, "GLnothing")) class(dim1) <- "missing"
 	if(is(dim2, "GLnothing"))
@@ -1897,7 +1897,7 @@ GLPrivExtPHI = function(x, ..., drop)
 			m <- array(0, c(length(xgroupe), length(xgroupe), length(xdepth)))
 			for(p in 1:length(xdepth)) {
 				#Matrice pour une depth donne
-				m[,  , p] <- GLapplyGroup(x[,  , p], xgrindex, gen.phiMean, check = 0, named = F)
+				m[,  , p] <- GLapplyGroup(x[,  , p], xgrindex, gen.phiMean, check = 0, named = FALSE)
 			}
 			if(l2$named)
 				dimnames(m) <- list(names(xgroupe), names(xgroupe), NULL)
@@ -1947,8 +1947,8 @@ GLPrivExtPHI = function(x, ..., drop)
 			lg <- xgroupe[dim1]
 			#Nouveau Group a construire
 			#Regeneration de la liste de proband
-			gind <- unlist(xgrindex, use.names = F)
-			ggrou <- unlist(xgroupe, use.names = F)
+			gind <- unlist(xgrindex, use.names = FALSE)
+			ggrou <- unlist(xgroupe, use.names = FALSE)
 			pro <- ggrou[match(1:(dim(x)[1]), gind)]
 			if(any(is.na(pro)))
 				stop("You can not use Drop=T for this particular object")
@@ -1972,7 +1972,7 @@ GLPrivExtPHISINGLE = function(x, ..., drop)
 	dim1 <- l2$dim1
 	dim2 <- l2$dim2
 	if(missing(drop))
-		drop <- T
+		drop <- TRUE
 	#fin if un parametre
 	#Valeur par defaut
 	if(l2$param < 3) {
@@ -1987,7 +1987,7 @@ GLPrivExtPHISINGLE = function(x, ..., drop)
 		if(drop) {
 			#Si drop=T, alors retourne la matrice de resultat
 			#Genere le tableau de phi moyen
-			m <- GLapplyGroup(x, xgrindex, gen.phiMean, check = 0, named = F)
+			m <- GLapplyGroup(x, xgrindex, gen.phiMean, check = 0, named = FALSE)
 			if(l2$named)
 				dimnames(m) <- list(names(xgroupe), names(xgroupe))
 			else dimnames(m) <- NULL
@@ -2012,8 +2012,8 @@ GLPrivExtPHISINGLE = function(x, ..., drop)
 				lg <- xgroupe[dim1]
 				#Nouveau Group a construire
 				#Regeneration de la liste de proband
-				gind <- unlist(xgrindex, use.names = F)
-				ggrou <- unlist(xgroupe, use.names = F)
+				gind <- unlist(xgrindex, use.names = FALSE)
+				ggrou <- unlist(xgroupe, use.names = FALSE)
 				pro <- ggrou[match(1:(dim(x)[1]), gind)]
 				if(any(is.na(pro)))
 					stop("You can not use Drop=T for this particular object (Error in the 'GLPrivExtPHISINGLE' function)")

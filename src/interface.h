@@ -68,6 +68,7 @@ GENLIBDLL_DLL_API(SEXP) SPLUSCGCumul(SEXP Genealogie, SEXP plProposant,SEXP lNPr
 
 GENLIBDLL_DLL_API(SEXP) SPLUSCGCumuldirect(SEXP matriceCG, SEXP lNProposant, SEXP plAncetre, SEXP lNAncetre, SEXP AncRet, SEXP  pdSomAnc, SEXP pdSomCumul);
 
+GENLIBDLL_DLL_API(SEXP) SPLUSSimulHaplo(SEXP sGenealogy, SEXP sProbands, SEXP sLenPro, SEXP sAncestors, SEXP sLenAncestors, SEXP snSimul, SEXP sProbRecomb, SEXP reconstruction, SEXP sBP, SEXP sWD, SEXP sPathToHap, SEXP sPathToMap, SEXP sSeed, SEXP sNumRecomb, SEXP sNumMeioses);
 //GENLIBDLL_DLL_API(SEXP) SPLUSSimul(SEXP Genealogie, SEXP proposant, SEXP etatproposant,SEXP nproposant, SEXP ancetre, SEXP etatancetre, SEXP nancetre,
 GENLIBDLL_DLL_API(SEXP) SPLUSSimul(SEXP Genealogie, SEXP proposant, SEXP etatproposant,SEXP nproposant, SEXP ancetre, SEXP etatancetre, SEXP nancetre,
 							SEXP nSimul, SEXP pdRetConj, SEXP pdRetSimul, SEXP pdRetProp, SEXP sprobRecomb, SEXP sprobSurvieHomo,

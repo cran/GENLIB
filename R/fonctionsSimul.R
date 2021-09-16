@@ -97,6 +97,52 @@ gen.simuProb = function(gen, pro, statePro, ancestors, stateAncestors, simulNo=5
 	v
 }
 #print.it = F, 
+
+gen.simuHaplo = function (gen, pro, ancestors, simulNo = 1, RecombRate=c(0,0), Reconstruction =0, BP=0, Hapfile=NULL, Mapfile=NULL, seed= 0, outDir = getwd()){
+	if(!is(gen, "GLgen"))
+		stop("Invalid parameter: gen must be an instance of Glgen (see gen.genealogy)")
+	if(!is(pro, "numeric") )
+		stop("Invalid parameter: pro must be a numeric vector")
+	if(!is(ancestors, "numeric") )
+		stop("Invalid parameter: ancestor must be numeric vector")
+	if(simulNo <= 0)
+		stop("Invalid parameter: simulNo must be greater than zero")
+	if(!is(RecombRate, "numeric"))
+		stop("Recombination rate must be a numeric vector ")
+	#comparisons to NULL don't produce boolean value	
+	#if(Reconstruction==1 & (Hapfile==NULL | Mapfile==NULL))
+		#stop("If reconstruction is set to 1 must specify the hap and map files")
+	if(Reconstruction==1 & BP==0)
+		stop("If reconstruction is set to 1, you must specify the size of the segment in BP")
+	if(Reconstruction==1 & (is.null(Hapfile) | is.null(Mapfile)))
+		stop("If reconstruction is set to 1, you must provide a hap file and map file")		
+
+	if(Reconstruction == 1){
+		pathHap<-normalizePath(Hapfile, mustWork=TRUE)
+		pathMap<-normalizePath(Mapfile, mustWork=TRUE)
+	}
+	else {
+		pathHap=""
+		pathMap=""
+	}
+
+	#Add in summary results, num meioses, num recombinations per simulation
+	numMeioses<-integer(simulNo)
+	numRecomb<-integer(simulNo)
+	simulCount<-c(1:simulNo)
+	if(seed==0)
+		seed=abs(.Random.seed[5])
+	message("seed: ", seed)
+	.Call("SPLUSSimulHaplo", gen@.Data, pro, length(pro), ancestors, length(ancestors), as.integer(simulNo), RecombRate, as.integer(Reconstruction), BP, outDir, pathHap, pathMap, as.integer(seed), numRecomb, numMeioses, package="GENLIB")
+	if(Reconstruction==0){
+		message("output files: ", outDir, "/All_nodes_haplotypes.txt \n", outDir, "/Proband_Haplotypes.txt \n")
+	}else{
+		message("output files: ", outDir, "/All_nodes_haplotypes.txt \n", outDir, "/Proband_Haplotypes.txt \n", outDir, "/reconstructed_haplotypes.txt")
+	}
+	return(cbind(simulNo=simulCount,numRecomb=numRecomb,numMeioses=numMeioses))
+}
+
+
 gen.simuSample = function(gen, pro, ancestors, stateAncestors, simulNo = 5000)#, named = T)
 {
 	if(!is(gen, "GLgen"))
@@ -122,7 +168,7 @@ gen.simuSample = function(gen, pro, ancestors, stateAncestors, simulNo = 5000)#,
 	#double* pdRetour,long* PrintProgress)
 	#Call de la fonction en C
 	.Call("SPLUSSimulSingle", gen@.Data, pro, length(pro), ancestors, as.integer(stateAncestors), length(ancestors), 
-							  as.integer(simulNo), tmpsimul, FALSE, specialsok = T)
+							  as.integer(simulNo), tmpsimul, FALSE, specialsok = TRUE)
 	#Mise en matrice
 	dim(tmpsimul) <- c(length(pro), simulNo)
 	#if(named)
@@ -206,7 +252,7 @@ gen.simuSampleFreq = function(gen, pro, ancestors, stateAncestors, simulNo = 500
 	#double* pdRetour,long* PrintProgress)
 	#Call de la fonction en C
 	.Call("SPLUSSimulSingleFreq", gen@.Data, pro, length(pro), ancestors, as.integer(stateAncestors), length(ancestors), 
-								as.integer(simulNo), tmpsimul,	FALSE, specialsok = T)
+								as.integer(simulNo), tmpsimul,	FALSE, specialsok = TRUE)
 	#Mise en matrice
 	dim(tmpsimul) <- c(length(pro), 3)
 	#if(named)

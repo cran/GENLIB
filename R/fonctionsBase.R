@@ -89,8 +89,8 @@ gen.gc = function(gen, pro = 0, ancestors = 0, vctProb = c(0.5, 0.5, 0.5, 0.5), 
 {
 	#if(length(check) != 1)	stop("Invalid 'check' parameter: choices are 0 or 1")
 
-	retour = gen.detectionErreur(gen = gen, pro = pro, ancestors = ancestors, print.it = FALSE, named = T, typeCG = typeCG, check = c(3, 5, 11, 34, 18, 10))
-	if(retour$erreur == T)	stop(retour$messageErreur)
+	retour = gen.detectionErreur(gen = gen, pro = pro, ancestors = ancestors, print.it = FALSE, named = TRUE, typeCG = typeCG, check = c(3, 5, 11, 34, 18, 10))
+	if(retour$erreur == TRUE)	stop(retour$messageErreur)
 	gen = retour$gen
 	pro = retour$pro
 	ancestors = retour$ancestors
@@ -142,8 +142,8 @@ gen.completeness = function(gen, pro = 0, genNo = -1, type = "MEAN", ...)#, chec
 			if(length(list(...)) != 2)
 				stop("Invalid '...' parameter : 'father' and 'mother' parameter names are obligatory")
 	#if(check == 1) {
-		retour <- gen.detectionErreur(gen = gen, pro = pro, genNo = genNo, typecomp = type, named = T, check = c(1, 5, 16, 171, 10))
-		if(retour$erreur == T)
+		retour <- gen.detectionErreur(gen = gen, pro = pro, genNo = genNo, typecomp = type, named = TRUE, check = c(1, 5, 16, 171, 10))
+		if(retour$erreur == TRUE)
 			stop(retour$messageErreur)
 		gen <- retour$gen
 		pro <- retour$pro
@@ -187,8 +187,8 @@ gen.completenessVar = function(gen, pro = 0, genNo = -1, ...) #, check = 1, ...)
 		if(length(list(...)) != 2)
 			stop("Invalid '...' parameter : 'father' and 'mother' parameter names are obligatory")
 
-	retour = gen.detectionErreur(gen = gen, pro = pro, genNo = genNo, named = T, check = c(1, 5, 16, 10))
-	if(retour$erreur == T)	stop(retour$messageErreur)
+	retour = gen.detectionErreur(gen = gen, pro = pro, genNo = genNo, named = TRUE, check = c(1, 5, 16, 10))
+	if(retour$erreur == TRUE)	stop(retour$messageErreur)
 	gen = retour$gen
 	pro = retour$pro
 	genNo = retour$genNo
@@ -249,12 +249,12 @@ gen.branching = function(gen, pro = 0, ancestors = gen.founder(gen), bflag = 0)#
 	ebranche = new("GLgen", .Data = tmpgen, Date = date())
 	#print("1")
 	ebranche.asc = gen.genout(ebranche)
-	sexeAbsent=F
+	sexeAbsent=FALSE
 	if(length(setdiff(unique(ebranche.asc[,"sex"]), c(1,2,"H","F")))>0) 
 	{
 	  diff = setdiff(unique(ebranche.asc[,"sex"]), c(1,2,"H","F"))
 	  ebranche.asc=data.frame(ind=ebranche.asc$ind,father=ebranche.asc$father,mother=ebranche.asc$mother) #*****
-	  sexeAbsent=T
+	  sexeAbsent=TRUE
 	  #warning(paste("la colonne \"sexe\" contient des valeurs non valide:",diff,"\n  Elle ne sera pas consideree pour le reste des calculs."))
 	  warning(paste("The \"sex\" column contains invalid values:",diff,
 					"\nThe column won't be considered for further calculations."))
@@ -300,7 +300,7 @@ gen.children = function(gen, individuals, ...)#, check = 1)
 			#stop("Param\350tre '...' invalide : indication du nom des param\350tres 'pere' et 'mere' est obligatoire")
 	#if(check == 1) {
 		retour = gen.detectionErreur(gen = gen, individuals = individuals, check = c(1, 13), ...)
-		if(retour$erreur == T)
+		if(retour$erreur == TRUE)
 			stop(retour$messageErreur)
 		gen = retour$gen
 		individuals = retour$individuals
@@ -325,7 +325,7 @@ gen.meangendepth = function(gen, pro = 0, type = "MEAN", ...)#, check = 1)#named
 			#stop("Param\350tre '...' invalide : indication du nom des param\350tres 'pere' et 'mere' est obligatoire")
 	#if(check == 1) {
 		retour <- gen.detectionErreur(gen = gen, pro = pro, typecomp = type, check = c(1, 5, 17))
-		if(retour$erreur == T)
+		if(retour$erreur == TRUE)
 			stop(retour$messageErreur)
 		gen <- retour$gen
 		pro <- retour$pro
@@ -437,7 +437,7 @@ gen.founder = function(gen, ...)#, check = 1)
 			#stop("Param\350tre '...' invalide : indication du nom des param\350tres 'pere' et 'mere' est obligatoire")
 	#if(check == 1) {
 		retour = gen.detectionErreur(gen = gen, ..., check = 1)
-		if(retour$erreur == T)
+		if(retour$erreur == TRUE)
 			return(retour$messageErreur)
 		gen = retour$gen
 	#}
@@ -455,7 +455,7 @@ gen.half.founder = function(gen, ...)#, check = 1)
 			#stop("Param\350tre '...' invalide : indication du nom des param\350tres 'pere' et 'mere' est obligatoire")
 	#if(check == 1) {
 		retour = gen.detectionErreur(gen = gen, ..., check = 1)
-		if(retour$erreur == T)
+		if(retour$erreur == TRUE)
 			return(retour$messageErreur)
 		gen = retour$gen
 	#}
@@ -463,7 +463,7 @@ gen.half.founder = function(gen, ...)#, check = 1)
 }
 
 
-gen.sibship = function(gen, individuals, halfSibling = T, ...)#, check = 1)
+gen.sibship = function(gen, individuals, halfSibling = TRUE, ...)#, check = 1)
 {
 	#if(length(check) != 1) stop("Invalid 'check' parameter: choices are 0 or 1")
 		#stop("Param\350tre 'check' invalide: les choix disponibles sont 0 et 1")
@@ -473,12 +473,12 @@ gen.sibship = function(gen, individuals, halfSibling = T, ...)#, check = 1)
 			#stop("Param\350tre '...' invalide : indication du nom des param\350tres 'pere' et 'mere' est obligatoire")
 	#if(check == 1) {
 	retour = gen.detectionErreur(gen = gen, individuals = individuals, halfSibling = halfSibling, check = c(1, 13, 14), ...)
-	if(retour$erreur == T) stop(retour$messageErreur)
+	if(retour$erreur == TRUE) stop(retour$messageErreur)
 	gen = retour$gen
 	individuals = retour$individuals
 	halfSibling = retour$halfSibling
 	#}
-	if(halfSibling == T) {
+	if(halfSibling == TRUE) {
 		PositionProband = match(individuals, gen$ind)
 		#Trouve les meres et les peres des probands
 		Meres <- gen$mother[PositionProband]
@@ -524,9 +524,9 @@ gen.f = function(gen, pro, depthmin= (gen.depth(gen)-1), depthmax= (gen.depth(ge
 	#if(length(check) != 1)	stop("Invalid 'check' parameter: choices are 0 or 1")
 	if(missing(pro))		pro = gen.pro(gen)
 
-	retour = gen.detectionErreur(gen = gen, pro = pro, depthmin = depthmin, depthmax = depthmax, print.it = FALSE, named = T, 
+	retour = gen.detectionErreur(gen = gen, pro = pro, depthmin = depthmin, depthmax = depthmax, print.it = FALSE, named = TRUE, 
 							check = c(3, 5, 20, 18, 10))
-	if(retour$erreur == T) stop(retour$messageErreur)
+	if(retour$erreur == TRUE) stop(retour$messageErreur)
 	gen = retour$gen
 	pro = retour$pro
 	depthmin = retour$depthmin
@@ -538,7 +538,7 @@ gen.f = function(gen, pro, depthmin= (gen.depth(gen)-1), depthmax= (gen.depth(ge
 	tmp <- double(length(pro) * ecart)
 
 	#Call de la fonction en C
-	.Call("SPLUSFS", gen@.Data, pro, length(pro), depthmin, depthmax, tmp, FALSE, specialsok = T)
+	.Call("SPLUSFS", gen@.Data, pro, length(pro), depthmin, depthmax, tmp, FALSE, specialsok = TRUE)
 	#Construction de la matrice de retour
 	dim(tmp) <- c(length(pro), ecart)
 	dimnames(tmp) <- list(pro, NULL)
@@ -555,27 +555,27 @@ gen.genealogy = function(ped, autoComplete=FALSE, ...)#, check = 1)
 	  colnames(ped) <- c("ind", "father", "mother", "sex")
 	 }
 	 if(sum(c("ind","father","mother","sex") %in% colnames(ped)) < 4){
-	  stop(paste(paste(c("ind","father","mother","sex")[grep(F,c("ind","father","mother","sex") %in% colnames(ped))]),
+	  stop(paste(paste(c("ind","father","mother","sex")[grep(FALSE,c("ind","father","mother","sex") %in% colnames(ped))]),
 	 		"not in table columns.",collapse=""))
 	 }
 	 if(autoComplete & !all(is.element(ped[ped[,"father"]!=0,"father"], ped[,"ind"]))) {
-	 	pereManquant <- unique(ped[grep(F, is.element(ped[,"father"], ped[,"ind"])),"father"])
+	 	pereManquant <- unique(ped[grep(FALSE, is.element(ped[,"father"], ped[,"ind"])),"father"])
 	 	pereManquant <- pereManquant[-grep("^0$",pereManquant)]
-	 	ajout <- matrix(c(pereManquant, rep(0, (2*length(pereManquant))), rep(1,length(pereManquant))), byrow=F, ncol=4)
+	 	ajout <- matrix(c(pereManquant, rep(0, (2*length(pereManquant))), rep(1,length(pereManquant))), byrow=FALSE, ncol=4)
 	 	colnames(ajout) <- colnames(ped)
 	 	ped <- rbind(ped, ajout)
 	 }
 	 if(autoComplete & !all(is.element(ped[ped[,"mother"]!=0,"mother"], ped[,"ind"]))) {
-	 	mereManquante <- unique(ped[grep(F, is.element(ped[,"mother"], ped[,"ind"])),"mother"])
+	 	mereManquante <- unique(ped[grep(FALSE, is.element(ped[,"mother"], ped[,"ind"])),"mother"])
 	 	mereManquante <- mereManquante[-grep("^0$",mereManquante)]
-	 	ajout <- matrix(c(mereManquante, rep(0, (2*length(mereManquante))), rep(2,length(mereManquante))), byrow=F, ncol=4)
+	 	ajout <- matrix(c(mereManquante, rep(0, (2*length(mereManquante))), rep(2,length(mereManquante))), byrow=FALSE, ncol=4)
 	 	colnames(ajout) <- colnames(ped)
 	 	ped <- rbind(ped, ajout)
 	 }
 	}
 	#if(length(check) != 1)	stop("Invalid 'check' parameter: choices are 0 or 1")
 	retour = gen.detectionErreur(gen = ped, check = 1, ...)
-	if(retour$erreur == T)	stop(retour$messageErreur)
+	if(retour$erreur == TRUE)	stop(retour$messageErreur)
 	gen = retour$gen
 
 	tmp2 <- NULL
@@ -592,21 +592,21 @@ gen.genealogy = function(ped, autoComplete=FALSE, ...)#, check = 1)
 }
 
 
-gen.lineages = function(ped, pro = 0, maternal = T, ...)#, check = 1
+gen.lineages = function(ped, pro = 0, maternal = TRUE, ...)#, check = 1
 {
 	#Creation d'un objet GLgen avec toutes les ascendances
 	gen = gen.genealogy(ped, ...) #check = check,
 	#Validation des parametres gen et proband
 
 	retour = gen.detectionErreur(gen = gen, pro = pro, check = c(3, 36))
-	if(retour$erreur == T)	stop(retour$messageErreur)
+	if(retour$erreur == TRUE)	stop(retour$messageErreur)
 	gen = retour$gen
 	pro = retour$pro
 
 	#Si des sujets ne sont pas forces, par defaut les individuals n'ayant pas d'enfants sont selectionnes
 	if(sum(pro == 0)) data.ind = gen.pro(gen) else data.ind = pro
 	#Si c'est des lignees maternelles, les tous les peres sont mis a 0, sinon c'est les meres 
-	if(maternal == T) {
+	if(maternal == TRUE) {
 		ped$father = rep(0, length(ped$father))
 #		output = "M"
 	}
@@ -629,13 +629,13 @@ gen.lineages = function(ped, pro = 0, maternal = T, ...)#, check = 1
 }
 
 
-gen.genout = function(gen, sorted = F)#, check = 1)
+gen.genout = function(gen, sorted = FALSE)#, check = 1)
 {
 	#if(length(check) != 1) stop("Invalid 'check' parameter: choices are 0 or 1")
 		#stop("Param\350tre 'check' invalide: les choix disponibles sont 0 et 1")
 	#if(check == 1) {
 		retour = gen.detectionErreur(gen = gen, sorted = sorted, check = c(3, 4))
-		if(retour$erreur == T) stop(retour$messageErreur)
+		if(retour$erreur == TRUE) stop(retour$messageErreur)
 		gen = retour$gen
 		sorted = retour$sorted
 	#}
@@ -656,7 +656,7 @@ gen.genout = function(gen, sorted = F)#, check = 1)
 	return(invisible(data.frame(v)))
 }
 
-gen.implex = function(gen, pro = 0, genNo = -1, type = "MEAN", onlyNewAnc = F, ...)#, check = 1 named = T, 
+gen.implex = function(gen, pro = 0, genNo = -1, type = "MEAN", onlyNewAnc = FALSE, ...)#, check = 1 named = T, 
 {
 	#Validations des parametres 
 	#if(length(check) != 1) stop("Invalid 'check' parameter: choices are 0 or 1")
@@ -666,8 +666,8 @@ gen.implex = function(gen, pro = 0, genNo = -1, type = "MEAN", onlyNewAnc = F, .
 			stop("Invalid '...' parameter : 'father' and 'mother' parameter names are obligatory")
 			#stop("Param\350tre '...' invalide : indication du nom des param\350tres 'pere' et 'mere' est obligatoire")
 	#if(check == 1) {
-		retour <- gen.detectionErreur(gen = gen, pro = pro, genNo = genNo, typecomp = type, named = T, check = c(1,	5, 16, 17, 10))
-		if(retour$erreur == T)
+		retour <- gen.detectionErreur(gen = gen, pro = pro, genNo = genNo, typecomp = type, named = TRUE, check = c(1,	5, 16, 17, 10))
+		if(retour$erreur == TRUE)
 			stop(retour$messageErreur)
 		gen <- retour$gen
 		pro <- retour$pro
@@ -677,7 +677,7 @@ gen.implex = function(gen, pro = 0, genNo = -1, type = "MEAN", onlyNewAnc = F, .
 	#}
 	#Les ancetres se repetent sur plusieurs generations
 	#Si on veut les ancetres distincts par generation nouveaux ou pas la fonctionnalite utilisee sera differente
-	if(onlyNewAnc == F) fctApp <- GLPriv.implex3V else fctApp <- gen.implex3V
+	if(onlyNewAnc == FALSE) fctApp <- GLPriv.implex3V else fctApp <- gen.implex3V
 	#Les ancetres ne sont comptes qu'a leur 1ere apparition
 	#Selon le type du calcul  
 	#Calcule de l'implex par sujet 
@@ -702,7 +702,7 @@ gen.implex = function(gen, pro = 0, genNo = -1, type = "MEAN", onlyNewAnc = F, .
 }
 
 
-gen.implexVar = function(gen, pro = 0, onlyNewAnc = F, genNo = -1, ...)# check = 1,named = T, 
+gen.implexVar = function(gen, pro = 0, onlyNewAnc = FALSE, genNo = -1, ...)# check = 1,named = T, 
 {
 	#Validation des parametres
 	#if(length(check) != 1) stop("Invalid 'check' parameter: choices are 0 or 1")
@@ -713,15 +713,15 @@ gen.implexVar = function(gen, pro = 0, onlyNewAnc = F, genNo = -1, ...)# check =
 		if(length(list(...)) != 2)
 			stop("Invalid '...' parameter : 'father' and 'mother' parameter names are obligatory")
 
-	retour = gen.detectionErreur(gen = gen, pro = pro, genNo = genNo, named = T, check = c(1, 5, 16, 10))
-	if(retour$erreur == T)	stop(retour$messageErreur)
+	retour = gen.detectionErreur(gen = gen, pro = pro, genNo = genNo, named = TRUE, check = c(1, 5, 16, 10))
+	if(retour$erreur == TRUE)	stop(retour$messageErreur)
 	gen = retour$gen
 	pro = retour$pro
 	genNo = retour$genNo
 	named = retour$named
 
 	#Si on veut les ancetres distincts par generation nouveaux ou pas la fonctionnalite utilisee sera differente
-	if(onlyNewAnc == F) fctApp <- GLPriv.implex3V else fctApp <- gen.implex3V
+	if(onlyNewAnc == FALSE) fctApp <- GLPriv.implex3V else fctApp <- gen.implex3V
 	#Selon le type de donnees, le facteur de correction sera modifie en consequence
 #	if(typeCorpus == "ECH") facteurCorr = length(pro)/(length(pro) - 1) else if(typeCorpus == "POP")
 #		facteurCorr = 1
@@ -755,8 +755,8 @@ gen.max = function(gen, individuals)#, check = 1) #, ancestors=0)named = T,
 {
 	#if(length(check) != 1)	stop("Invalid 'check' parameter: choices are 0 or 1")
 
-	retour = gen.detectionErreur(gen = gen, individuals = individuals, ancestors = 0, named = T, check = c(3, 13, 10))
-	if(retour$erreur == T)	stop(retour$messageErreur)
+	retour = gen.detectionErreur(gen = gen, individuals = individuals, ancestors = 0, named = TRUE, check = c(3, 13, 10))
+	if(retour$erreur == TRUE)	stop(retour$messageErreur)
 	gen			= retour$gen
 	individuals = retour$individuals
 	named		= retour$named
@@ -776,8 +776,8 @@ gen.min = function(gen, individuals)#, check = 1) #, ancestors=0)named = T,
 	#if(length(check) != 1) stop("Invalid 'check' parameter: choices are 0 or 1")
 		#stop("Param\350tre 'check' invalide: les choix disponibles sont 0 et 1")
 	#if(check == 1) {
-		retour = gen.detectionErreur(gen = gen, individuals = individuals, ancestors = 0, named = T, check = c(3,13,10))
-		if(retour$erreur == T)
+		retour = gen.detectionErreur(gen = gen, individuals = individuals, ancestors = 0, named = TRUE, check = c(3,13,10))
+		if(retour$erreur == TRUE)
 			stop(retour$messageErreur)
 		gen = retour$gen
 		individuals = retour$individuals
@@ -798,8 +798,8 @@ gen.mean = function(gen, individuals)#, check = 1) #, ancestors=0)named = T,
 	#if(length(check) != 1) stop("Invalid 'check' parameter: choices are 0 or 1")
 		#stop("Param\350tre 'check' invalide: les choix disponibles sont 0 et 1")
 	#if(check == 1) {
-		retour = gen.detectionErreur(gen = gen, individuals = individuals, ancestors = 0, named = T, check = c(3,13,10))
-		if(retour$erreur == T)
+		retour = gen.detectionErreur(gen = gen, individuals = individuals, ancestors = 0, named = TRUE, check = c(3,13,10))
+		if(retour$erreur == TRUE)
 			stop(retour$messageErreur)
 		gen = retour$gen
 		individuals = retour$individuals
@@ -820,8 +820,8 @@ gen.nochildren = function(gen, individuals)#, check = 1)#named = T,
 	#if(length(check) != 1) stop("Invalid 'check' parameter: choices are 0 or 1")
 		#stop("Param\350tre 'check' invalide: les choix disponibles sont 0 et 1")
 	#if(check == 1) {
-		retour = gen.detectionErreur(gen = gen, individuals = individuals, named = T, check = c(3, 13, 10))
-		if(retour$erreur == T)
+		retour = gen.detectionErreur(gen = gen, individuals = individuals, named = TRUE, check = c(3, 13, 10))
+		if(retour$erreur == TRUE)
 			stop(retour$messageErreur)
 		gen = retour$gen
 		individuals = retour$individuals
@@ -830,7 +830,7 @@ gen.nochildren = function(gen, individuals)#, check = 1)#named = T,
 	#Structure necessaire pour emmagasiner le resultat la fonction de la dll		
 	ret <- integer(length(individuals))
 	#extern "C" void SPLUSChild(long* Genealogie, long* plProband,long* lNProband, long* retour)
-	.Call("SPLUSChild", gen@.Data, individuals, length(individuals), ret, specialsok = T)
+	.Call("SPLUSChild", gen@.Data, individuals, length(individuals), ret, specialsok = TRUE)
 	#if(named)
 		names(ret) <- individuals
 	return(ret)
@@ -842,7 +842,7 @@ gen.nowomen = function(gen)#, check = 1)
 		#stop("Param\350tre 'check' invalide: les choix disponibles sont 0 et 1")
 	#if(check == 1) {
 		retour = gen.detectionErreur(gen = gen, check = 3)
-		if(retour$erreur == T)
+		if(retour$erreur == TRUE)
 			stop(retour$messageErreur)
 		gen = retour$gen
 	#}
@@ -856,7 +856,7 @@ gen.nomen = function(gen)#, check = 1)
 		#stop("Param\350tre 'check' invalide: les choix disponibles sont 0 et 1")
 	#if(check == 1) {
 		retour = gen.detectionErreur(gen = gen, check = 3)
-		if(retour$erreur == T)
+		if(retour$erreur == TRUE)
 			stop(retour$messageErreur)
 		gen = retour$gen
 	#}
@@ -870,7 +870,7 @@ gen.noind = function(gen)#, check = 1)
 		#stop("Param\350tre 'check' invalide: les choix disponibles sont 0 et 1")
 	#if(check == 1) {
 		retour = gen.detectionErreur(gen = gen, check = c(3))
-		if(retour$erreur == T)
+		if(retour$erreur == TRUE)
 			stop(retour$messageErreur)
 		gen = retour$gen
 	#}
@@ -887,7 +887,7 @@ gen.occ = function(gen, pro = 0, ancestors = 0, typeOcc = "IND", ...) # check = 
 			#stop("Param\350tre '...' invalide : indication du nom des param\350tres 'pere' et 'mere' est obligatoire")
 	#if(check == 1) {
 		retour = gen.detectionErreur(gen, pro = pro, ancestors = ancestors, check = c(1, 5, 11), ...)
-		if(retour$erreur == T)
+		if(retour$erreur == TRUE)
 			stop(retour$messageErreur)
 		gen = retour$gen
 		pro = retour$pro
@@ -930,7 +930,7 @@ gen.parent = function(gen, individuals, output = "FaMo", ...)#, check = 1
 			#stop("Param\350tre '...' invalide : indication du nom des param\350tres 'pere' et 'mere' est obligatoire")
 	#if(check == 1) {
 		retour = gen.detectionErreur(gen = gen, individuals = individuals, output = output, check = c(1, 13, 15), ...)
-		if(retour$erreur == T)
+		if(retour$erreur == TRUE)
 			stop(retour$messageErreur)
 		gen = retour$gen
 		individuals = retour$individuals
@@ -1008,8 +1008,8 @@ gen.phiMean = function(phiMatrix)#, check = 1)#named = T,
 	#if(length(check) != 1) stop("Invalid 'check' parameter: choices are 0 or 1")
 		#stop("Param\350tre 'check' invalide: les choix disponibles sont 0 et 1")
 	#if(check == 1) {
-		retour = gen.detectionErreur(matricephi = phiMatrix, named = T, check = c(28, 10))
-		if(retour$erreur == T)
+		retour = gen.detectionErreur(matricephi = phiMatrix, named = TRUE, check = c(28, 10))
+		if(retour$erreur == TRUE)
 			stop(retour$messageErreur)
 		phiMatrix = retour$matricephi
 		named = retour$named
@@ -1051,15 +1051,15 @@ gen.phiMean = function(phiMatrix)#, check = 1)#named = T,
 #	return(invisible(tmp))
 #}
 
-gen.phi = function(gen, pro, depthmin = (gen.depth(gen)-1), depthmax = (gen.depth(gen)-1), MT = F)#, check = 1)#named = T, 
+gen.phi = function(gen, pro, depthmin = (gen.depth(gen)-1), depthmax = (gen.depth(gen)-1), MT = FALSE)#, check = 1)#named = T, 
 {
 	#if(length(check) != 1)	stop("Invalid 'check' parameter: choices are 0 or 1")
 	if(missing(pro))		pro = gen.pro(gen)
 	if( depthmin<0 | depthmin>(gen.depth(gen)-1) | depthmax<0 | depthmax>(gen.depth(gen)-1) )
 		stop("depthmin and depthmax must be between 0 and (gen.depth(gen)-1)")
 	
-	retour = gen.detectionErreur( gen=gen, pro=pro, depthmin=depthmin, depthmax=depthmax, print.it=F, named=T, check=c(3,5,20,18,10))
-	if(retour$erreur == T)	stop(retour$messageErreur)
+	retour = gen.detectionErreur( gen=gen, pro=pro, depthmin=depthmin, depthmax=depthmax, print.it=FALSE, named=TRUE, check=c(3,5,20,18,10))
+	if(retour$erreur == TRUE)	stop(retour$messageErreur)
 
 	gen		= retour$gen
 	pro		= retour$pro
@@ -1076,7 +1076,7 @@ gen.phi = function(gen, pro, depthmin = (gen.depth(gen)-1), depthmax = (gen.dept
 	  #Structure necessaire pour emmagasiner le resultat la fonction de la dll
 	  rmatrix <- double(ecart * npp)
 	  moyenne <- double(ecart)
-	  .Call("SPLUSPhisMT", gen@.Data, pro, length(pro), as.integer(depthmin), as.integer(depthmax), moyenne, rmatrix, FALSE, specialsok=T)
+	  .Call("SPLUSPhisMT", gen@.Data, pro, length(pro), as.integer(depthmin), as.integer(depthmax), moyenne, rmatrix, FALSE, specialsok=TRUE)
 	}
 	else {
 #	  depthmaxtmp = depthmax
@@ -1092,8 +1092,8 @@ gen.phi = function(gen, pro, depthmin = (gen.depth(gen)-1), depthmax = (gen.dept
 		npp <- length(pro) * length(pro)
 		rmatrix <- double(ecart * npp)
 		moyenne <- double(ecart)
-		print.it=F
-		.Call("SPLUSPhis", gen@.Data, pro, length(pro), depthmintmp, depthmaxtmp, moyenne, rmatrix, print.it, specialsok = T)
+		print.it=FALSE
+		.Call("SPLUSPhis", gen@.Data, pro, length(pro), depthmintmp, depthmaxtmp, moyenne, rmatrix, print.it, specialsok = TRUE)
 		dim(rmatrix) <- c(np, np, ecart)
 
 		dimnames(rmatrix) <- list(pro, pro, NULL)
@@ -1258,7 +1258,7 @@ gen.rec = function(gen, pro = 0, ancestors = 0, ...) #, check = 1
 			#stop("Param\350tre '...' invalide : indication du nom des param\350tres 'pere' et 'mere' est obligatoire")
 	#if(check == 1) {
 		retour = gen.detectionErreur(gen = gen, pro = pro, ancestors = ancestors, check = c(1, 5, 11), ...)
-		if(retour$erreur == T)
+		if(retour$erreur == TRUE)
 			stop(retour$messageErreur)
 		gen = gen.genealogy(retour$gen)#, check = 0)
 		pro = retour$pro
@@ -1291,7 +1291,7 @@ gen.meangendepthVar = function(gen, pro = 0, type = "MEAN", ...)#, check = 1, na
 			stop("Invalid '...' parameter : 'father' and 'mother' parameter names are obligatory")
 
 	retour <- gen.detectionErreur(gen = gen, pro = pro, typecomp = type, check = c(1, 5, 17))
-	if(retour$erreur == T)	stop(retour$messageErreur)
+	if(retour$erreur == TRUE)	stop(retour$messageErreur)
 	gen <- retour$gen
 	pro <- retour$pro
 	type <- retour$typecomp

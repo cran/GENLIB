@@ -4,7 +4,7 @@
 \description{Function that plots pedigrees of GLgen objects.}
 \usage{gen.graph( gen, pro=gen.pro(gen), ancestors=gen.founder(gen), 
        indVarAffected=gen.genout(gen)$ind, varAffected=gen.genout(gen)$ind, cex="1",
-       col="0", symbolsize="1", width="1", packed="F", align="T", ...)}
+       col="0", symbolsize="1", width="1", packed=FALSE, align=TRUE, ...)}
 \arguments{
 \item{gen}{An object of class GLgen obtained with gen.genealogy, gen.lineages or gen.branching. Required.}
 \item{pro}{Vector of proband id numbers to be included. Default is 'gen.pro(gen)', which will select all individuals without children.}
@@ -15,7 +15,7 @@
 \item{col}{Color for each id (same as kinship2::plot.pedigree). Default is 0, which assigns the same color to everyone.}
 \item{symbolsize}{Controls symbolsize (same as kinship2::plot.pedigree). Default is 1.}
 \item{width}{For a packed pedigree, the minimum width allowed in the realignment of pedigrees (same as kinship2::plot.pedigree). Default is 1.}
-\item{packed}{If T, uniform distance between all individuals at a given level (same as kinship2::plot.pedigree). Default is FALSE.}
+\item{packed}{If TRUE, uniform distance between all individuals at a given level (same as kinship2::plot.pedigree). Default is FALSE.}
 \item{align}{Controls the extra effort spent trying to align children underneath parents, but without making the
           pedigree too wide (same as kinship2::plot.pedigree). Default is TRUE.}
 \item{...}{Other arguments that can be passed to the kinship2::plot.pedigree.}

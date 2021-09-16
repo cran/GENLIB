@@ -2,7 +2,7 @@
 \alias{gen.implex}
 \title{Genealogical implex}
 \description{Returns the genealogical implex index (a measure of pedigree collapsing) for the specified probands.}
-\usage{gen.implex( gen, pro = "0", genNo = -1, type = "MEAN", onlyNewAnc = "F", ...)}
+\usage{gen.implex( gen, pro = "0", genNo = -1, type = "MEAN", onlyNewAnc = FALSE, ...)}
 \arguments{
 \item{gen}{An object of class GLgen obtained with gen.genealogy, gen.lineages or gen.branching. Required.}
 \item{pro}{Vector of proband id numbers to be included. Default is 0, which will select all individuals without children.}
@@ -11,8 +11,8 @@
 \item{type}{If type="MEAN" (default), implex index values are averaged over all specified probands.
 	If type="IND", the implex index is calculated for all specified proband together.
 	If type="ALL", the implex index is calculated for each specified proband.}
-\item{onlyNewAnc}{If onlyNewAnc="F" (default), all ancestors will be considered.
-	If onlyNewAnc="T", only new ancestors will be counted
+\item{onlyNewAnc}{If onlyNewAnc=FALSE (default), all ancestors will be considered.
+	If onlyNewAnc=TRUE, only new ancestors will be counted
 	 (i.e., an ancestor is not counted again if it has already been counted in another generation).}
 \item{...}{Option to pass additionnal arguments automaticaly between methods. Internal use only.}
 }

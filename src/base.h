@@ -1,16 +1,16 @@
 /*! \file base.h
 \brief Library Genlib: Classe et Enumation de base
 
-	Ce fichier comprend toutes les classes énumération qui sont d'interet a toute les fonctions
+	Ce fichier comprend toutes les classes ï¿½numï¿½ration qui sont d'interet a toute les fonctions
 	Il automatise les modifications du code entre Unix et WIN32.
 	De plus, ce fichier sert de fichier option et peut servir a activer les options suivante :
-	1) L'utilisation de la gestion memoire integrée de SPLUS au lieu de celle standard (malloc)
-	2) L'utilisation de la generation de nombre aleatoire à l'aide de SPLUS au lieu de rand,srand
+	1) L'utilisation de la gestion memoire integrï¿½e de SPLUS au lieu de celle standard (malloc)
+	2) L'utilisation de la generation de nombre aleatoire ï¿½ l'aide de SPLUS au lieu de rand,srand
 
 \remark Sous windows, le detecteur de memory leak et automatiquement activer en mode debug
 
-\author Sébastien Leclerc
-\contributor Jean-François Lefebvre
+\author Sï¿½bastien Leclerc
+\contributor Jean-Franï¿½ois Lefebvre
 // Distributed under the Boost Software License, Version 1.0.
 //    (See accompanying file LICENSE_1_0.txt or copy at
 //          http://www.boost.org/LICENSE_1_0.txt)
@@ -20,9 +20,9 @@
 
 /*PARAMETRE DE COMPILATION*/
 
-#define MODETEST 			//!< Si defini alors TOUS les blocs de code fesant appel a des fonctions specifique de splus seront déactiver
-//#define USESPLUSALLOC		//!< Si defini alors tous les appels à memalloc seront explicitement converti en S_alloc
-//#define USESDEBUG			//!< Si defini alors certain message d information seront affiché
+#define MODETEST 			//!< Si defini alors TOUS les blocs de code fesant appel a des fonctions specifique de splus seront dï¿½activer
+//#define USESPLUSALLOC		//!< Si defini alors tous les appels ï¿½ memalloc seront explicitement converti en S_alloc
+//#define USESDEBUG			//!< Si defini alors certain message d information seront affichï¿½
 
 #define USESPLUSRANDOM		//!< Si defini alors les fonctions utiliseront unif_rand au lieu de srand et rand
 #define USESTIMER			//!< Si defini alors la variable .Last.timeSec equivaudra au temps d execution de la derniere fonction
@@ -78,6 +78,9 @@
 #include<stdlib.h>
 #include<string.h>
 
+#include <string>
+#include <vector>
+
 /*COMPATIBILITE AVEC SPLUS ANSI QUE LES DEUX PLATEFORMES WIN32 ET LINUX*/
 //#ifdef MODETEST
 //	#undef USESPLUSALLOC
@@ -90,7 +93,7 @@ const int MAX_SUPPORTED_GENERATION=500;
 
 /** @defgroup ALLOCMEM ALLOCATION MEMOIRE
 
-	Les allocations memoire peuvent-être fait de deux manieres.
+	Les allocations memoire peuvent-ï¿½tre fait de deux manieres.
 <OL>
   <li>Splus S_alloc : dans ce cas la memoire est automatiquement recuperer a la sortie de la fonction</li>
   <li>C malloc	   : Dans ce cas, un objet GestionMemoire est creer et il se charge d'effectuer
@@ -189,7 +192,7 @@ const int MAX_SUPPORTED_GENERATION=500;
 
 //Definit tous les types d'individu possible
 /*
-	Une fois que tout les individu on été transforme en CIndSimul (Appele Noeud)
+	Une fois que tout les individu on ï¿½tï¿½ transforme en CIndSimul (Appele Noeud)
 	il ne sont pas tous utile, souvent seulement ceux entre un certain ancetre et
 	un proposant sont utile. (utile au sens, ce noeud peut influence le resultat du calcul courant)
 
@@ -213,6 +216,7 @@ enum sex_t {GEN_INCONNU=0,GEN_MASC=1,GEN_FEM=2};
 
 struct Clist;
 struct CIndSimul;
+struct haplotype; 
 
 ///Structure qui represente un individu (NOEUD) 
 /**
@@ -241,11 +245,13 @@ struct CIndSimul
 	Clist* fils;		///< Liste des enfants de ce Noeud
 	int noind;	///< EX : No indice du Noeud dans un vecteur de priorite (d ordre) 
 
-	//Accessoire (peuvent-être modifier)
+	//Accessoire (peuvent-ï¿½tre modifier)
 	int allele;			///<EX : Nombre d allele que l individu possede 	
 	int allele2Pos[2];		///<EX : Allele 1 (chiffre) et allele 2 (chiffre) que l individu possede 
 	int alleleAttendu;		///<EX : Nombre d allele que l individu devrait posseder
 	
+	int clesHaplo_1, clesHaplo_2; // = {"0.1", "0.1"};	// nom.1 ou nom.2 pour les ancetres
+
 	union 
 	{
 		double prob[3];	///<EX : Probabilite d avoir 0,1,2 allele 
@@ -261,6 +267,18 @@ struct CIndSimul
 	double dFlagSort;
 	typenoeud_t etat;	///< Etat/Utilite de ce noeud			 
 }; 
+
+
+/* Structure qui represente un haplotype. Une suite de segments dont le premier commence a 0 et se termine a 'pos'.
+   Prend en charge les recombinaisons.
+*/
+struct haplotype
+{
+	std::string hap;  // the original haplotype that makes up the segment.
+	double pos;  // the relative position (> 0 and <1) where the segment represented by hap ends.
+	int fixe;    // determine if we should keep this haplo between each simulation.
+	haplotype* next_segment; // if not defined -> pos = 1.
+};
 
 ///Liste de Noeud. Utilise pour les enfants d un individu (CIndSimul)
 struct Clist

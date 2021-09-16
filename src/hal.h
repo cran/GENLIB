@@ -1,6 +1,6 @@
 /***************************
-	Fichier qui contient les fonctions très spécifique au hardware
-\contributor Jean-François Lefebvre
+	Fichier qui contient les fonctions trï¿½s spï¿½cifique au hardware
+\contributor Jean-Franï¿½ois Lefebvre
   ***********************************/
 #ifndef GENLIBHAL
 #define GENLIBHAL
@@ -12,7 +12,7 @@
 #else
  #include <R_ext/RS.h>
 #endif
-#define R_NO_REMAP
+
 /*FONCTION CLASSIQUE*/
 int processorCount();
 int thetime();

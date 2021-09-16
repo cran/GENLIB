@@ -1,10 +1,10 @@
 /*! \file consanguinite.cc
 \brief Implementation des fonctions de calcul de F
 
-Calcul et Analyse de diverse valeur dérivé de F et Fmoyen
+Calcul et Analyse de diverse valeur dï¿½rivï¿½ de F et Fmoyen
 
-\author Sébastien Leclerc
-\contributor Jean-François Lefebvre
+\author Sï¿½bastien Leclerc
+\contributor Jean-Franï¿½ois Lefebvre
 
 */
 
@@ -25,7 +25,7 @@ Calcul et Analyse de diverse valeur dérivé de F et Fmoyen
 #include <math.h>
 #include <cstdlib>
 #include <Rcpp.h>
-#define R_NO_REMAP
+
 // ********************************************************************
 //
 //			PUBLIC 
@@ -33,14 +33,14 @@ Calcul et Analyse de diverse valeur dérivé de F et Fmoyen
 // ********************************************************************
 
 /*! 
-	\brief Calcul de la consanguinité (F)
+	\brief Calcul de la consanguinitï¿½ (F)
 
-	Calcul le coefficient de consanguinité (F) de chaque proposant.
+	Calcul le coefficient de consanguinitï¿½ (F) de chaque proposant.
 
-	\param Genealogie	[in] Une genealogie construite à l'aide de gen.genealogie 
+	\param Genealogie	[in] Une genealogie construite ï¿½ l'aide de gen.genealogie 
 
-	\param proposant	[in] Vecteur des no de proposant à étudier
-	\param NProposant	[in] Nombre d'élément du vecteur proposant
+	\param proposant	[in] Vecteur des no de proposant ï¿½ ï¿½tudier
+	\param NProposant	[in] Nombre d'ï¿½lï¿½ment du vecteur proposant
   
 	\param Niveau		[in] Profondeur maximal de la recherche
 
@@ -50,7 +50,7 @@ Calcul et Analyse de diverse valeur dérivé de F et Fmoyen
 
 	\param printprogress [in] Imprime un message indiquant les progress accomplies
 
-	\return 0 si la fonction est executé avec succès
+	\return 0 si la fonction est executï¿½ avec succï¿½s
 
 	\remark lors de l'appel de kinship sur les 2 parents, le Niveau est reduit de 1 pour montrer la remonte
 			necessaire pour ce rendre au parent. (valide?)
@@ -67,7 +67,7 @@ int consan(int* Genealogie, int* proposant, int NProposant,int Niveau, double* p
 	CIndSimul **NoeudPro=NULL;
 	LoadProposant(proposant,NProposant,&NoeudPro);
 	
-	//Remise à zero des valeurs utilisé
+	//Remise ï¿½ zero des valeurs utilisï¿½
 	int i=0;
 	for(i=0;i<lNIndividu;i++)
 		Noeud[i].prob[1]=-1;	//CONTRIBUTION DES 2 PARENTS	
@@ -81,7 +81,7 @@ int consan(int* Genealogie, int* proposant, int NProposant,int Niveau, double* p
 		char erreur[TAILLEDESCRIPTION];
 		sprintf(erreur, "Niveau must be smaller than %d",SHRT_MAX);
 		throw std::range_error(erreur);
-		//GENError("Le niveau doit-être inférieur à %d",SHRT_MAX);
+		//GENError("Le niveau doit-ï¿½tre infï¿½rieur ï¿½ %d",SHRT_MAX);
 	}
 	const short niveauMax = short(Niveau);
 
@@ -109,17 +109,17 @@ int consan(int* Genealogie, int* proposant, int NProposant,int Niveau, double* p
 
 
 /*! 
-	\brief Liste de F moyens pour différentes profondeurs
+	\brief Liste de F moyens pour diffï¿½rentes profondeurs
 
-  Donne une liste de F moyen pour différentes profondeurs
+  Donne une liste de F moyen pour diffï¿½rentes profondeurs
 
-	\param Genealogie	[in] Une genealogie construite à l'aide de gen.genealogie 
+	\param Genealogie	[in] Une genealogie construite ï¿½ l'aide de gen.genealogie 
 
-	\param proposant	[in] Vecteur des no de proposant à étudier
-	\param NProposant	[in] Nombre d'élément du vecteur proposant
+	\param proposant	[in] Vecteur des no de proposant ï¿½ ï¿½tudier
+	\param NProposant	[in] Nombre d'ï¿½lï¿½ment du vecteur proposant
   
-	\param NiveauMin	[in] Nombre de génération à prendre en compte
-	\param NiveauMax	[in] Nombre de génération à prendre en compte
+	\param NiveauMin	[in] Nombre de gï¿½nï¿½ration ï¿½ prendre en compte
+	\param NiveauMax	[in] Nombre de gï¿½nï¿½ration ï¿½ prendre en compte
   
 	\retval pdDeepConsan [out] Un pointeur vers un vecteur de intueur NProposant*(NiveauMax-NiveauMin+1)
 						  En cas de success, contient la consanguinite de chaque proposant et ce pour chaque niveau 
@@ -133,7 +133,7 @@ int consan(int* Genealogie, int* proposant, int NProposant,int Niveau, double* p
 
 	\param printprogress [in] Imprime un message indiquant les progress accomplies
 
-    \return 0 si la fonction est executé avec succès
+    \return 0 si la fonction est executï¿½ avec succï¿½s
 
 */
 int consanFs(int* Genealogie, int* proposant, int NProposant,int NiveauMin,int NiveauMax,
@@ -149,12 +149,12 @@ int consanFs(int* Genealogie, int* proposant, int NProposant,int NiveauMin,int N
 	if (NiveauMin<1){
 //		GENError("depthmax and depthmin must be greater than one.");
 		throw std::range_error("depthmax and depthmin must be greater than one.");
-		//GENError("Le niveau minimum et le niveau maximum doivent-être supérieur à un");
+		//GENError("Le niveau minimum et le niveau maximum doivent-ï¿½tre supï¿½rieur ï¿½ un");
 	}
 	if (NiveauMax<NiveauMin){
 //		GENError("depthmax must be greater or equal to depthmin");
 		throw std::range_error("depthmax must be greater or equal to depthmin");
-		//GENError("Le niveau maximum doit-être supérieur ou égal au niveau minimum");
+		//GENError("Le niveau maximum doit-ï¿½tre supï¿½rieur ou ï¿½gal au niveau minimum");
 	}
 	//Mise en place du niveau maximal
 	if (NiveauMax>SHRT_MAX){
@@ -162,7 +162,7 @@ int consanFs(int* Genealogie, int* proposant, int NProposant,int NiveauMin,int N
 		char erreur[TAILLEDESCRIPTION];
 		sprintf(erreur, "depthmax must be smaller than %d",SHRT_MAX);
 		throw std::range_error(erreur);
-		//GENError("Le NiveauMax doit-être inférieur à %d",SHRT_MAX);
+		//GENError("Le NiveauMax doit-ï¿½tre infï¿½rieur ï¿½ %d",SHRT_MAX);
 	}
 	const short trueNiveauMax = NiveauMax-1;
 	const int trueNiveauMin = NiveauMin-1;
@@ -200,7 +200,7 @@ int consanFs(int* Genealogie, int* proposant, int NProposant,int NiveauMin,int N
 		if (NoeudPro[cPro]->pere && NoeudPro[cPro]->mere)	
 		{	//Ce proposant a un pere et une mere		
 
-			//remise à zero de phi deep
+			//remise ï¿½ zero de phi deep
 			for(int a=0;a<=trueNiveauMax;a++)
 				Phideep[a]=0.0;
 

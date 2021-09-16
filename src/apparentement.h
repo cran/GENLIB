@@ -2,8 +2,8 @@
 \brief Interface des fonctions de calcul de Phi
 
 
-\author Sébastien Leclerc
-\contributor Jean-François Lefebvre
+\author Sï¿½bastien Leclerc
+\contributor Jean-Franï¿½ois Lefebvre
 
 */
 
@@ -13,9 +13,8 @@
 #include "outilsalloc.h"
 #include "hashtable.h"
 #include <Rcpp.h>
-#define R_NO_REMAP
 
-/// Structure de gestion memoire mémoire utilise par kinship2
+/// Structure de gestion memoire mï¿½moire utilise par kinship2
 /**
 	Utiliser pour effectuer une serie d'assignement memoire et ensuite laisser la voie libre au
 	gestionnaire de memoire pour qu'il effectue lui-meme la "gargage collection"
@@ -31,7 +30,7 @@ struct Kinship4Struct
 private:	
 	short NiveauMax; //Niveau maximal voulu 0..Niveaumax = NiveauMax+1 Case...
 	BlockAlloc<double> memblock; 
-	SMPile<double*,MAX_SUPPORTED_GENERATION> PileCosan; //L'adresse de la cosanguinité a écrire
+	SMPile<double*,MAX_SUPPORTED_GENERATION> PileCosan; //L'adresse de la cosanguinitï¿½ a ï¿½crire
 
 	//SUPPORT MT		
 	static CSema m_acces; //Semaphore pour l'acces a allele qui sert de variable partage	

@@ -6,7 +6,7 @@
 #include <string.h>
 #include <Rcpp.h>
 using namespace Rcpp;
-#define R_NO_REMAP
+
 /*
 
 N.b La motivation d'utilise un systeme d'erreur par ErrorHandler au lieu d'un systeme par try..catch

@@ -63,8 +63,8 @@ gen.findMRCA <- function(gen, individuals, NbProcess=parallel::detectCores()-1)
  colnames(x) <- inter$ind
  rownames(x) <- individuals
  x
- }, warning = function(w){ print("warning"); message(w); return(NULL)
- }, error   = function(e){ print("error");   message(e); return(NULL)
+ }, warning = function(w){message("warning: ",w); return(NULL)
+ }, error   = function(e){message("error: ", e); return(NULL)
  }, finally = { stopCluster(cluster); })
  return(retour)
 }
@@ -111,8 +111,8 @@ gen.findFounders <- function(gen, individuals, NbProcess=parallel::detectCores()
  else				res <- x[[1]]
  
  res
- }, warning = function(w){ print("warning"); message(w); return(NULL)
- }, error   = function(e){ print("error");   message(e); return(NULL)
+ }, warning = function(w){message("warning: ", w); return(NULL)
+ }, error   = function(e){message("error: ", e); return(NULL)
  }, finally = { stopCluster(cluster); })
  return(retour)
 }

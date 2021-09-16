@@ -3,8 +3,8 @@
 
 Interface de toutes les fonctions en rapport avec le gene fondateur
 
-\author Sébastien Leclerc 
-\contributor Jean-François Lefebvre
+\author Sï¿½bastien Leclerc 
+\contributor Jean-Franï¿½ois Lefebvre
 
 */
 
@@ -12,9 +12,28 @@ Interface de toutes les fonctions en rapport avec le gene fondateur
 #define GENFOND
 
 #include <RcppCommon.h>
+#include <unordered_map>
 
 int simul(int* Genealogie, int* plProposant, int* plProEtat,int lNProposant, int* plAncetre, int* plAncEtat, int lNAncetre,
 		int lSimul, double* pdRetConj,double* pdRetSimul,double* pdRetProp,double* probRecomb,double probSurvieHomo,int printprogress);
+
+void simulhaplo(int* Genealogie, int* plProposant, int lNProposant, int* plAncetre, int lNAncetre,
+		int lSimul, double* probRecomb, std::unordered_map<int,haplotype*> *hapRef, std::string WD, int seed, int* NumRecomb, int* NumMeioses);
+
+// int getNumberRec(double* probRecomb, int sex);
+// double getRandomNumber(int exponential);
+//int descendreHaplotypes(CIndSimul* Ordre_tmp, double probHap); //, /**/std::unordered_map<std::string, haplotype*>/* const std::unordered_map<std::string, haplotype*> &*/*hapRef);
+//void makeRecomb( CIndSimul* Ordre_tmp, std::unordered_map<int, haplotype*> *hapRef, double probHap, double posRecomb, int& cle );
+void makeRecombM( CIndSimul* Ordre_tmp, std::unordered_map<int, haplotype*> *hapRef, double probHap, int nbRecomb, double* posRecomb, int& cle );
+void makeRecombF( CIndSimul* Ordre_tmp, std::unordered_map<int, haplotype*> *hapRef, double probHap, int nbRecomb, double* posRecomb, int& cle );
+
+void recombine( haplotype* hapBegin, haplotype* hapEnd, haplotype* hapChild, int nbRecomb, double *posRecomb );
+
+bool reconstruct(std::string WD, const std::string &hapfilename, const std::string &simufilename,const std::string &SNPposfilename,const int &BPsize);
+
+bool ancestralseq(const std::string &fileName, std::unordered_map<float, std::string> &haploseqs);
+
+std::vector<int> readSNPpos(const std::string &fileName);
 
 int simulsingle(int* Genealogie, int* plProposant, int lNProposant, int* plAncetre, int* plAncEtat, int lNAncetre,
 			 int lSimul, double* pdRetour,int printprogress);

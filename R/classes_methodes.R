@@ -47,7 +47,7 @@ setMethod("group","GLCGMatrixGroupSingle",function(x) x@group )
 #setMethod("Dim","GLCGMatrixGroupSingle",function(object, ...){
 Dim <- function(object, ...) {
 	param <- list(...)
-	if (!is.null(param$drop) && param$drop==F){	
+	if (!is.null(param$drop) && param$drop==FALSE){	
 		#Dans ce cas, group seulement
 		c(length(object@group),dim(object)[2])
 	}else{	
@@ -90,7 +90,7 @@ setMethod("Math2","GLCGMatrixGroupSingle",function(x, digits){
 	callGeneric(x[],digits)
 })
 
-setMethod("Summary","GLCGMatrixGroupSingle",function(x, ..., na.rm = F){
+setMethod("Summary","GLCGMatrixGroupSingle",function(x, ..., na.rm = FALSE){
 	callGeneric(x[], ..., na.rm)})
 
 #F
@@ -121,12 +121,12 @@ setMethod("Dim","GLmultiFGroupSingle",function(object, ...){
 
 setMethod("show","GLmultiFGroup",function(object){
 	#Affiche les donnees sur le group
-	show(GLapplyF(object,mean,named=T))
+	show(GLapplyF(object,mean,named=TRUE))
 })
 
 setMethod("show","GLmultiFGroupSingle",function(object){
 	#Affiche les donnees sur le group
-	show(GLapplyF(object,mean,named=T))
+	show(GLapplyF(object,mean,named=TRUE))
 })
 
 #EXTRACTION 
@@ -151,7 +151,7 @@ setMethod("Math2","GLmultiFGroupSingle",function(x, digits)
 	callGeneric(x[],digits)
 })
 
-setMethod("Summary","GLmultiFGroupSingle",function(x, ..., na.rm = F)
+setMethod("Summary","GLmultiFGroupSingle",function(x, ..., na.rm = FALSE)
 {
 	callGeneric(x[], ..., na.rm)
 })
@@ -177,7 +177,7 @@ setMethod("Math2","GLmultiFGroup",function(x, digits){
 	callGeneric(x[],digits)
 })
 
-setMethod("Summary","GLmultiFGroup",function(x, ..., na.rm = F){
+setMethod("Summary","GLmultiFGroup",function(x, ..., na.rm = FALSE){
 	callGeneric(x[], ..., na.rm)
 })
 
@@ -212,7 +212,7 @@ setClass("GLgen",representation(.Data="integer",Date="character"),
 			|| object@.Data[length(object@.Data)]!=99999999 ){
 					stop("Invalid GLgen object")
 		}
-		return (T)
+		return (TRUE)
 	}
 )
 
@@ -460,8 +460,8 @@ setMethod("[","GLmultiMatrix",function(x,i,...,drop){
                     if (is.numeric(pro) && !l2$abs){ #Si c'est pas valeur absolue
                          #Recherche comme prevu dans la liste de depth
                          pos <- match(pro,x@depth)
-                         if (any(is.na(pos)))
-                              stop(paste("Some depths were not found:",pro[is.na(pos)],"\n" ), call.=F)
+                         if (any(is.na(pos))) 
+                              stop(paste("Some depths were not found:",pro[is.na(pos)],"\n" ), call.=FALSE)
                               #stop(cat("Certaine(s) depth(s) demandees n'ont pas put etre trouvees :",pro[is.na(pos)],"\n" ))
                          pro<-pos
                     }
@@ -777,7 +777,7 @@ setMethod("group","GLmultiPhiGroupSingle",function(x) x@group)
 
 setMethod("Dim","GLmultiPhiGroup",function(object, ...){	
 	param <- list(...)
-	if (!is.null(param$drop) && param$drop==F){	
+	if (!is.null(param$drop) && param$drop==FALSE){	
 		#Dans ce cas, group seulement
 		z=dim(object)	
 		c(z[length(z)],length(object@group))
@@ -790,7 +790,7 @@ setMethod("Dim","GLmultiPhiGroup",function(object, ...){
 
 setMethod("Dim","GLmultiPhiGroupSingle",function(object, ...){
 	param <- list(...)
-	if (!is.null(param$drop) && param$drop==F){	
+	if (!is.null(param$drop) && param$drop==FALSE){	
 		#Dans ce cas, group seulement
 		c(length(object@group))
 	}else{	
@@ -807,7 +807,7 @@ setMethod("show","GLmultiPhiGroup",function(object){
 		lapply(1:length(depth),function(x,obj,depth,xgroupe,xgrindex){
 		 	cat("depth : ",depth[x],"\n")
 		
-			m <- GLapplyGroup(obj[,,x],xgrindex,gen.phiMean,check=0,named=F)
+			m <- GLapplyGroup(obj[,,x],xgrindex,gen.phiMean,check=0,named=FALSE)
 			dimnames(m) <- list(names(xgroupe),names(xgroupe))
 			prmatrix(m)
 
@@ -817,7 +817,7 @@ setMethod("show","GLmultiPhiGroup",function(object){
 
 setMethod("show","GLmultiPhiGroupSingle",function(object){
 	#Affiche les donnees concernant une genealogie	
-	m <- GLapplyGroup(as(object,"matrix",strict=T),object@grindex,gen.phiMean,check=0,named=F)
+	m <- GLapplyGroup(as(object,"matrix",strict=TRUE),object@grindex,gen.phiMean,check=0,named=FALSE)
 	dimnames(m) <- list(names(object@group),names(object@group))
 	prmatrix(m)
 })
@@ -842,7 +842,7 @@ setMethod("Math2","GLmultiPhiGroupSingle",function(x, digits){
 	callGeneric(x[],digits)
 })
 
-setMethod("Summary","GLmultiPhiGroupSingle",function(x, ..., na.rm = F){
+setMethod("Summary","GLmultiPhiGroupSingle",function(x, ..., na.rm = FALSE){
 	callGeneric(x[], ..., na.rm)
 })
 

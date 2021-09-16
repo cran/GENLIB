@@ -11,8 +11,8 @@ Genealogical data analysis including descriptive statistics (e.g., kinship and i
 \tabular{ll}{
 Package: \tab GenlibR\cr
 Type: \tab Package\cr
-Version: \tab 1.0\cr
-Date: \tab 2012-04-04\cr
+Version: \tab 1.1.4\cr
+Date: \tab 2021-09-15\cr
 License: \tab GPL (>=2)\cr
 LazyLoad: \tab yes\cr
 }

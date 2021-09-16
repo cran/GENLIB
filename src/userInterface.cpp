@@ -9,7 +9,6 @@
 #include <cstdlib>
 #include <Rcpp.h>
 using namespace std;
-#define R_NO_REMAP
 
 //Implementation d'un chronometre
 static int g_TimerStart=-1;
@@ -18,10 +17,10 @@ void TimerOnStart() {g_TimerStart=thetime();g_TimerLast=-1;}
 void TimerOnStop()	{g_TimerLast =thetime()-g_TimerStart;}
 int getLastTimer() {return g_TimerLast;}
 
-//Implémentation d'un système d'arret automatique si une procédure s'annonce trop longue
-const int g_tempsEchantillon = 30;		   //Temps d'échantillonnage pour le temps d'execution (seconde)
-const int g_sautEchantillon = 3;			   //Nombre d'incrément entre chaque test
-static double g_maxEstimatedProcessingTime=20*60;  //En seconde: Valeur par défaut: 20 min
+//Implï¿½mentation d'un systï¿½me d'arret automatique si une procï¿½dure s'annonce trop longue
+const int g_tempsEchantillon = 30;		   //Temps d'ï¿½chantillonnage pour le temps d'execution (seconde)
+const int g_sautEchantillon = 3;			   //Nombre d'incrï¿½ment entre chaque test
+static double g_maxEstimatedProcessingTime=20*60;  //En seconde: Valeur par dï¿½faut: 20 min
 
 void setCurrentMaxTime(double minute) 
 {
@@ -40,7 +39,7 @@ void getCurrentMaxTime(double* minute)
 
 
 
-//Implémentation d'une progress bar en mode texte...
+//Implï¿½mentation d'une progress bar en mode texte...
 const char  ProgresBARLength=62;
 //const char  sProgressMarge[]="   ";
 //const char  sProgressBAR[]  ="0..........20..........40...........60..........80..........100";
@@ -56,7 +55,7 @@ CTextProgressBar::CTextProgressBar(SXLONG max,int affiche)
 	m_afficheBar=affiche;
 }
 
-//L'opérateur magique
+//L'opï¿½rateur magique
 void CTextProgressBar::operator++() 
 {
 	try{
@@ -71,7 +70,7 @@ void CTextProgressBar::operator++()
 			//printf("\n%s%s\n%s",sProgressMarge,sProgressBAR,sProgressMarge); 
 			fflush(stdout);		
 		}*/
-		//DÉMARRÉ CHRONOMETRE
+		//Dï¿½MARRï¿½ CHRONOMETRE
 		m_tempsdebut=thetime()+g_tempsEchantillon;
 
 	case ADD:
@@ -91,7 +90,7 @@ void CTextProgressBar::operator++()
 					sprintf(erreur, "Execution time exceeded maximum allowed: ESTIMATED: %d min MAXIMUM: %d min\nSee gen.maxexetime() definition",
 							int(testime/60),int(g_maxEstimatedProcessingTime/60));
 					throw std::range_error(erreur);
-					//GENError("Le temps d'execution estimé est trop long: ESTIME: %d min   MAXIMUM: %d min"\n Regarde la definition de la fonction gen.maxexetime()",
+					//GENError("Le temps d'execution estimï¿½ est trop long: ESTIME: %d min   MAXIMUM: %d min"\n Regarde la definition de la fonction gen.maxexetime()",
 				}
 			}
 			if (m_afficheBar)
@@ -119,7 +118,7 @@ void CTextProgressBar::operator++()
 	}
 }
 
-//Implémentation d'une progress bar en mode texte...
+//Implï¿½mentation d'une progress bar en mode texte...
 //Variante pour des constantes floatante
 CTextProgressBarFloat::CTextProgressBarFloat(double max,double* curseur,int affiche)
 {	
@@ -138,7 +137,7 @@ void CTextProgressBarFloat::End()
 	m_pcur=&m_max;
 	++(*this);
 }
-//L'opérateur magique
+//L'opï¿½rateur magique
 void CTextProgressBarFloat::operator++() 
 {
 	try{
@@ -152,7 +151,7 @@ void CTextProgressBarFloat::operator++()
 			//printf("\n%s%s\n%s",sProgressMarge,sProgressBAR,sProgressMarge); 
 			fflush(stdout);		
 		}*/
-		//DÉMARRÉ CHRONOMETRE
+		//Dï¿½MARRï¿½ CHRONOMETRE
 		m_tempsdebut=thetime()+g_tempsEchantillon;
 
 	case ADD:
@@ -168,7 +167,7 @@ void CTextProgressBarFloat::operator++()
 				if (testime>g_maxEstimatedProcessingTime){			
 //					GENError("Execution time exceeded maximum allowed: ESTIMATED: %.10G min MAXIMUM: %.10G min\nSee gen.maxexetime() definition",
 //						testime/60.,g_maxEstimatedProcessingTime/60.);
-					//GENError("Le temps d'execution estimé est trop long: ESTIME: %.10G min   MAXIMUM: %.10G min\n Regarde la definition de la fonction gen.maxexetime()",
+					//GENError("Le temps d'execution estimï¿½ est trop long: ESTIME: %.10G min   MAXIMUM: %.10G min\n Regarde la definition de la fonction gen.maxexetime()",
 					char erreur[TAILLEDESCRIPTION];
 					sprintf(erreur, "Execution time exceeded maximum allowed: ESTIMATED: %.10G min MAXIMUM: %.10G min\nSee gen.maxexetime() definition",
 								  testime/60.,g_maxEstimatedProcessingTime/60.);

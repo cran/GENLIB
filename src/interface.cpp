@@ -2,10 +2,10 @@
 \brief Implementation toutes les fonctions d'interface de Splus
 
 	C'est dans ce fichier que sont placer toutes les interfaces pour Splus.
-	Seulement les fonctions d'ici sont caller à partir des wrappers des .ssc
+	Seulement les fonctions d'ici sont caller ï¿½ partir des wrappers des .ssc
 
-\author Sébastien Leclerc
-\contributor Jean-François Lefebvre
+\author Sï¿½bastien Leclerc
+\contributor Jean-Franï¿½ois Lefebvre
 */
 
 #include "base.h"
@@ -20,6 +20,7 @@
 #include "statanal.h"
 #include "interface.h"
 
+#include <fstream>
 #include <string>
 #define ALLOWPRINTPROGRESS
 #include <R.h>
@@ -30,8 +31,6 @@
 #include <RcppCommon.h>
 //#define EXPORTTYPE extern "C"  -> remplacer par RcppExport
 
-#define R_NO_REMAP
-#define R_NO_REMAP_RMATH
 
 /// Valeur textuel de l'enumeration typenoeud_t
 /** \sa typenoeud_t*/
@@ -576,7 +575,52 @@ RcppExport SEXP SPLUSCGCumuldirect(SEXP smatriceCG, SEXP slNProposant, SEXP splA
 /// **********
 //	DIVERS
 // *********
+RcppExport SEXP SPLUSSimulHaplo(SEXP sGenealogy, SEXP sProbands, SEXP sLenPro, SEXP sAncestors, SEXP sLenAncestors, SEXP snSimul, SEXP sProbRecomb, SEXP reconstruction, SEXP sBP, SEXP sWD, SEXP sPathToHap, SEXP sPathToMap, SEXP sSeed, SEXP sNumRecomb, SEXP sNumMeioses)
+{
+	
+	int * Genealogie, * proposant, * ancetre, * nproposant, * nancetre, * nSimul, * rec, * seed, * NumMeioses, * NumRecomb;
+	double * probRecomb, *BP;
 
+	Rcpp::IntegerVector lNumRecomb  ( sNumRecomb);
+	Rcpp::IntegerVector lNumMeioses ( sNumMeioses);	
+
+	Rcpp::IntegerVector lGenealogie	( sGenealogy );
+	Rcpp::IntegerVector lproposant	( sProbands );
+	Rcpp::IntegerVector lancetre	( sAncestors );
+	Rcpp::NumericVector lprobRecomb ( sProbRecomb );
+	
+	NumMeioses  = INTEGER   (sNumMeioses);
+	NumRecomb   = INTEGER   (sNumRecomb);
+	seed 		= INTEGER   (sSeed);
+	rec 		= INTEGER   (reconstruction);
+	Genealogie	= INTEGER	(lGenealogie);
+	proposant	= INTEGER	(lproposant);
+	ancetre		= INTEGER	(lancetre);
+	probRecomb 	= REAL		(lprobRecomb);
+	BP			= REAL 		(sBP);
+	nproposant	= INTEGER	(sLenPro);
+	nancetre	= INTEGER	(sLenAncestors);
+	nSimul		= INTEGER	(snSimul);
+
+	std::unordered_map<int, haplotype*> hapRef; // empty unordered_map
+	haplotype *hapVide = new haplotype();
+	hapVide->hap  = "0.1";
+	hapVide->pos  = -1.0;
+	hapVide->fixe = 1;
+	hapRef[0]=hapVide;
+
+	std::string WD = Rcpp::as<std::string>(sWD);
+	simulhaplo(Genealogie, proposant, *nproposant, ancetre, *nancetre, *nSimul, probRecomb, &hapRef, WD, *seed, NumRecomb, NumMeioses);	
+
+	if (*rec == 1){
+		std::string PathToHap = Rcpp::as<std::string>(sPathToHap);
+		std::string PathToMap = Rcpp::as<std::string>(sPathToMap);
+		std::string WD1 = WD;
+		reconstruct(WD,WD1+="/Proband_Haplotypes.txt",PathToHap, PathToMap, *BP);
+	}
+
+	return R_NilValue;
+}
 /*FONCTION D'INTERFACE POUR SPLUS*/
 
 /// Fonction d'interface Splus pour simul
@@ -852,7 +896,7 @@ RcppExport SEXP SPLUSCoeffApparentement(SEXP sGenealogie, SEXP sproposant, SEXP 
 
 
 /*! 
-	\brief SPLUSCALL: Creer une genealogie binaire à l'aide d'une genealogie de forme classique No Ind, No Pere, No Mere
+	\brief SPLUSCALL: Creer une genealogie binaire ï¿½ l'aide d'une genealogie de forme classique No Ind, No Pere, No Mere
 
      Cette fonction est une interface SPLUS de la fonction CreerGenealogie()
 	
@@ -952,7 +996,7 @@ RcppExport SEXP SPLUSCALLCreerObjetGenealogie(SEXP SIndividu,SEXP SPere, SEXP SM
 
 	La fonction Extrait la genealogie et retourne 3 vecteur soit le No Individu, le No du pere et le No de la Mere.
 	
-	\param genealogie	[in] Une genealogie construite à l'aide de gen.genealogie 
+	\param genealogie	[in] Une genealogie construite ï¿½ l'aide de gen.genealogie 
 
 	\retval plRetIndividu [out] Vecteur de taille LengthGenealogie
 								En cas de succes contient les No d'individus
@@ -1005,7 +1049,7 @@ RcppExport SEXP SPLUSOutgen(SEXP Rgenealogie, SEXP RplRetIndividu, SEXP RplRetPe
 		if (havesex)				plRetSexe[i]=Noeud[i].sex;
 		else						plRetSexe[i]=-1; //Pas utilisable
 	}
-	//Trie si nécessaire
+	//Trie si nï¿½cessaire
 	if (*mustsort)
 		SortGenealogie3Vecteur(plRetIndividu,plRetPere,plRetMere,plRetSexe,lNIndividu);
 	STOPTIMER;
@@ -1022,7 +1066,7 @@ RcppExport SEXP SPLUSOutgen(SEXP Rgenealogie, SEXP RplRetIndividu, SEXP RplRetPe
 
 	La fonction Extrait la genealogie et retourne 3 vecteur soit le No Individu, le Indice du pere et le Indice de la Mere.
 	
-	\param genealogie	[in] Une genealogie construite à l'aide de gen.genealogie 
+	\param genealogie	[in] Une genealogie construite ï¿½ l'aide de gen.genealogie 
 
 	\retval plRetIndividu [out] Vecteur de taille LengthGenealogie
 								En cas de succes contient les No d'individus
@@ -1077,7 +1121,7 @@ RcppExport SEXP SPLUSOutIndice(SEXP sgenealogie, SEXP splRetIndividu, SEXP splRe
 		else						plRetSexe[i]=-1; //Pas utilisable
 	}
 
-	//Trie si nécessaire
+	//Trie si nï¿½cessaire
 	if (*mustsort)
 		SortGenealogie3Vecteur(plRetIndividu,plRetPere,plRetMere,plRetSexe,lNIndividu);
 	STOPTIMER;

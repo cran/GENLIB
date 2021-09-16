@@ -1,6 +1,6 @@
 //#define MODETEST
 
-//contributor Jean-François Lefebvre
+//contributor Jean-Franï¿½ois Lefebvre
 
 /// Authorise l'affichage du niveau de progression sur la sortie standard
 /** 
@@ -26,7 +26,6 @@
 
 using namespace std;
 
-#define R_NO_REMAP
 
 #define DIV 1024
 string divisor = "K";
@@ -37,10 +36,10 @@ string divisor = "K";
 	La fonction calcule la valeur de l'apparentement entre chaque proposant qui lui est fourni. 
 	Le resultat retourne sous la forme d'une matrice NProposant x NProposant   
 
-	\param Genealogie		[in] Une genealogie construite à l'aide de gen.genealogie 
+	\param Genealogie		[in] Une genealogie construite ï¿½ l'aide de gen.genealogie 
 
-	\param proposant		[in] Vecteur avec les numeros des proposants à étudier 
-	\param NProposant		[in] Nombre d'éléments du vecteur proposant 
+	\param proposant		[in] Vecteur avec les numeros des proposants ï¿½ ï¿½tudier 
+	\param NProposant		[in] Nombre d'ï¿½lï¿½ments du vecteur proposant 
   
 	\param Niveau			[in] Profondeur fixe 
 
@@ -58,7 +57,7 @@ string divisor = "K";
 						
 	\param printprogress	[in] Imprime une serie de message indiquant la progression du calcul 
  
-	\return 0 si la fonction est executé avec succès 
+	\return 0 si la fonction est executï¿½ avec succï¿½s 
 */ 
 int PhiMatrix(int* Genealogie, int* proposant, int NProposant,int Niveau, double* pdMatricePhi, int printprogress)
 {
@@ -81,7 +80,7 @@ int PhiMatrix(int* Genealogie, int* proposant, int NProposant,int Niveau, double
 		char erreur[TAILLEDESCRIPTION];
 		sprintf(erreur, "depthmin must be smaller than %d",SHRT_MAX);
 		throw std::range_error(erreur);
-		//GENError("Le niveau doit-être inférieur à %d",SHRT_MAX);
+		//GENError("Le niveau doit-ï¿½tre infï¿½rieur ï¿½ %d",SHRT_MAX);
 	}
 	const short niveauMax = short(Niveau);
 
@@ -107,8 +106,8 @@ int PhiMatrix(int* Genealogie, int* proposant, int NProposant,int Niveau, double
 				//Affichage des progress
 				//INCREMENT_PROGRESS_BAR();
 			//}//Fin IF
-		}//Fin itérateur proposant 2
-	}//Fin itérateur proposant 1
+		}//Fin itï¿½rateur proposant 2
+	}//Fin itï¿½rateur proposant 1
 	return 0;
  			} catch(std::exception &ex) {
  				forward_exception_to_r(ex);
@@ -161,13 +160,13 @@ int PhiMatrixMT(int* Genealogie, int* proposant, int NProposant,int Niveau, doub
 		char erreur[TAILLEDESCRIPTION];
 		sprintf(erreur, "depthmin must be smaller than %d",SHRT_MAX);
 		throw std::range_error(erreur);
-		//GENError("Le niveau doit-être inférieur à %d",SHRT_MAX);
+		//GENError("Le niveau doit-ï¿½tre infï¿½rieur ï¿½ %d",SHRT_MAX);
 	}
 	const short niveauMax = short(Niveau);
 
 	//Initialisation d'une structure multithread
 	BASEMT_DEBUTBOUCLE_INITMESSAGE(1) 		
-		//initialisation des données Phi de la structure
+		//initialisation des donnï¿½es Phi de la structure
 		BASEMT_MESSAGE(1).niv=niveauMax;	 	  
 		BASEMT_MESSAGE(1).indice1 = -1;
 		BASEMT_MESSAGE(1).indice2 = -1;	 
@@ -189,7 +188,7 @@ int PhiMatrixMT(int* Genealogie, int* proposant, int NProposant,int Niveau, doub
 			else
 			{*/
 				BASEMT_DEBUT_REQUETE(1) 
-					//Résupere le résultat de phi
+					//Rï¿½supere le rï¿½sultat de phi
 					if (BASEMT_MESSAGE(1).indice1!=-1)
 					{
 						pdMatricePhi[BASEMT_MESSAGE(1).indice1*NProposant+BASEMT_MESSAGE(1).indice2]=BASEMT_MESSAGE(1).danswer;
@@ -205,8 +204,8 @@ int PhiMatrixMT(int* Genealogie, int* proposant, int NProposant,int Niveau, doub
 				//Affichage des progress
 				INCREMENT_PROGRESS_BAR();
 			//}//fin if pour chaque case de la matrice
-		}//Fin itérateur proposant 2
-	}//Fin itérateur proposant 1
+		}//Fin itï¿½rateur proposant 2
+	}//Fin itï¿½rateur proposant 1
 	
 	//Fermeture des threads
 	BASEMT_DEBUT_FERMETURE(1)

@@ -2,13 +2,13 @@
 \alias{gen.phiCI}
 \title{Average kinship confidence interval}
 \description{Returns the confidence interval of the average kinship among pairs of specified individuals}
-\usage{gen.phiCI(phiMatrix, prob=c(0.025,0.05,0.95,0.975), b=5000, print.it=F)}
+\usage{gen.phiCI(phiMatrix, prob=c(0.025,0.05,0.95,0.975), b=5000, print.it=FALSE)}
 \arguments{
 \item{phiMatrix}{A square matrix of kinship coefficients obtained for example with gen.phi, 
 	or an array of square matrices (GLmultiMatrix object) of kinship coefficients obtained with gen.phi. Required.}
 \item{prob}{Confidence limits probabilities. Default is probs=c(0.025, 0.05, 0.95, 0.975).}
 \item{b}{Number of simulations used to calculate the confidence interval. Default is b="5000".}
-\item{print.it}{If print.it="F" (default), progression in the number of simulations performed is not displayed.}
+\item{print.it}{If print.it=FALSE (default), progression in the number of simulations performed is not displayed.}
 }
 \value{A vector or a GLmultiVector object depending on the type of 'phiMatrix' entered.
 	  If 'phiMatrix' is a GLmultiMatrix, an array of vectors (GLmultiVector), one for each depth, is returned.

@@ -18,14 +18,14 @@
 \examples{
 data(geneaJi) 
 genJi<-gen.genealogy(geneaJi) 
-# There are 3 probants
+# There are 3 probands
 gen.pro(genJi)
 
 
 data(genea140) 
 gen140<-gen.genealogy(genea140)
 gen.pro(gen140)
-# There are 140 probants
+# There are 140 probands
 
 }
 \keyword{manip}
