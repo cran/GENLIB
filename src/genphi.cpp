@@ -117,7 +117,6 @@ int PhiMatrix(int* Genealogie, int* proposant, int NProposant,int Niveau, double
  			return 0;
 }
 
-
 /* VERSION MT */
 struct CBASEMTPhiMatrixMT : public CMtGlobalMessage
 {
@@ -129,100 +128,111 @@ struct CBASEMTPhiMatrixMT : public CMtGlobalMessage
 	short niv;				//Nombre de remonte de la matrice
 };
 
-BASEMT_CREATE_GLOBALMESSAGE(CBASEMTPhiMatrixMT,1)
-
-BASEMT_DEBUT_HELPERFCT(CBASEMTPhiMatrixMT,1)
-		//LANCEMENT DU CALCUL ET RECUPERE LE RESULTAT
-		BASEMT_HLPMES.danswer  = 
-			Kinship(BASEMT_HLPMES.ind1,BASEMT_HLPMES.ind2,BASEMT_HLPMES.niv,BASEMT_HLPMES.niv); 
-BASEMT_FIN_HELPERFCT() 
-
-
-int PhiMatrixMT(int* Genealogie, int* proposant, int NProposant,int Niveau, double* pdMatricePhi, int printprogress)
-{
-	try{
-	//CREATION DE TABLEAU D'INDIVIDU
-	INITGESTIONMEMOIRE
-	int lNIndividu;
-	CIndSimul *Noeud=NULL;
-	LoadGenealogie(Genealogie,GFALSE,&lNIndividu,&Noeud);
-
-	//CREATION D'UN VECTEUR DE PROPOSANT
-	CIndSimul **NoeudPro=NULL;
-	LoadProposant(proposant,NProposant,&NoeudPro);
-
-	//DEBUT DU CALCUL
-	if (Niveau==0)
-		Niveau=SHRT_MAX;	
-
-	if (Niveau>SHRT_MAX){
-//		GENError("Niveau must be smaller than %d", SHRT_MAX);
-		char erreur[TAILLEDESCRIPTION];
-		sprintf(erreur, "depthmin must be smaller than %d",SHRT_MAX);
-		throw std::range_error(erreur);
-		//GENError("Le niveau doit-�tre inf�rieur � %d",SHRT_MAX);
+//turn off multithreading for apple devices temporarily
+//sem_init, sem_destroy are deprecated. CRAN removed package because of warning while compiling on OSX
+//later will re-implement multithread with std library threads
+#if defined __APPLE__
+	int PhiMatrixMT(int* Genealogie, int* proposant, int NProposant,int Niveau, double* pdMatricePhi, int printprogress){
+		PhiMatrix(Genealogie, proposant, NProposant, Niveau, pdMatricePhi, printprogress);
+		return 0;
 	}
-	const short niveauMax = short(Niveau);
 
-	//Initialisation d'une structure multithread
-	BASEMT_DEBUTBOUCLE_INITMESSAGE(1) 		
-		//initialisation des donn�es Phi de la structure
-		BASEMT_MESSAGE(1).niv=niveauMax;	 	  
-		BASEMT_MESSAGE(1).indice1 = -1;
-		BASEMT_MESSAGE(1).indice2 = -1;	 
-	BASEMT_FINBOUCLE_INITMESSAGE(1)
+#else
+	BASEMT_CREATE_GLOBALMESSAGE(CBASEMTPhiMatrixMT,1)
 
-	//Demarre le calcul de phi
-	//Barre de progression
-	CREATE_PROGRESS_BAR_MATRIX(NProposant,printprogress);		
-	for(int cPro1=0;cPro1<NProposant;++cPro1)
+	BASEMT_DEBUT_HELPERFCT(CBASEMTPhiMatrixMT,1)
+			//LANCEMENT DU CALCUL ET RECUPERE LE RESULTAT
+			BASEMT_HLPMES.danswer  = 
+				Kinship(BASEMT_HLPMES.ind1,BASEMT_HLPMES.ind2,BASEMT_HLPMES.niv,BASEMT_HLPMES.niv); 
+	BASEMT_FIN_HELPERFCT() 
+
+
+	int PhiMatrixMT(int* Genealogie, int* proposant, int NProposant,int Niveau, double* pdMatricePhi, int printprogress)
 	{
-		for(int cPro2=cPro1;cPro2<NProposant;++cPro2)
-		{
-			/*
-			if (cPro1==cPro2)
-			{
-				// L'apparentement de qqun avec lui-meme = 0.5 
-				pdMatricePhi[cPro1*NProposant+cPro2]=0.5;
-			}
-			else
-			{*/
-				BASEMT_DEBUT_REQUETE(1) 
-					//R�supere le r�sultat de phi
-					if (BASEMT_MESSAGE(1).indice1!=-1)
-					{
-						pdMatricePhi[BASEMT_MESSAGE(1).indice1*NProposant+BASEMT_MESSAGE(1).indice2]=BASEMT_MESSAGE(1).danswer;
-						pdMatricePhi[BASEMT_MESSAGE(1).indice2*NProposant+BASEMT_MESSAGE(1).indice1]=BASEMT_MESSAGE(1).danswer;
-					}
-					//Parametre pour un nouveau calcul de phi
-					BASEMT_MESSAGE(1).indice1 = cPro1;
-					BASEMT_MESSAGE(1).indice2 = cPro2;
-					BASEMT_MESSAGE(1).ind1=NoeudPro[cPro1];
-					BASEMT_MESSAGE(1).ind2=NoeudPro[cPro2];				
-				BASEMT_FIN_REQUETE(1)
+		try{
+		//CREATION DE TABLEAU D'INDIVIDU
+		INITGESTIONMEMOIRE
+		int lNIndividu;
+		CIndSimul *Noeud=NULL;
+		LoadGenealogie(Genealogie,GFALSE,&lNIndividu,&Noeud);
 
-				//Affichage des progress
-				INCREMENT_PROGRESS_BAR();
-			//}//fin if pour chaque case de la matrice
-		}//Fin it�rateur proposant 2
-	}//Fin it�rateur proposant 1
-	
-	//Fermeture des threads
-	BASEMT_DEBUT_FERMETURE(1)
-		//RECUPERE LES DERNIERS RESULTATS DE PHI S'IL SONT VALIDE
-		if (BASEMT_MESSAGE(1).indice1!=-1)
-		{
-			pdMatricePhi[BASEMT_MESSAGE(1).indice1*NProposant+BASEMT_MESSAGE(1).indice2]=BASEMT_MESSAGE(1).danswer;
-			pdMatricePhi[BASEMT_MESSAGE(1).indice2*NProposant+BASEMT_MESSAGE(1).indice1]=BASEMT_MESSAGE(1).danswer;
+		//CREATION D'UN VECTEUR DE PROPOSANT
+		CIndSimul **NoeudPro=NULL;
+		LoadProposant(proposant,NProposant,&NoeudPro);
+
+		//DEBUT DU CALCUL
+		if (Niveau==0)
+			Niveau=SHRT_MAX;	
+
+		if (Niveau>SHRT_MAX){
+	//		GENError("Niveau must be smaller than %d", SHRT_MAX);
+			char erreur[TAILLEDESCRIPTION];
+			sprintf(erreur, "depthmin must be smaller than %d",SHRT_MAX);
+			throw std::range_error(erreur);
+			//GENError("Le niveau doit-�tre inf�rieur � %d",SHRT_MAX);
 		}
-	BASEMT_FIN_FERMETURE(1)
+		const short niveauMax = short(Niveau);
 
-	return 0;
- 			} catch(std::exception &ex) {
- 				forward_exception_to_r(ex);
- 			} catch(...){
- 				::Rf_error("c++ exception (unknown reason)"); 
- 			} 
- 			return 0;
-}
+		//Initialisation d'une structure multithread
+		BASEMT_DEBUTBOUCLE_INITMESSAGE(1) 		
+			//initialisation des donn�es Phi de la structure
+			BASEMT_MESSAGE(1).niv=niveauMax;	 	  
+			BASEMT_MESSAGE(1).indice1 = -1;
+			BASEMT_MESSAGE(1).indice2 = -1;	 
+		BASEMT_FINBOUCLE_INITMESSAGE(1)
 
+		//Demarre le calcul de phi
+		//Barre de progression
+		CREATE_PROGRESS_BAR_MATRIX(NProposant,printprogress);		
+		for(int cPro1=0;cPro1<NProposant;++cPro1)
+		{
+			for(int cPro2=cPro1;cPro2<NProposant;++cPro2)
+			{
+				/*
+				if (cPro1==cPro2)
+				{
+					// L'apparentement de qqun avec lui-meme = 0.5 
+					pdMatricePhi[cPro1*NProposant+cPro2]=0.5;
+				}
+				else
+				{*/
+					BASEMT_DEBUT_REQUETE(1) 
+						//R�supere le r�sultat de phi
+						if (BASEMT_MESSAGE(1).indice1!=-1)
+						{
+							pdMatricePhi[BASEMT_MESSAGE(1).indice1*NProposant+BASEMT_MESSAGE(1).indice2]=BASEMT_MESSAGE(1).danswer;
+							pdMatricePhi[BASEMT_MESSAGE(1).indice2*NProposant+BASEMT_MESSAGE(1).indice1]=BASEMT_MESSAGE(1).danswer;
+						}
+						//Parametre pour un nouveau calcul de phi
+						BASEMT_MESSAGE(1).indice1 = cPro1;
+						BASEMT_MESSAGE(1).indice2 = cPro2;
+						BASEMT_MESSAGE(1).ind1=NoeudPro[cPro1];
+						BASEMT_MESSAGE(1).ind2=NoeudPro[cPro2];				
+					BASEMT_FIN_REQUETE(1)
+
+					//Affichage des progress
+					INCREMENT_PROGRESS_BAR();
+				//}//fin if pour chaque case de la matrice
+			}//Fin it�rateur proposant 2
+		}//Fin it�rateur proposant 1
+		
+		//Fermeture des threads
+		BASEMT_DEBUT_FERMETURE(1)
+			//RECUPERE LES DERNIERS RESULTATS DE PHI S'IL SONT VALIDE
+			if (BASEMT_MESSAGE(1).indice1!=-1)
+			{
+				pdMatricePhi[BASEMT_MESSAGE(1).indice1*NProposant+BASEMT_MESSAGE(1).indice2]=BASEMT_MESSAGE(1).danswer;
+				pdMatricePhi[BASEMT_MESSAGE(1).indice2*NProposant+BASEMT_MESSAGE(1).indice1]=BASEMT_MESSAGE(1).danswer;
+			}
+		BASEMT_FIN_FERMETURE(1)
+
+		return 0;
+				} catch(std::exception &ex) {
+					forward_exception_to_r(ex);
+				} catch(...){
+					::Rf_error("c++ exception (unknown reason)"); 
+				} 
+				return 0;
+	}
+
+#endif

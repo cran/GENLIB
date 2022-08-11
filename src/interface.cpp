@@ -575,49 +575,64 @@ RcppExport SEXP SPLUSCGCumuldirect(SEXP smatriceCG, SEXP slNProposant, SEXP splA
 /// **********
 //	DIVERS
 // *********
-RcppExport SEXP SPLUSSimulHaplo(SEXP sGenealogy, SEXP sProbands, SEXP sLenPro, SEXP sAncestors, SEXP sLenAncestors, SEXP snSimul, SEXP sProbRecomb, SEXP reconstruction, SEXP sBP, SEXP sWD, SEXP sPathToHap, SEXP sPathToMap, SEXP sSeed, SEXP sNumRecomb, SEXP sNumMeioses)
-{
-	
-	int * Genealogie, * proposant, * ancetre, * nproposant, * nancetre, * nSimul, * rec, * seed, * NumMeioses, * NumRecomb;
-	double * probRecomb, *BP;
 
-	Rcpp::IntegerVector lNumRecomb  ( sNumRecomb);
-	Rcpp::IntegerVector lNumMeioses ( sNumMeioses);	
+ 
+/** \sa SPLUSSimulHaplo() */
+RcppExport SEXP SPLUSSimulHaplo(SEXP sGenealogy, SEXP sProbands, SEXP sLenPro, SEXP sAncestors, SEXP sLenAncestors, SEXP snSimul, SEXP sProbRecomb, 
+					SEXP sMorgan_Len, SEXP smodel, SEXP s_convert, SEXP sBP, SEXP s_bp_map_FA, SEXP s_cm_map_FA, SEXP s_bp_map_MO, SEXP s_cm_map_MO, 
+					SEXP sWD, SEXP sAll_node, SEXP sSeed)
+{  
+	
+	int * Genealogie, * proposant, * ancetre, * nproposant, * nancetre, * nSimul, * seed, * model;
+	int * BP, * convert, * bp_map_FA, *bp_map_MO, * All_node;
+	double * probRecomb, *Morgan_Len, *cm_map_FA, *cm_map_MO;	
 
 	Rcpp::IntegerVector lGenealogie	( sGenealogy );
-	Rcpp::IntegerVector lproposant	( sProbands );
+	Rcpp::IntegerVector lproposant	( sProbands  );
 	Rcpp::IntegerVector lancetre	( sAncestors );
-	Rcpp::NumericVector lprobRecomb ( sProbRecomb );
-	
-	NumMeioses  = INTEGER   (sNumMeioses);
-	NumRecomb   = INTEGER   (sNumRecomb);
+	Rcpp::IntegerVector l_bp_map_FA ( s_bp_map_FA);
+	Rcpp::IntegerVector l_bp_map_MO ( s_bp_map_MO);
+	Rcpp::NumericVector l_cm_map_FA ( s_cm_map_FA);
+	Rcpp::NumericVector l_cm_map_MO ( s_cm_map_MO);
+	Rcpp::NumericVector lprobRecomb ( sProbRecomb);
+	Rcpp::NumericVector lMorgan_Len ( sMorgan_Len);
+
+	convert 	= INTEGER   (s_convert);
+	All_node    = INTEGER   (sAll_node);
 	seed 		= INTEGER   (sSeed);
-	rec 		= INTEGER   (reconstruction);
+	model       = INTEGER   (smodel);
 	Genealogie	= INTEGER	(lGenealogie);
 	proposant	= INTEGER	(lproposant);
 	ancetre		= INTEGER	(lancetre);
 	probRecomb 	= REAL		(lprobRecomb);
-	BP			= REAL 		(sBP);
+	Morgan_Len  = REAL		(lMorgan_Len);
+	BP			= INTEGER 	(sBP);
 	nproposant	= INTEGER	(sLenPro);
 	nancetre	= INTEGER	(sLenAncestors);
 	nSimul		= INTEGER	(snSimul);
 
+	bp_map_FA 	= INTEGER( l_bp_map_FA);
+	bp_map_MO 	= INTEGER( l_bp_map_MO);
+	cm_map_FA	= REAL 	 ( l_cm_map_FA);
+	cm_map_MO 	= REAL 	 ( l_cm_map_MO);
+
 	std::unordered_map<int, haplotype*> hapRef; // empty unordered_map
 	haplotype *hapVide = new haplotype();
 	hapVide->hap  = "0.1";
-	hapVide->pos  = -1.0;
+	hapVide->pos  = -1;
 	hapVide->fixe = 1;
 	hapRef[0]=hapVide;
 
 	std::string WD = Rcpp::as<std::string>(sWD);
-	simulhaplo(Genealogie, proposant, *nproposant, ancetre, *nancetre, *nSimul, probRecomb, &hapRef, WD, *seed, NumRecomb, NumMeioses);	
 
-	if (*rec == 1){
-		std::string PathToHap = Rcpp::as<std::string>(sPathToHap);
-		std::string PathToMap = Rcpp::as<std::string>(sPathToMap);
-		std::string WD1 = WD;
-		reconstruct(WD,WD1+="/Proband_Haplotypes.txt",PathToHap, PathToMap, *BP);
-	}
+	simulhaplo(Genealogie, proposant, *nproposant, ancetre, *nancetre, *nSimul, probRecomb, Morgan_Len, *BP, *model, *convert, cm_map_FA, cm_map_MO, bp_map_FA, bp_map_MO, &hapRef, WD, *All_node, *seed);	
+
+	// if (*rec == 1){
+	// 	std::string PathToHap = Rcpp::as<std::string>(sPathToHap);
+	// 	std::string PathToMap = Rcpp::as<std::string>(sPathToMap);
+	// 	std::string WD1 = WD;
+	// 	reconstruct(WD,WD1+="/Proband_Haplotypes.txt",PathToHap, PathToMap, *BP);
+	// }
 
 	return R_NilValue;
 }

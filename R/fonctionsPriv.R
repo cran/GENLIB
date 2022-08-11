@@ -817,7 +817,7 @@ gen.validationGLgen = function(object)
 	ret <- try(.Call("SPLUSValidateGenealogie", object@.Data, isValid))
 
 	isValid = ret$isValid
-	if(class(ret) == "Error")
+	if(is(ret, "Error"))
 		return(list(erreur = TRUE, messageErreur = "Error from dll return value")) #"Erreur de retour provenant de la dll"))
 	if(as.logical(isValid))
 		return(list(erreur = FALSE, gen = object))

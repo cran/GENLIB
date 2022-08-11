@@ -18,22 +18,27 @@ int simul(int* Genealogie, int* plProposant, int* plProEtat,int lNProposant, int
 		int lSimul, double* pdRetConj,double* pdRetSimul,double* pdRetProp,double* probRecomb,double probSurvieHomo,int printprogress);
 
 void simulhaplo(int* Genealogie, int* plProposant, int lNProposant, int* plAncetre, int lNAncetre,
-		int lSimul, double* probRecomb, std::unordered_map<int,haplotype*> *hapRef, std::string WD, int seed, int* NumRecomb, int* NumMeioses);
+						int lSimul, double* probRecomb, double* Morgan_Len, int BP_len, int model, int convert,  
+						double* cm_map_FA, double* cm_map_MO, int* bp_map_FA, int* bp_map_MO, 
+						std::unordered_map<int,haplotype*> *hapRef, std::string WD, int write_all_node, int seed);
 
 // int getNumberRec(double* probRecomb, int sex);
 // double getRandomNumber(int exponential);
 //int descendreHaplotypes(CIndSimul* Ordre_tmp, double probHap); //, /**/std::unordered_map<std::string, haplotype*>/* const std::unordered_map<std::string, haplotype*> &*/*hapRef);
 //void makeRecomb( CIndSimul* Ordre_tmp, std::unordered_map<int, haplotype*> *hapRef, double probHap, double posRecomb, int& cle );
-void makeRecombM( CIndSimul* Ordre_tmp, std::unordered_map<int, haplotype*> *hapRef, double probHap, int nbRecomb, double* posRecomb, int& cle );
-void makeRecombF( CIndSimul* Ordre_tmp, std::unordered_map<int, haplotype*> *hapRef, double probHap, int nbRecomb, double* posRecomb, int& cle );
+void no_convert( int& nbrecomb, double* CO_array, const double& Morgan_len, const int& bp_len, int* bp_map, double* cm_map, int* BP_array);
+void convert1(   int& nbrecomb, double* CO_array, const double& Morgan_len, const int& bp_len, int* bp_map, double* cm_map, int* BP_array);
 
-void recombine( haplotype* hapBegin, haplotype* hapEnd, haplotype* hapChild, int nbRecomb, double *posRecomb );
+void makeRecombM( CIndSimul* Ordre_tmp, std::unordered_map<int, haplotype*> *hapRef, double probHap, int nbRecomb, int* posRecomb, int& cle );
+void makeRecombF( CIndSimul* Ordre_tmp, std::unordered_map<int, haplotype*> *hapRef, double probHap, int nbRecomb, int* posRecomb, int& cle );
 
-bool reconstruct(std::string WD, const std::string &hapfilename, const std::string &simufilename,const std::string &SNPposfilename,const int &BPsize);
+void recombine( haplotype* hapBegin, haplotype* hapEnd, haplotype* hapChild, int nbRecomb, int *posRecomb );
 
-bool ancestralseq(const std::string &fileName, std::unordered_map<float, std::string> &haploseqs);
+// bool reconstruct(std::string WD, const std::string &hapfilename, const std::string &simufilename,const std::string &SNPposfilename,const int &BPsize);
 
-std::vector<int> readSNPpos(const std::string &fileName);
+// bool ancestralseq(const std::string &fileName, std::unordered_map<float, std::string> &haploseqs);
+
+// std::vector<int> readSNPpos(const std::string &fileName);
 
 int simulsingle(int* Genealogie, int* plProposant, int lNProposant, int* plAncetre, int* plAncEtat, int lNAncetre,
 			 int lSimul, double* pdRetour,int printprogress);

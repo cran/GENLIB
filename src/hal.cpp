@@ -1,8 +1,8 @@
 /***************************
-	Fichier qui contient les fonctions très spécifique au hardware
+	Fichier qui contient les fonctions trï¿½s spï¿½cifique au hardware
 
 
-\contributor Jean-François Lefebvre
+\contributor Jean-Franï¿½ois Lefebvre
 
   ***********************************/
 #include "hal.h"
@@ -226,64 +226,64 @@
 	}
 */
 
-
-
-	//MULTITHREAD
-	struct Opa_Thread
-	{
-		pthread_t tid;
-	};
-	int Cthread_create(Cthread& thread, THREADRETURN (*start_routine)(void*),void* arg)
-	{
-		thread= (Opa_Thread*) malloc(sizeof(Opa_Thread));
-		return pthread_create(&(thread->tid), NULL, start_routine, arg);
-	}
-
-	void Cthread_destroy(Cthread& thread)
-	{	
-		free(thread);
-		thread=NULL;
-	}
-
-	void Cthread_exit()
-	{	
-		pthread_exit(NULL);
-	}
-
-	void Cthread_join(Cthread& thread)
-	{		
-		pthread_join(thread->tid, NULL);		
-	}
-
-	//ENCAPSULATION D'UNE SEMAPHORE
 	struct Opa_Cema
 	{
 		sem_t sema;
 	};
-	int CSema_init(CSema& Semaphore,int compteinitial)
-	{
-		Semaphore= (Opa_Cema*) malloc(sizeof(Opa_Cema));
-		return sem_init(&Semaphore->sema,1,compteinitial);		
-	}
 
-	int CSema_destroy(CSema& Semaphore)
-	{
-		int tmp = sem_destroy(&Semaphore->sema);
-		free(Semaphore);
-		Semaphore=NULL;
-		return tmp;
-	}
+	#ifndef __APPLE__
+		//MULTITHREAD
+		struct Opa_Thread
+		{
+			pthread_t tid;
+		};
+		int Cthread_create(Cthread& thread, THREADRETURN (*start_routine)(void*),void* arg)
+		{
+			thread= (Opa_Thread*) malloc(sizeof(Opa_Thread));
+			return pthread_create(&(thread->tid), NULL, start_routine, arg);
+		}
 
-	int CSema_wait(CSema& Semaphore)
-	{
-		return sem_wait(&Semaphore->sema);
-	}
+		void Cthread_destroy(Cthread& thread)
+		{	
+			free(thread);
+			thread=NULL;
+		}
 
-	int CSema_post(CSema& Semaphore)
-	{
-		return sem_post(&Semaphore->sema);
-	}
+		void Cthread_exit()
+		{	
+			pthread_exit(NULL);
+		}
 
+		void Cthread_join(Cthread& thread)
+		{		
+			pthread_join(thread->tid, NULL);		
+		}
+
+		//ENCAPSULATION D'UNE SEMAPHORE
+		int CSema_init(CSema& Semaphore,int compteinitial)
+		{
+			Semaphore= (Opa_Cema*) malloc(sizeof(Opa_Cema));
+			return sem_init(&Semaphore->sema,1,compteinitial);		
+		}
+
+		int CSema_destroy(CSema& Semaphore)
+		{
+			int tmp = sem_destroy(&Semaphore->sema);
+			free(Semaphore);
+			Semaphore=NULL;
+			return tmp;
+		}
+
+		int CSema_wait(CSema& Semaphore)
+		{
+			return sem_wait(&Semaphore->sema);
+		}
+
+		int CSema_post(CSema& Semaphore)
+		{
+			return sem_post(&Semaphore->sema);
+		}
+	#endif
 
 #endif
 

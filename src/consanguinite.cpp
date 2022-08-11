@@ -31,7 +31,8 @@ Calcul et Analyse de diverse valeur d�riv� de F et Fmoyen
 //			PUBLIC 
 //
 // ********************************************************************
-
+//this is called by SPLUSF, but gen.F now uses SPLUSFS. which uses consanFs instead of consan, Which in turn uses kinship4() instead of kinship()
+//need to removed unused fxns eventually. 
 /*! 
 	\brief Calcul de la consanguinit� (F)
 

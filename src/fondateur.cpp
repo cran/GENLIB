@@ -22,6 +22,7 @@ Calcul et Analyse de diverse valeur d�riv� du gene fondateur
 #include "userInterface.h"
 #include "fondateur.h"
 #include <iostream>
+#include <iomanip>
 #include <fstream>
 #include <time.h>
 #include <string.h> 
@@ -38,8 +39,8 @@ Calcul et Analyse de diverse valeur d�riv� du gene fondateur
 #include <Rcpp/as.h>
 #include <Rcpp/Function.h>
 #include <unordered_map>
-//#include <boost/random/random_device.hpp>
 
+#include "asa239.h"
 
 #ifdef NEG
 	#undef NEG
@@ -77,22 +78,22 @@ static void FASTCALL ExploreCoeff(CIndSimul* Noeud);
 static void PathDestruction(CApPath **Path,int npath);
 
 
-std::string dump_hapref(std::unordered_map<int,haplotype*> *hapRef)
-{
-	std::stringstream out;
-	out << "hapRef\n";
-	for(auto h : (*hapRef)) {
-		out << "  " << h.first << "\n";
-		haplotype *hap = h.second;
-		out << "    &hap:         " << hap << std::endl;
-//		out << "    hap:          " << hap->hap << "\n";
-		out << "    pos:          " << hap->pos << "\n";
-		out << "    fixe:         " << hap->fixe << "\n";
-		out << "    next_segment: " << hap->next_segment << "\n";
-	}
+// std::string dump_hapref(std::unordered_map<int,haplotype*> *hapRef)
+// {
+// 	std::stringstream out;
+// 	out << "hapRef\n";
+// 	for(auto h : (*hapRef)) {
+// 		out << "  " << h.first << "\n";
+// 		haplotype *hap = h.second;
+// 		out << "    &hap:         " << hap << std::endl;
+// //		out << "    hap:          " << hap->hap << "\n";
+// 		out << "    pos:          " << hap->pos << "\n";
+// 		out << "    fixe:         " << hap->fixe << "\n";
+// 		out << "    next_segment: " << hap->next_segment << "\n";
+// 	}
 
-	return out.str();
-}
+// 	return out.str();
+// }
 
 
 // ********************************************************************
@@ -101,59 +102,212 @@ std::string dump_hapref(std::unordered_map<int,haplotype*> *hapRef)
 //
 // ********************************************************************
 /*! 
-	\brief Execute une simulation pour determiner les probabilites du passage d'un allele a une serie de proposant
-
-	Calcule les probabilite qu'un proposants recoivent 0,1-2,2 allele a partir d'un groupe d'ancetre
-	Calcule la probabilite conjointe que chaque proposant soit atteint
-	Calcule la probatilite que de un..n proposant soit atteint
-	Calcule la probabilie que chaque proposant soit atteint
-
-	\param Genealogie	[in] Une genealogie construite � l'aide de gen.genealogie 
-
-	\param plProposant	[in] Vecteur des no de proposant � �tudier
-	\param plProEtat    [in] vecteur de taille lNProposant et representant l'etat a considerer pour chaque proposant
-			<br>&nbsp; &nbsp;&nbsp; &nbsp;0: La condition est remplie si se proposant n'est pas malade 
-			<br>&nbsp; &nbsp;&nbsp; &nbsp;1: La condition est remplie si le proposant recois 1-2 allele 
-			<br>&nbsp; &nbsp;&nbsp; &nbsp;2: La condition est remplie si le proposant recois 2 allele 
-	\param lNProposant	[in] Nombre d'�l�ment du vecteur proposant
-  
-	\param plAncetre	[in] Vecteur des no des ancetres correspondant proposant � �tudier
-	\param plAncEtat	[in] Vecteur de taille plAncetre representant le nombre d'allele atteint pour chaque Ancetre (0,1,2) 
-	\param lNAncetre	[in] Nombre d'�l�ment du vecteur ancetre
-
-	\param lSimul		[in] Nombre de simulation a effectuer
-
-	\retval pdRetConj	[out] Un pointeur vers un double. 
-					En cas de succes, le double represente la probabilite conjointe que la condition de chaque proposant soit remplis. 
-	\retval pdRetSimul	[out] Un pointeur vers une vecteur de taille lNProposant.. 
-					En cas de succes, Probabilite que la condition de chaque proposant soit remplis
-	\retval pdRetProp	[out] Un pointeur vers une vecteur de taille lNProposant+1.
-					En cas de succes represente la probabilite que 0,1,2..n condition soit remplis
-									
-	\param printprogress [in] imprime un message indiquant les progress accomplies
-
-	\return 0 si la fonction est execut� avec succ�s 
 */ 
-void simulhaplo(int* Genealogie, int* plProposant, int lNProposant, int* plAncetre, int lNAncetre,
-						int lSimul, double* probRecomb, std::unordered_map<int,haplotype*> *hapRef, std::string WD, int seed,
-						int* NumRecomb, int* NumMeioses)
-{
-	double precision = 1000000000.0;
-	std::string stroutHaplo; 
-	std::string	stroutAllHaplo;
-	std::string WD1 = WD;
-	stroutHaplo = WD+="/Proband_Haplotypes.txt";
-	stroutAllHaplo = WD1+="/All_nodes_haplotypes.txt";
-	std::ofstream outHaplo(stroutHaplo.c_str());
-	std::ofstream outAllHaplo(stroutAllHaplo.c_str());
-	
-	outHaplo << lSimul << ";" << lNProposant << "\n";
-	outAllHaplo << lSimul << ";" << lNProposant << "\n";
 
-	std::mt19937 my_rng = std::mt19937(seed);
-	std::uniform_real_distribution<> u_dist(0, 1);
-	std::poisson_distribution<int> p1_dist(probRecomb[0]);
-	std::poisson_distribution<int> p2_dist(probRecomb[1]);
+class Crossovers
+{
+	public:		
+		void Poisson_CO(const int&, double*, double*, int&, std::mt19937&, double*);
+		void Poisson_ZT(const int&, double*, double*, int&, std::mt19937&, double*);
+		void init_gamma(double&, double&, double&, double& );
+		void Gamma_CO  (const int&, double*, double*, int&, std::mt19937&, double*);
+
+		
+ 	private:
+		double first_arrival[2][10000]; //Numbins = 10,000. Need to calculate first arrival times for gamma process. They are distributed differently than the interrarival times
+
+};
+
+void Crossovers::Poisson_CO(const int &sex, double *param, double *Morgan_len, int& NumRecomb, std::mt19937& mtgen, double *CO_array){
+	double pos;			
+	static std::uniform_real_distribution<> u_dist(0, 1);
+	static std::poisson_distribution<int> p1_dist(param[0]);
+	static std::poisson_distribution<int> p2_dist(param[1]);
+
+	if(sex==1){
+		NumRecomb = p1_dist(mtgen); //number of recombination events 
+		for( int h=0; h<NumRecomb; h++ ) {
+			pos = u_dist(mtgen);
+			CO_array[h] = pos; 
+		}
+		
+		std::sort(CO_array, CO_array + NumRecomb);
+	}
+	else{
+		NumRecomb = p2_dist(mtgen); //number of recombination events 
+		for( int h=0; h<NumRecomb; h++ ) {
+			pos = u_dist(mtgen);
+			CO_array[h] = pos; 
+		}
+		
+		std::sort(CO_array, CO_array + NumRecomb);		
+	}
+
+}
+
+void Crossovers::Poisson_ZT(const int &sex, double *param, double *Morgan_len, int& NumRecomb, std::mt19937& mtgen, double *CO_array){
+	double chiasma_pos[40];
+	double pos;
+	int	   num_chiasma = 0;		
+	static std::uniform_real_distribution<> u_dist(0, 1);
+	static std::poisson_distribution<int> p1_dist(param[0]);
+	static std::poisson_distribution<int> p2_dist(param[1]);
+
+	if(sex==1){
+		num_chiasma = p1_dist(mtgen); //number of recombination events 
+		while (num_chiasma == 0){
+			num_chiasma = p1_dist(mtgen);
+		}
+		
+		for( int h=0; h<num_chiasma; h++ ) {
+			pos = u_dist(mtgen);
+			chiasma_pos[h] = pos; 
+		}
+		
+	}
+	else{
+		num_chiasma = p2_dist(mtgen); //number of recombination events 
+		while (num_chiasma == 0){
+			num_chiasma = p2_dist(mtgen);
+		}
+		
+		for( int h=0; h<num_chiasma; h++ ) {
+			pos = u_dist(mtgen);
+			chiasma_pos[h] = pos; 
+		}
+	}
+	
+	int counter=0;
+	double u_rand;
+	NumRecomb = 0;
+		for (int i=0; i<num_chiasma; i++){
+			u_rand = u_dist(mtgen);
+			if (u_rand < 0.50){
+				CO_array[counter] = chiasma_pos[i];
+				counter   += 1;
+				NumRecomb += 1;
+			}
+		}
+	
+	std::sort(CO_array, CO_array + NumRecomb);
+}
+
+void Crossovers::init_gamma(double& paramF,  double& paramM,  double& Morgan_LenF,  double& Morgan_LenM){
+	double x;
+	int wasteman = 0;
+
+	//Number of bins is 10,000, these are the bins for reimann sum
+	//Morgan_Len/10000 is the delta x of the integral
+	//gamma_q is 1-CDF. We multiply by 2 because we are dividing by mean of regular distribution (which has mean 1/2)
+	
+	x= Morgan_LenF/10000;
+	first_arrival[0][0] = 2 * (1-gammad(2*paramF*x, paramF, &wasteman)) * Morgan_LenF/10000;
+
+	for ( int i=1; i<10000; i++){
+		x = Morgan_LenF*(i+1)/10000;
+		first_arrival[0][i] = 2 * (1-gammad(2*paramF*x, paramF, &wasteman)) * Morgan_LenF/10000 + first_arrival[0][i-1];
+	}	
+
+	x= Morgan_LenM/10000;
+	first_arrival[1][0] = 2 * (1-gammad(2*paramM*x, paramM, &wasteman)) * Morgan_LenM/10000;
+
+	for ( int i=1; i<10000; i++){
+		x = Morgan_LenM*(i+1)/10000;
+		first_arrival[1][i] = 2 *  (1-gammad(2*paramM*x, paramM, &wasteman)) * Morgan_LenM/10000 + first_arrival[1][i-1];
+	}
+}
+
+void Crossovers::Gamma_CO(const int &sex, double *param, double *Morgan_len, int& NumRecomb, std::mt19937& mtgen, double *CO_array){
+	double u_rand;
+	double length;
+	double step;
+	double interrarival;
+	double current_pos;
+	double chiasma_pos[20];
+	int Num_Chiasmata = 0;
+	
+	static std::uniform_real_distribution<> u_dist(0, 1);
+	static std::gamma_distribution<> g1_dist(param[0],1/(2*param[0]));
+	static std::gamma_distribution<> g2_dist(param[1],1/(2*param[1]));
+
+	if (sex==1){
+		length = Morgan_len[0];
+	} else{
+		length = Morgan_len[1];
+	}
+
+	step = length/10000;
+    u_rand = u_dist(mtgen); 
+
+	if ( u_rand > first_arrival[sex-1][9999]) NumRecomb = 0; //IF the first chiasmata is beyond the length of the chromsome then we have no recombination
+	else {
+		if (u_rand <= first_arrival[sex-1][0]){ 
+			chiasma_pos[0] = 0.5 * step;
+			Num_Chiasmata = 1;
+		}
+		else { //binary search to find the first position (sample between 0-1, then lookup the inverse CDF values)
+			int mid, low = 0, high = 10000;
+			while (high - low > 1) {
+				mid = (high - low) / 2 + low;
+				if (u_rand <= first_arrival[sex-1][mid])
+					high = mid;
+				else if (u_rand > first_arrival[sex-1][mid])
+					low = mid;
+			}
+			Num_Chiasmata=1;
+			//mid will end up being the index of the smallest value (step of reimann partial sums) we are less than or equal to
+			chiasma_pos[0] = mid*step + 0.5*step;
+		}
+
+		current_pos = chiasma_pos[0];
+		//After finding the first arrival time we can  use std::gamma_distribution for the rest
+		if (sex==1){
+			interrarival = g1_dist(mtgen);
+			int counter = 1;
+			while (current_pos + interrarival < Morgan_len[0]){
+				Num_Chiasmata = Num_Chiasmata + 1;
+
+				chiasma_pos[counter] = current_pos + interrarival;
+				current_pos 		 = current_pos + interrarival;
+
+				counter 	 = counter + 1;
+				interrarival = g1_dist(mtgen);
+			}
+
+		}
+		else{
+			interrarival = g2_dist(mtgen);
+			int counter = 1;
+			while (current_pos + interrarival < Morgan_len[1]){
+				Num_Chiasmata = Num_Chiasmata + 1;
+
+				chiasma_pos[counter] = current_pos + interrarival;
+				current_pos 		 = current_pos + interrarival;
+
+				counter 	 = counter + 1;
+				interrarival = g2_dist(mtgen);
+			}
+		}
+
+		//After determining position of all chiasmata, we select each one with probability 0.5 of resolving as a crossover 
+		int counter=0;
+		NumRecomb = 0;
+		for (int i=0; i<Num_Chiasmata; i++){
+			u_rand = u_dist(mtgen);
+			if (u_rand < 0.50){
+				CO_array[counter] = chiasma_pos[i]/length;
+				counter   += 1;
+				NumRecomb += 1;
+			}
+		}
+	}
+}
+
+void simulhaplo(int* Genealogie, int* plProposant, int lNProposant, int* plAncetre, int lNAncetre,
+						int lSimul, double* probRecomb, double* Morgan_Len, int BP_len, int model, int convert,  
+						double* cm_map_FA, double* cm_map_MO, int* bp_map_FA, int* bp_map_MO, 
+						std::unordered_map<int,haplotype*> *hapRef, std::string WD, int write_all_node, int seed) 
+{
 
 	try{
 
@@ -209,7 +363,7 @@ void simulhaplo(int* Genealogie, int* plProposant, int lNProposant, int* plAncet
 		nom << NoeudAnc[i]->nom << ".1";
 		haplotype *tmp1 = new haplotype();//[1];
 		tmp1->hap  = nom.str();
-		tmp1->pos  = -1.0;
+		tmp1->pos  = -1;
 		tmp1->fixe = 1;
 		(*hapRef)[NoeudAnc[i]->clesHaplo_1] = tmp1;
 		
@@ -217,7 +371,7 @@ void simulhaplo(int* Genealogie, int* plProposant, int lNProposant, int* plAncet
 		nom << NoeudAnc[i]->nom << ".2";
 		haplotype *tmp2 = new haplotype();//[1];
 		tmp2->hap  = nom.str();
-		tmp2->pos  = -1.0;
+		tmp2->pos  = -1;
 		tmp2->fixe = 1;
 		(*hapRef)[NoeudAnc[i]->clesHaplo_2] = tmp2;
 
@@ -235,155 +389,253 @@ void simulhaplo(int* Genealogie, int* plProposant, int lNProposant, int* plAncet
 	for(i=0;i<lNAncetre;i++)		
 		StartSortPrioriteArbre(NoeudAnc[i],Ordre,&NOrdre,OrdreSaut); // les infos de NoeudAnc sont pointes par Ordre dans "le bon ordre".
 
-	//Simulation
-	for(int csimul=0;csimul<lSimul; csimul++)
-	{
-		int clesSim= cleFixe;
+	//create mersenne twister generator to use for random  distributions 
+	std::mt19937 my_rng = std::mt19937(seed);
+	//initialize crossover class
+	Crossovers crossovers;
+  
+	void (Crossovers::*SampleCO)(const int&, double*, double*, int&, std::mt19937&, double*);
+	
+	if 		(model==1) SampleCO=&Crossovers::Poisson_CO;
+	else if (model==2) SampleCO=&Crossovers::Poisson_ZT;
+	else if (model==3){
+		SampleCO=&Crossovers::Gamma_CO;
+		crossovers.init_gamma(probRecomb[0], probRecomb[1], Morgan_Len[0], Morgan_Len[1]);
+	}
 
-		for(int i=0;i<NOrdre;i++) {
+	void (*convert_dist)(int&, double*, const double&, const int&, int*, double*, int*); //(nbrecomb, CO_array, Morgan_len, bp_len, bp_map, cm_map, precision)
 
-			int nbRecomb1 = p1_dist(my_rng); //number of recombination events of father's chromosomes
-			int nbRecomb2 = p2_dist(my_rng); //number of recombination events of mother's chromosomes
+	if 		(convert == 0) convert_dist = &no_convert;  // no genetic/physical map is specified, then no need to scale wrt physical distance (assumed 1:1)
+	else if (convert == 1) convert_dist = &convert1; 	// genetic/physical map is specified
+	
+	double pHap1, pHap2;
+
+	double CO_arrayF[20]; //hold crossover positions for Father's chromosome
+	double CO_arrayM[20]; //hold crossover positions for Mother's chromsome
+
+	int BP_CO_arrayF[20]; //crossover positions in BP
+	int BP_CO_arrayM[20];
+
+	int nbRecomb1 =0;
+	int nbRecomb2 =0;
+	
+	std::uniform_real_distribution<> u_dist(0, 1);
+
+	//create output files
+	std::string stroutHaplo = WD + "/Proband_Haplotypes.txt";
+	std::ofstream outHaplo(stroutHaplo);
+	outHaplo << std::dec << std::fixed<< std::setprecision(0);
+	outHaplo 	<< lSimul << ";" << lNProposant << "\n";
+
+	if(write_all_node == 1){
+		std::string	stroutAllHaplo = WD + "/All_nodes_haplotypes.txt";
+		std::ofstream outAllHaplo(stroutAllHaplo);
+		outAllHaplo << lSimul << ";" << lNProposant << ";" << NOrdre << "\n";
+		outAllHaplo << std::dec << std::fixed<< std::setprecision(0);
+
+		for(int csimul=0;csimul<lSimul; csimul++)
+		{
+			int clesSim= cleFixe;
 			
-			NumRecomb[csimul] += nbRecomb1 + nbRecomb2;
-			NumMeioses[csimul] += 2;
+			for(int i=0;i<NOrdre;i++) {
+				//Simulate meiosis in the parents, store the location of crossovers (in genetic distance scaled to [0,1]) in CO_array.
+				(crossovers.*SampleCO)(1, probRecomb, Morgan_Len, nbRecomb1, my_rng, CO_arrayF);
+				(crossovers.*SampleCO)(2, probRecomb, Morgan_Len, nbRecomb2, my_rng, CO_arrayM);
 
-			double pHap;
+				//Now the locations of crossovers in CO_array will be converted to physical distance. 
+				convert_dist(nbRecomb1, CO_arrayF, Morgan_Len[0], BP_len, bp_map_FA ,cm_map_FA, BP_CO_arrayF);
+				convert_dist(nbRecomb2, CO_arrayM, Morgan_Len[1], BP_len, bp_map_MO ,cm_map_MO, BP_CO_arrayM);
 
-			outAllHaplo <<"{"<< csimul+1 <<";"<< Ordre[i]->nom <<";" ;
-			
-			if(Ordre[i]->pere != NULL){
-				outAllHaplo << nbRecomb1 <<",";
-				if(nbRecomb1 > 0){ //Recombination event in the father
-					double tailleTot[20];
-					pHap = u_dist(my_rng);
-					outAllHaplo << pHap;
+				pHap1 = u_dist(my_rng); 
+				makeRecombF(Ordre[i], hapRef, pHap1, nbRecomb1, BP_CO_arrayF, clesSim);
+				
+				pHap2 = u_dist(my_rng);
+				makeRecombM(Ordre[i], hapRef, pHap2, nbRecomb2, BP_CO_arrayM, clesSim);
 
-					for(int j=0;j<nbRecomb1;j++){
-						tailleTot[j] = u_dist(my_rng);
-						outAllHaplo << std::fixed << "," << double(round(tailleTot[j]*precision)/precision);
-					}
-					std::sort(tailleTot,tailleTot + nbRecomb1);
-					makeRecombF(Ordre[i], hapRef, pHap, nbRecomb1, tailleTot, clesSim);
-					outAllHaplo << ";";
-				}			
-				else{ //If no recombination just pass one of father's chromosomes down 
-					pHap = u_dist(my_rng);
-					outAllHaplo << pHap << ",0;";
-					if(pHap<0.50){
-						Ordre[i]->clesHaplo_1=Ordre[i]->pere->clesHaplo_1;
-					}
-					else{
-						Ordre[i]->clesHaplo_1=Ordre[i]->pere->clesHaplo_2;
-					}
-				}
-			}
-			else{
-				outAllHaplo << "0,0,0;" ;
-				Ordre[i]->clesHaplo_1 = 0;
-			}
-
-			if(Ordre[i]->mere != NULL){
-				outAllHaplo << nbRecomb2 << ",";
-				if(nbRecomb2 > 0){ //Recombination event in mother
-					double tailleTot[20];
-					pHap = u_dist(my_rng);
-					outAllHaplo << pHap;
-
-					for(int j=0;j<nbRecomb2;j++){
-						tailleTot[j] = u_dist(my_rng);
-						outAllHaplo << std::fixed << "," <<  double(round(tailleTot[j]*precision)/precision);
-					}
-					std::sort(tailleTot,tailleTot + nbRecomb2);
-					makeRecombM(Ordre[i], hapRef, pHap, nbRecomb2, tailleTot, clesSim);
-					outAllHaplo << "}";
-				}	
-				else{
-					pHap = u_dist(my_rng);
-					outAllHaplo << pHap << ",0}";
-					if(pHap<0.50){
-						Ordre[i]->clesHaplo_2=Ordre[i]->mere->clesHaplo_1;
-					}
-					else{
-						Ordre[i]->clesHaplo_2=Ordre[i]->mere->clesHaplo_2;
+				if (write_all_node == 1){
+					outAllHaplo <<"{"<< csimul+1 <<";"<< Ordre[i]->nom <<";" ;
+					
+					if(Ordre[i]->pere != NULL){
+						outAllHaplo << nbRecomb1 <<",";
+						if(nbRecomb1 > 0){ //Recombination event in the father
+							outAllHaplo << pHap1;
+							for(int j=0; j<nbRecomb1; j++){
+								outAllHaplo << "," << BP_CO_arrayF[j];
+							}
+							outAllHaplo << ";";
+						}
+						else{
+							outAllHaplo << pHap1 << ",0;";
+						}
 					}		
+					else{
+						outAllHaplo << "0,0,0;";
+					}		
+
+				
+					if(Ordre[i]->mere != NULL){
+						outAllHaplo << nbRecomb2 << ",";
+						if(nbRecomb2 > 0){ //Recombination event in mother
+							outAllHaplo << pHap2;
+							for(int j=0;j<nbRecomb2;j++){
+								outAllHaplo << "," <<  BP_CO_arrayM[j];
+							}
+							outAllHaplo << "}";
+						}	
+						else{
+							outAllHaplo << pHap2 << ",0}";
+						}
+					}
+					else{
+						outAllHaplo << "0,0,0}";
+					}
+
+					haplotype* tmp = (*hapRef).find(Ordre[i]->clesHaplo_1)->second;
+
+					int pos = tmp->pos;
+					if(pos == -1) pos = BP_len;
+
+					for( int h=0; h<2; h++ ) {
+						outAllHaplo << "{" << 0 << ";" << tmp->hap << ";" << pos ; 
+						while( tmp->next_segment != NULL) { 
+							tmp = tmp->next_segment;
+							pos = tmp->pos;
+							if(pos == -1) pos = BP_len;
+							outAllHaplo << ";" << tmp->hap << ";" <<  pos ;
+						}
+						
+						outAllHaplo << "}";
+						tmp = (*hapRef).find(Ordre[i]->clesHaplo_2)->second;
+						pos = tmp->pos;
+						if(pos == -1) pos = BP_len;
+					}	
+					outAllHaplo << "\n";
 				}
 			}
-			else{
-				outAllHaplo << "0,0,0}";
-				Ordre[i]->clesHaplo_2 = 0;
-			}			
-
-			std::stringstream hap;
-
-			haplotype* tmp = (*hapRef).find(Ordre[i]->clesHaplo_1)->second;
-			double pos = tmp->pos;
-			if(pos == -1.0) pos = 1;
-			for( int h=0; h<2; h++ ) {
-				hap <<std::fixed<< "{" << 0 << ";" << tmp->hap << ";" << double(round(pos*precision)/precision) ; // on normalise a 1 en divisant par taille_tot (*plus necessaire)
-				while( tmp->next_segment != NULL) { 
-					tmp = tmp->next_segment;
-					pos = tmp->pos;
-					if(pos == -1.0) pos = 1;
-					hap <<std::fixed<< ";" << tmp->hap << ";" <<  double(round(pos*precision)/precision) ;// on normalise a 1 en divisant par taille_tot (*plus necessaire)
-				}
-				
-				hap << "}";
-				tmp = (*hapRef).find(Ordre[i]->clesHaplo_2)->second;
-				pos = tmp->pos;
-				if(pos == -1.0) pos = 1;
-			}	
-			outAllHaplo << hap.str() << std::endl;
-
-		}
 		
-		for(i=0;i<lNProposant;i++){
-			std::stringstream hap;
-			haplotype* tmp = (*hapRef).find(NoeudPro[i]->clesHaplo_1)->second;
-			double pos = tmp->pos;
-			if(pos == -1.0) pos = 1;
-			for( int h=0; h<2; h++ ) {
-				hap <<std::fixed<< "{" << 0 << ";" << tmp->hap << ";" << double(round(pos*precision)/precision) ; // on normalise a 1 en divisant par taille_tot (*plus necessaire)
-				while( tmp->next_segment != NULL) { 
-					tmp = tmp->next_segment;
+
+			for(i=0;i<lNProposant;i++){
+				haplotype* tmp = (*hapRef).find(NoeudPro[i]->clesHaplo_1)->second;
+				double pos = tmp->pos;
+				if(pos == -1) pos = 1;
+
+				outHaplo <<"{"<< csimul+1 <<";"<< NoeudPro[i]->nom << ";0}";
+
+				for( int h=0; h<2; h++ ) {
+					outHaplo << "{" << 0 << ";" << tmp->hap << ";" << pos ; 
+			
+					while( tmp->next_segment != NULL) { 
+						tmp = tmp->next_segment;
+						pos = tmp->pos;
+						if(pos == -1) pos = BP_len;
+						outHaplo << ";" << tmp->hap << ";" <<  pos;
+					}
+					
+					outHaplo << "}";
+					tmp = (*hapRef).find(NoeudPro[i]->clesHaplo_2)->second;
 					pos = tmp->pos;
-					if(pos == -1.0) pos = 1;
-					hap <<std::fixed<< ";" << tmp->hap << ";" <<  double(round(pos*precision)/precision) ;// on normalise a 1 en divisant par taille_tot (*plus necessaire)
+					if(pos == -1) pos = BP_len;
 				}
-				
-				hap << "}";
-				tmp = (*hapRef).find(NoeudPro[i]->clesHaplo_2)->second;
-				pos = tmp->pos;
-				if(pos == -1.0) pos = 1;
+				outHaplo << "\n";
 			}
-			outHaplo <<"{"<< csimul+1 <<";"<< NoeudPro[i]->nom << ";" << 0 << "}"<< hap.str() << std::endl;
-		}
-		//delete haplotypes from memory before next iteration of simulation
-		for( int i=cleFixe; i<clesSim; i++) {
-			haplotype* tmp = (*hapRef).find(i)->second; //hapKey.second;
+			//delete haplotypes from memory before next iteration of simulation
+			for( int i=cleFixe; i<clesSim; i++) {
+				haplotype* tmp = (*hapRef).find(i)->second; //hapKey.second;
+				while(tmp->next_segment != NULL) {
+					haplotype* tmp_back = tmp;
+					tmp = tmp->next_segment;
+					delete tmp_back;
+				}
+				delete tmp;
+			}
+			
+		} // end of the for loop that goes through the # of simulations
+		
+		outHaplo.close();
+		if(write_all_node == 1) outAllHaplo.close();
+
+		for(int i=0; i<cleFixe; i++) {
+			haplotype* tmp = (*hapRef).find(i)->second;//hapKey.second;
 			while(tmp->next_segment != NULL) {
 				haplotype* tmp_back = tmp;
 				tmp = tmp->next_segment;
 				delete tmp_back;
 			}
-			delete tmp;
+		delete tmp;
 		}
-
-
-	} // end of the for loop that goes through the # of simulations
-	
-	outHaplo.close();
-	outAllHaplo.close();
-
-	for(int i=0; i<cleFixe; i++) {
-		haplotype* tmp = (*hapRef).find(i)->second;//hapKey.second;
-		while(tmp->next_segment != NULL) {
-			haplotype* tmp_back = tmp;
-			tmp = tmp->next_segment;
-			delete tmp_back;
-		}
-	delete tmp;
 	}
+
+	else{
+	//simulation loop
+		for(int csimul=0;csimul<lSimul; csimul++)
+		{
+			int clesSim= cleFixe;
+			
+			for(int i=0;i<NOrdre;i++) {
+				//Simulate meiosis in the parents, store the location of crossovers (in genetic distance scaled to [0,1]) in CO_array.
+				(crossovers.*SampleCO)(1, probRecomb, Morgan_Len, nbRecomb1, my_rng, CO_arrayF);
+				(crossovers.*SampleCO)(2, probRecomb, Morgan_Len, nbRecomb2, my_rng, CO_arrayM);
+
+				//Now the locations of crossovers in CO_array will be converted to physical distance. 
+				convert_dist(nbRecomb1, CO_arrayF, Morgan_Len[0], BP_len, bp_map_FA ,cm_map_FA, BP_CO_arrayF);
+				convert_dist(nbRecomb2, CO_arrayM, Morgan_Len[1], BP_len, bp_map_MO ,cm_map_MO, BP_CO_arrayM);
+
+				pHap1 = u_dist(my_rng); 
+				makeRecombF(Ordre[i], hapRef, pHap1, nbRecomb1, BP_CO_arrayF, clesSim);
+				
+				pHap2 = u_dist(my_rng);
+				makeRecombM(Ordre[i], hapRef, pHap2, nbRecomb2, BP_CO_arrayM, clesSim);
+			}
+
+			for(i=0;i<lNProposant;i++){
+				haplotype* tmp = (*hapRef).find(NoeudPro[i]->clesHaplo_1)->second;
+				double pos = tmp->pos;
+				if(pos == -1) pos = 1;
+
+				outHaplo <<"{"<< csimul+1 <<";"<< NoeudPro[i]->nom << ";0}";
+
+				for( int h=0; h<2; h++ ) {
+					outHaplo << "{" << 0 << ";" << tmp->hap << ";" << pos ; 
+			
+					while( tmp->next_segment != NULL) { 
+						tmp = tmp->next_segment;
+						pos = tmp->pos;
+						if(pos == -1) pos = BP_len;
+						outHaplo << ";" << tmp->hap << ";" <<  pos;
+					}
+					
+					outHaplo << "}";
+					tmp = (*hapRef).find(NoeudPro[i]->clesHaplo_2)->second;
+					pos = tmp->pos;
+					if(pos == -1) pos = BP_len;
+				}
+				outHaplo << "\n";
+			}
+			//delete haplotypes from memory before next iteration of simulation
+			for( int i=cleFixe; i<clesSim; i++) {
+				haplotype* tmp = (*hapRef).find(i)->second; //hapKey.second;
+				while(tmp->next_segment != NULL) {
+					haplotype* tmp_back = tmp;
+					tmp = tmp->next_segment;
+					delete tmp_back;
+				}
+				delete tmp;
+			}
+		}// end of the for loop that goes through the # of simulations
+		outHaplo.close();
+
+		for(int i=0; i<cleFixe; i++) {
+			haplotype* tmp = (*hapRef).find(i)->second;//hapKey.second;
+			while(tmp->next_segment != NULL) {
+				haplotype* tmp_back = tmp;
+				tmp = tmp->next_segment;
+				delete tmp_back;
+			}
+		delete tmp;
+		}
+	} 
+	
+
 	
 
  } catch(std::exception &ex) {
@@ -391,6 +643,190 @@ void simulhaplo(int* Genealogie, int* plProposant, int lNProposant, int* plAncet
  } catch(...){
  	::Rf_error("c++ exception (unknown reason)"); 
  } 
+}
+
+void no_convert(int& nbrecomb, double* CO_array, const double& Morgan_len, const int& bp_len, int* bp_map, double* cm_map, int* BP_array){
+	for(int k=0; k<nbrecomb; k++){
+		BP_array[k] = (int) (CO_array[k]*bp_len);
+		if (k>0){
+			if(BP_array[k]==BP_array[k-1]){
+				BP_array[k]=BP_array[k]+1;
+			}
+		}
+	}
+
+	//check if any recombinations are at same position, remove duplicate
+	// if(nbrecomb>1){
+	// 	double temp[20];
+	// 	int j = 0;
+	// 	temp[j++] = CO_array[0];
+	// 	for(int k=1; k<nbrecomb; k++){
+	// 		if(CO_array[k] != CO_array[k-1]){
+	// 				temp[j++] = CO_array[k];
+	// 		}
+	// 	}
+	// 	for (int k=0; k<j; k++){
+	// 		CO_array[k] = temp[k];
+	// 	}
+	// 	nbrecomb = j;		
+	// }
+}
+
+void convert1(int& nbrecomb, double* CO_array, const double& Morgan_len, const int& bp_len, int* bp_map, double* cm_map, int* BP_array){
+	for (int k=0; k<nbrecomb; k++){
+		double physical_distance;
+		double genetic_distance = CO_array[k]*Morgan_len*100;
+
+		int map_index = 0;
+		while(genetic_distance > cm_map[map_index]) map_index++;
+
+		physical_distance = bp_map[map_index-1]  + (bp_map[map_index] - bp_map[map_index-1])*(genetic_distance - cm_map[map_index-1])/(cm_map[map_index] - cm_map[map_index-1]);
+		BP_array[k] = (int)(physical_distance);
+
+		if (k>0){
+			if(BP_array[k]==BP_array[k-1]){
+				BP_array[k]=BP_array[k]+1;
+			}
+		}
+
+	}
+	
+	// double temp[20];
+	// int j = 0;
+	// if(nbrecomb>1){
+	// 	temp[j++] = CO_array[0];
+	// 	for(int k=1; k<nbrecomb; k++){
+	// 		if(CO_array[k] != CO_array[k-1]){
+	// 				temp[j++] = CO_array[k];
+	// 		}
+	// 	}
+	// 	for (int k=0; k<j; k++){
+	// 		CO_array[k] = temp[k];
+	// 	}
+	// 	nbrecomb = j;		
+	// }
+}
+
+//F for father, not female
+void makeRecombF( CIndSimul *Ordre_tmp, std::unordered_map<int, haplotype*> *hapRef, double probHap, int nbRecomb, int *posRecomb, int &cle )
+{
+    haplotype *perehap1, *perehap2;
+	if(Ordre_tmp->pere != NULL){
+		if (nbRecomb > 0){
+			if (probHap < 0.5){
+				perehap1=(*hapRef).find(Ordre_tmp->pere->clesHaplo_1)->second;
+				perehap2=(*hapRef).find(Ordre_tmp->pere->clesHaplo_2)->second;
+			} 
+			else{
+				perehap1=(*hapRef).find(Ordre_tmp->pere->clesHaplo_2)->second;
+				perehap2=(*hapRef).find(Ordre_tmp->pere->clesHaplo_1)->second;
+			}
+
+			haplotype *hapChild_1 = new haplotype();
+			haplotype *hapChild_deb1 = hapChild_1;
+			recombine(perehap1, perehap2, hapChild_deb1, nbRecomb, posRecomb);
+			Ordre_tmp->clesHaplo_1 = cle;
+			(*hapRef)[cle++] = hapChild_1;
+		}
+		else{ //If no recombination just pass one of father's chromosomes down 
+			if(probHap<0.50){
+				Ordre_tmp->clesHaplo_1=Ordre_tmp->pere->clesHaplo_1;
+			}
+			else{
+				Ordre_tmp->clesHaplo_1=Ordre_tmp->pere->clesHaplo_2;
+			}
+		}
+	}
+	else Ordre_tmp -> clesHaplo_1 = 0;
+}
+
+//M for mother, not male
+void makeRecombM( CIndSimul *Ordre_tmp, std::unordered_map<int, haplotype*> *hapRef, double probHap, int nbRecomb, int *posRecomb, int &cle )
+{
+    haplotype *merehap1, *merehap2;
+ 	if(Ordre_tmp->mere != NULL){
+		if (nbRecomb > 0){
+			if (probHap < 0.5){
+				merehap1=(*hapRef).find(Ordre_tmp->mere->clesHaplo_1)->second;
+				merehap2=(*hapRef).find(Ordre_tmp->mere->clesHaplo_2)->second;
+			} 
+			else{
+				merehap1=(*hapRef).find(Ordre_tmp->mere->clesHaplo_2)->second;
+				merehap2=(*hapRef).find(Ordre_tmp->mere->clesHaplo_1)->second;
+			}
+
+			haplotype *hapChild_2 = new haplotype();
+			haplotype *hapChild_deb2 = hapChild_2;
+			recombine(merehap1, merehap2, hapChild_deb2, nbRecomb, posRecomb);
+			Ordre_tmp->clesHaplo_2 = cle;
+			(*hapRef)[cle++] = hapChild_2;
+		}
+		else{ //If no recombination just pass one of mother's chromosomes down 
+			if(probHap<0.50){
+				Ordre_tmp->clesHaplo_2=Ordre_tmp->mere->clesHaplo_1;
+			}
+			else{
+				Ordre_tmp->clesHaplo_2=Ordre_tmp->mere->clesHaplo_2;
+			}
+		}
+	}
+	else Ordre_tmp -> clesHaplo_2 = 0;
+			
+}
+
+
+void recombine(haplotype* hapBegin, haplotype* hapEnd, haplotype* hapChild, int nbRecomb, int* posRecomb)
+{
+	haplotype* hap_active = hapBegin;
+
+	for (int i=0; i < nbRecomb; i++){
+		
+		int position = posRecomb[i];
+		// de 0 a posRecomb on prend hapBegin
+		while(position > hap_active->pos && hap_active->pos != -1) {
+			(*hapChild).hap          = hap_active->hap;
+			(*hapChild).pos          = hap_active->pos;
+			(*hapChild).fixe         = 0;
+			(*hapChild).next_segment = new haplotype();//[1];
+			hapChild                 = hapChild->next_segment;
+			hap_active               = hap_active->next_segment;
+		}
+
+		// on ajoute la recomb pour hapChild
+		(*hapChild).hap          = hap_active->hap;
+		(*hapChild).pos          = position;
+		(*hapChild).fixe         = 0;
+
+		if(i%2 == 0){
+			hap_active = hapEnd;
+		}
+		else hap_active = hapBegin;
+
+		// on met le pointeur de hapEnd a la bonne place.
+		while(position >= hap_active->pos && hap_active->pos != -1) hap_active = hap_active->next_segment;
+
+		// on verifie que l'haplotype qui suit n'est pas le meme. Si oui, on met la nouvelle position.
+		if(hap_active->hap == hapChild->hap){
+			(*hapChild).pos          = hap_active->pos;
+		}
+		else{
+			(*hapChild).next_segment = new haplotype();//[1];
+			hapChild                 = hapChild->next_segment;
+			(*hapChild).hap          = hap_active->hap;
+			(*hapChild).pos          = hap_active->pos;
+			(*hapChild).fixe         = 0;
+		}
+	}
+
+	while(hap_active->pos != -1) {
+		hap_active               = hap_active->next_segment;
+		(*hapChild).next_segment = new haplotype();//[1]; 
+		hapChild                 = hapChild->next_segment;
+		(*hapChild).hap          = hap_active->hap;
+		(*hapChild).pos          = hap_active->pos;
+		(*hapChild).fixe         = 0;
+	}
+
 }
 
 // int getNumberRec(double* probRecomb, int sex, int seed)
@@ -498,260 +934,199 @@ void simulhaplo(int* Genealogie, int* plProposant, int lNProposant, int* plAncet
   
 // }
 
-void makeRecombF( CIndSimul *Ordre_tmp, std::unordered_map<int, haplotype*> *hapRef, double probHap, int nbRecomb, double *posRecomb, int &cle )
-{
+// These commented out functions: reconstruct, readSNPpos, ancestralseq, were for converting the results of simulhaplo into sequence data.
+// This funcitonality is removed for now, we just provide the perl script to do the same thing. 
 
-    haplotype *perehap1, *perehap2;
+// bool reconstruct(std::string WD, const std::string &simufilename,const std::string &hapfilename, const std::string &SNPposfilename,const int &BPsize){
 
-	if (probHap < 0.5){
-		perehap1=(*hapRef).find(Ordre_tmp->pere->clesHaplo_1)->second;
-		perehap2=(*hapRef).find(Ordre_tmp->pere->clesHaplo_2)->second;
-	} 
-	else{
-		perehap1=(*hapRef).find(Ordre_tmp->pere->clesHaplo_2)->second;
-		perehap2=(*hapRef).find(Ordre_tmp->pere->clesHaplo_1)->second;
-	}
+// 	try{
 
-    haplotype *hapChild_1 = new haplotype();
-    haplotype *hapChild_deb1 = hapChild_1;
-    recombine(perehap1, perehap2, hapChild_deb1, nbRecomb, posRecomb);
-    Ordre_tmp->clesHaplo_1 = cle;
-    (*hapRef)[cle++] = hapChild_1;
-}
+//     std::ifstream in (simufilename.c_str());
+//     if(!in)
+//     {
+//         Rcpp::stop ("Cannot open the proband_haplotypes file ");
+//     }
 
+// 	WD += "/reconstructed_haplotypes.txt";
+//     std::ofstream reconstructed(WD.c_str());
+//     if(!reconstructed.is_open()){
+//         Rcpp::stop("Can't open output file to write to. Check permissions of output directory");
+//     }
 
-void makeRecombM( CIndSimul *Ordre_tmp, std::unordered_map<int, haplotype*> *hapRef, double probHap, int nbRecomb, double *posRecomb, int &cle )
-{
-    haplotype *merehap1, *merehap2;
- 
-	if (probHap < 0.5){
-		merehap1=(*hapRef).find(Ordre_tmp->mere->clesHaplo_1)->second;
-		merehap2=(*hapRef).find(Ordre_tmp->mere->clesHaplo_2)->second;
-	} 
-	else{
-		merehap1=(*hapRef).find(Ordre_tmp->mere->clesHaplo_2)->second;
-		merehap2=(*hapRef).find(Ordre_tmp->mere->clesHaplo_1)->second;
-	}
+//     std::vector<int> SNPpos = readSNPpos(SNPposfilename);
+//     int numSNPs = SNPpos.size();
 
-    haplotype *hapChild_2 = new haplotype();
-    haplotype *hapChild_deb2 = hapChild_2;
-    recombine(merehap1, merehap2, hapChild_deb2, nbRecomb, posRecomb);
-    Ordre_tmp->clesHaplo_2 = cle;
-    (*hapRef)[cle++] = hapChild_2;
-}
+//     std::unordered_map <float, std::string> haploseqs;
+//     ancestralseq(hapfilename, haploseqs);
 
-void recombine(haplotype* hapBegin, haplotype* hapEnd, haplotype* hapChild, int nbRecomb, double* posRecomb )
-{
-	haplotype* hap_active = hapBegin;
-
-	for (int i=0; i < nbRecomb; i++){
-		
-		double position = posRecomb[i];
-		// de 0 a posRecomb on prend hapBegin
-		while(position > hap_active->pos && hap_active->pos != -1) {
-			(*hapChild).hap          = hap_active->hap;
-			(*hapChild).pos          = hap_active->pos;
-			(*hapChild).fixe         = 0;
-			(*hapChild).next_segment = new haplotype();//[1];
-			hapChild                 = hapChild->next_segment;
-			hap_active               = hap_active->next_segment;
-		}
-
-		// on ajoute la recomb pour hapChild
-		(*hapChild).hap          = hap_active->hap;
-		(*hapChild).pos          = position;
-		(*hapChild).fixe         = 0;
-
-		if(i%2 == 0){
-			hap_active = hapEnd;
-		}
-		else hap_active = hapBegin;
-
-		// on met le pointeur de hapEnd a la bonne place.
-		while(position > hap_active->pos && hap_active->pos != -1) hap_active = hap_active->next_segment;
-
-		// on verifie que l'haplotype qui suit n'est pas le meme. Si oui, on met la nouvelle position.
-		if(hap_active->hap == hapChild->hap){
-			(*hapChild).pos          = hap_active->pos;
-		}
-		else{
-			(*hapChild).next_segment = new haplotype();//[1];
-			hapChild                 = hapChild->next_segment;
-			(*hapChild).hap          = hap_active->hap;
-			(*hapChild).pos          = hap_active->pos;
-			(*hapChild).fixe         = 0;
-		}
-	}
-
-	while(hap_active->pos != -1.0) {
-		hap_active               = hap_active->next_segment;
-		(*hapChild).next_segment = new haplotype();//[1]; 
-		hapChild                 = hapChild->next_segment;
-		(*hapChild).hap          = hap_active->hap;
-		(*hapChild).pos          = hap_active->pos;
-		(*hapChild).fixe         = 0;
-	}
-
-}
-
-
-bool reconstruct(std::string WD, const std::string &simufilename,const std::string &hapfilename, const std::string &SNPposfilename,const int &BPsize){
-
-	try{
-
-    std::ifstream in (simufilename.c_str());
-    if(!in)
-    {
-        Rcpp::stop ("Cannot open the proband_haplotypes file ");
-    }
-
-	WD += "/reconstructed_haplotypes.txt";
-    std::ofstream reconstructed(WD.c_str());
-    if(!reconstructed.is_open()){
-        Rcpp::stop("Can't open output file to write to. Check permissions of output directory");
-    }
-
-    std::vector<int> SNPpos = readSNPpos(SNPposfilename);
-    int numSNPs = SNPpos.size();
-
-    std::unordered_map <float, std::string> haploseqs;
-    ancestralseq(hapfilename, haploseqs);
-
-    std::string line;
-    std::getline(in,line); //waste first line
-    while (std::getline(in, line))
-    {
-        std::size_t tokenPos, tokenPos1; 
-        tokenPos=line.find(";");
-        tokenPos1=line.find(";", tokenPos+1);
-        reconstructed << line.substr(1,tokenPos-1) << " " << line.substr(tokenPos+1,tokenPos1-tokenPos-1) << " ";
+//     std::string line;
+//     std::getline(in,line); //waste first line
+//     while (std::getline(in, line))
+//     {
+//         std::size_t tokenPos, tokenPos1; 
+//         tokenPos=line.find(";");
+//         tokenPos1=line.find(";", tokenPos+1);
+//         reconstructed << line.substr(1,tokenPos-1) << " " << line.substr(tokenPos+1,tokenPos1-tokenPos-1) << " ";
 
         
-        tokenPos= line.find("}");   
-        tokenPos1= line.find("}",tokenPos+1);
-        std::string hap1(line.substr(tokenPos+2,tokenPos1-tokenPos-2));
-        tokenPos=line.find("}",tokenPos1+1);
-        std::string hap2(line.substr(tokenPos1+2,tokenPos-tokenPos1-2));
-        //reconstructing haplotype1
-        tokenPos=hap1.find(";");
-        tokenPos1=hap1.find(";",tokenPos+1);
+//         tokenPos= line.find("}");   
+//         tokenPos1= line.find("}",tokenPos+1);
+//         std::string hap1(line.substr(tokenPos+2,tokenPos1-tokenPos-2));
+//         tokenPos=line.find("}",tokenPos1+1);
+//         std::string hap2(line.substr(tokenPos1+2,tokenPos-tokenPos1-2));
+//         //reconstructing haplotype1
+//         tokenPos=hap1.find(";");
+//         tokenPos1=hap1.find(";",tokenPos+1);
 
-        int SNPpos_ind =0; 
-        float ancID;
-        int seg_end =0;
+//         int SNPpos_ind =0; 
+//         float ancID;
+//         int seg_end =0;
 
-        ancID = std::stof(hap1.substr(tokenPos+1,tokenPos1-tokenPos-1));
-        tokenPos1 = hap1.find(";", tokenPos1 +1);
+//         ancID = std::stof(hap1.substr(tokenPos+1,tokenPos1-tokenPos-1));
+//         tokenPos1 = hap1.find(";", tokenPos1 +1);
 
-        while (tokenPos1 != std::string::npos){
-            tokenPos = hap1.find(";",tokenPos+1);
-            seg_end = std::stof(hap1.substr(tokenPos+1,tokenPos1-tokenPos-1))*BPsize;
-            tokenPos1=hap1.find(";",tokenPos1+1);
+//         while (tokenPos1 != std::string::npos){
+//             tokenPos = hap1.find(";",tokenPos+1);
+//             seg_end = std::stof(hap1.substr(tokenPos+1,tokenPos1-tokenPos-1))*BPsize;
+//             tokenPos1=hap1.find(";",tokenPos1+1);
 
-            while(SNPpos[SNPpos_ind]<seg_end && SNPpos_ind < numSNPs){
-                reconstructed << haploseqs[ancID].at(SNPpos_ind);
-                SNPpos_ind++;
-            }
-            tokenPos = hap1.find(";", tokenPos +1);
-            ancID = std::stof(hap1.substr(tokenPos+1,tokenPos1-tokenPos-1));
-            tokenPos1 = hap1.find(";", tokenPos1+1);
-        }
+//             while(SNPpos[SNPpos_ind]<seg_end && SNPpos_ind < numSNPs){
+//                 reconstructed << haploseqs[ancID].at(SNPpos_ind);
+//                 SNPpos_ind++;
+//             }
+//             tokenPos = hap1.find(";", tokenPos +1);
+//             ancID = std::stof(hap1.substr(tokenPos+1,tokenPos1-tokenPos-1));
+//             tokenPos1 = hap1.find(";", tokenPos1+1);
+//         }
         
-        if (seg_end == 0){
-            reconstructed << haploseqs[ancID] << std::endl;
-        }
-        else{
-            reconstructed << haploseqs[ancID].substr(SNPpos_ind, std::string::npos) <<std::endl;
-        } 
+//         if (seg_end == 0){
+//             reconstructed << haploseqs[ancID] << std::endl;
+//         }
+//         else{
+//             reconstructed << haploseqs[ancID].substr(SNPpos_ind, std::string::npos) <<std::endl;
+//         } 
         
-        //reconstructing haplotype2
-        tokenPos=line.find(";");
-        tokenPos1=line.find(";", tokenPos+1);
-        reconstructed << line.substr(1,tokenPos-1) << " " << line.substr(tokenPos+1,tokenPos1-tokenPos-1) << " ";
+//         //reconstructing haplotype2
+//         tokenPos=line.find(";");
+//         tokenPos1=line.find(";", tokenPos+1);
+//         reconstructed << line.substr(1,tokenPos-1) << " " << line.substr(tokenPos+1,tokenPos1-tokenPos-1) << " ";
 
-        tokenPos=hap2.find(";");
-        tokenPos1=hap2.find(";",tokenPos+1);
+//         tokenPos=hap2.find(";");
+//         tokenPos1=hap2.find(";",tokenPos+1);
 
-        SNPpos_ind =0; 
-        seg_end =0;
+//         SNPpos_ind =0; 
+//         seg_end =0;
 
-        ancID = std::stof(hap2.substr(tokenPos+1,tokenPos1-tokenPos-1));
-        tokenPos1 = hap2.find(";", tokenPos1 +1);
+//         ancID = std::stof(hap2.substr(tokenPos+1,tokenPos1-tokenPos-1));
+//         tokenPos1 = hap2.find(";", tokenPos1 +1);
         
-        while (tokenPos1 != std::string::npos){
-            tokenPos = hap2.find(";",tokenPos+1);
-            seg_end = std::stof(hap2.substr(tokenPos+1,tokenPos1-tokenPos-1))*BPsize;
-            tokenPos1=hap2.find(";",tokenPos1+1);
+//         while (tokenPos1 != std::string::npos){
+//             tokenPos = hap2.find(";",tokenPos+1);
+//             seg_end = std::stof(hap2.substr(tokenPos+1,tokenPos1-tokenPos-1))*BPsize;
+//             tokenPos1=hap2.find(";",tokenPos1+1);
 
-            while(SNPpos[ SNPpos_ind]<seg_end && SNPpos_ind < numSNPs){
-                reconstructed << haploseqs[ancID].at(SNPpos_ind);
-                SNPpos_ind++;
-            }
+//             while(SNPpos[ SNPpos_ind]<seg_end && SNPpos_ind < numSNPs){
+//                 reconstructed << haploseqs[ancID].at(SNPpos_ind);
+//                 SNPpos_ind++;
+//             }
 
-            tokenPos = hap2.find(";", tokenPos +1);
-            ancID = std::stof(hap2.substr(tokenPos+1,tokenPos1-tokenPos-1));
-            tokenPos1 = hap2.find(";", tokenPos1+1);
-        }
+//             tokenPos = hap2.find(";", tokenPos +1);
+//             ancID = std::stof(hap2.substr(tokenPos+1,tokenPos1-tokenPos-1));
+//             tokenPos1 = hap2.find(";", tokenPos1+1);
+//         }
         
-        if (seg_end == 0){
-            reconstructed << haploseqs[ancID] << std::endl;
-        }
-        else{
-            reconstructed << haploseqs[ancID].substr(SNPpos_ind, std::string::npos) << std::endl;
-        } 
-    }
+//         if (seg_end == 0){
+//             reconstructed << haploseqs[ancID] << std::endl;
+//         }
+//         else{
+//             reconstructed << haploseqs[ancID].substr(SNPpos_ind, std::string::npos) << std::endl;
+//         } 
+//     }
     
 
-    in.close();
-    reconstructed.close();
-    return true;
+//     in.close();
+//     reconstructed.close();
+//     return true;
 
-	} catch(std::exception &ex) {
- 	forward_exception_to_r(ex);
- 	} catch(...){
- 	::Rf_error("c++ exception (unknown reason)"); 
- 	}
-	return false; 
-}
+// 	} catch(std::exception &ex) {
+//  	forward_exception_to_r(ex);
+//  	} catch(...){
+//  	::Rf_error("c++ exception (unknown reason)"); 
+//  	}
+// 	return false; 
+// }
 
-bool ancestralseq(const std::string &fileName, std::unordered_map<float, std::string> &haploseqs)
-{
-    std::ifstream in(fileName.c_str());
+// bool ancestralseq(const std::string &fileName, std::unordered_map<float, std::string> &haploseqs)
+// {
+//     std::ifstream in(fileName.c_str());
 
-    if(!in)
-    {
-        Rcpp::stop("Cannot open the hapfile");
-        return false;
-    }
+//     if(!in)
+//     {
+//         Rcpp::stop("Cannot open the hapfile");
+//         return false;
+//     }
 
-    float anc_id;
-    std::string anc_haplo;
+//     float anc_id;
+//     std::string anc_haplo;
 
-    while (in>>anc_id>>anc_haplo)
-    {
-        haploseqs[anc_id]=anc_haplo;
-    }
+//     while (in>>anc_id>>anc_haplo)
+//     {
+//         haploseqs[anc_id]=anc_haplo;
+//     }
 
-    in.close();
-    return true;
-}
+//     in.close();
+//     return true;
+// }
 
-std::vector<int> readSNPpos(const std::string &fileName){
+// std::vector<int> readSNPpos(const std::string &fileName){
     
-	std::ifstream in(fileName.c_str());
+// 	std::ifstream in(fileName.c_str());
     
-    if(!in)
-    {
-        Rcpp::stop("Cannot open the mapfile");
-    }
+//     if(!in)
+//     {
+//         Rcpp::stop("Cannot open the mapfile");
+//     }
 
-    std::vector<int> vec(std::istream_iterator<int>(in), {});
+//     std::vector<int> vec(std::istream_iterator<int>(in), {});
 
-    in.close();
-    return vec;
-}
+//     in.close();
+//     return vec;
+// }
 
+/*! 
+	\brief Execute une simulation pour determiner les probabilites du passage d'un allele a une serie de proposant
 
+	Calcule les probabilite qu'un proposants recoivent 0,1-2,2 allele a partir d'un groupe d'ancetre
+	Calcule la probabilite conjointe que chaque proposant soit atteint
+	Calcule la probatilite que de un..n proposant soit atteint
+	Calcule la probabilie que chaque proposant soit atteint
+
+	\param Genealogie	[in] Une genealogie construite � l'aide de gen.genealogie 
+
+	\param plProposant	[in] Vecteur des no de proposant � �tudier
+	\param plProEtat    [in] vecteur de taille lNProposant et representant l'etat a considerer pour chaque proposant
+			<br>&nbsp; &nbsp;&nbsp; &nbsp;0: La condition est remplie si se proposant n'est pas malade 
+			<br>&nbsp; &nbsp;&nbsp; &nbsp;1: La condition est remplie si le proposant recois 1-2 allele 
+			<br>&nbsp; &nbsp;&nbsp; &nbsp;2: La condition est remplie si le proposant recois 2 allele 
+	\param lNProposant	[in] Nombre d'�l�ment du vecteur proposant
+  
+	\param plAncetre	[in] Vecteur des no des ancetres correspondant proposant � �tudier
+	\param plAncEtat	[in] Vecteur de taille plAncetre representant le nombre d'allele atteint pour chaque Ancetre (0,1,2) 
+	\param lNAncetre	[in] Nombre d'�l�ment du vecteur ancetre
+
+	\param lSimul		[in] Nombre de simulation a effectuer
+
+	\retval pdRetConj	[out] Un pointeur vers un double. 
+					En cas de succes, le double represente la probabilite conjointe que la condition de chaque proposant soit remplis. 
+	\retval pdRetSimul	[out] Un pointeur vers une vecteur de taille lNProposant.. 
+					En cas de succes, Probabilite que la condition de chaque proposant soit remplis
+	\retval pdRetProp	[out] Un pointeur vers une vecteur de taille lNProposant+1.
+					En cas de succes represente la probabilite que 0,1,2..n condition soit remplis
+									
+	\param printprogress [in] imprime un message indiquant les progress accomplies
+
+	\return 0 si la fonction est execut� avec succ�s 
+*/ 
 int simul(int* Genealogie, int* plProposant, int* plProEtat,int lNProposant, int* plAncetre, int* plAncEtat, int lNAncetre,
 		int lSimul, double* pdRetConj, double* pdRetSimul, double* pdRetProp, double* probRecomb, double probSurvieHomo,
 		int printprogress)

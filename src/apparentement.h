@@ -39,25 +39,32 @@ public:
 	Kinship4Struct();	
 	Kinship4Struct(short NiveauMax, double* resultat); //Resultat tableau de taille NiveauMax+1		
 	void Initialise(short NiveauMax, double* Resultat);
-	static void InitMT();
-	static void ReleaseMT();
-	inline void remplace(double* resultat) {PileCosan.pop();PileCosan.push(resultat);} 
+
+	#ifndef __APPLE__
+		static void InitMT();
+		static void ReleaseMT();
+		inline void remplace(double* resultat) {PileCosan.pop();PileCosan.push(resultat);} 
+		
+	#endif
 	
-    //FONCTION AMIS
+	//FONCTION AMIS
 	friend void FASTCALL Kinship4(CIndSimul* Ind1, CIndSimul* Ind2, short ttl1, short ttl2,Kinship4Struct &T);
+	
+	#ifndef __APPLE__
 	friend void FASTCALL Kinship4MT(CIndSimul* Ind1, CIndSimul* Ind2, short ttl1, short ttl2,Kinship4Struct &T);	
+	#endif
 };
 
 int Phis(int* Genealogie, int* proposant, int NProposant,int NiveauMin,int NiveauMax, double* pdMoyenne,double *MatrixArray, int printprogress);
 int PhisMT(int* Genealogie, int* proposant, int NProposant,int NiveauMin,int NiveauMax, double* pdMoyenne,double *MatrixArray, int printprogress);
 
-
 double FASTCALL Kinship(CIndSimul* Ind1,CIndSimul* Ind2,short ttl1,short ttl2);
 void FASTCALL Kinship4(CIndSimul* Ind1, CIndSimul* Ind2, short ttl1, short ttl2,Kinship4Struct &T);
-void FASTCALL Kinship4MT(CIndSimul* Ind1, CIndSimul* Ind2, short ttl1, short ttl2,Kinship4Struct &T);
-		
+
+#ifndef __APPLE__
+	void FASTCALL Kinship4MT(CIndSimul* Ind1, CIndSimul* Ind2, short ttl1, short ttl2,Kinship4Struct &T);
 #endif
 
-
+#endif
 
 

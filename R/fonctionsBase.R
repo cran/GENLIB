@@ -549,7 +549,7 @@ gen.f = function(gen, pro, depthmin= (gen.depth(gen)-1), depthmax= (gen.depth(ge
 
 gen.genealogy = function(ped, autoComplete=FALSE, ...)#, check = 1)
 {
-	if(class(ped) != "GLgen") {
+	if(!(is(ped, "GLgen"))) {
 	 if(dim(ped)[2]==4 && sum(colnames(ped)==c("X1","X2","X3","X4"))==4) {
 	  print("No column names given. Assuming <ind>, <father>, <mother> and <sex>")
 	  colnames(ped) <- c("ind", "father", "mother", "sex")

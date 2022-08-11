@@ -12,33 +12,33 @@ struct maclasse : public CMtGlobalMessage
 
 };
 
-//Classe contenant les éléments nécessaire a l'appel d'une fonction de calcul
-ainsi que le retour des résultats
+//Classe contenant les ï¿½lï¿½ments nï¿½cessaire a l'appel d'une fonction de calcul
+ainsi que le retour des rï¿½sultats
 
 BASEMT_CREATE_GLOBALMESSAGE(maclasse,1)
 
 //DANS LA FONCTION DE CALCUL 
 	//Initialisation du multithread
 	BASEMT_DEBUTBOUCLE_INITMESSAGE(1) 
-		//utiliser BASEMT_MESSAGE(1) pour accédé a l'intance maclasse courante
+		//utiliser BASEMT_MESSAGE(1) pour accï¿½dï¿½ a l'intance maclasse courante
 	BASEMT_FINBOUCLE_INITMESSAGE(1)
 
 	//Dans la boucle de service
 		BASEMT_DEBUT_REQUETE(1) 
-			//utiliser BASEMT_MESSAGE(1) pour accédé a l'intance maclasse courante
+			//utiliser BASEMT_MESSAGE(1) pour accï¿½dï¿½ a l'intance maclasse courante
 			//sauvegarde la solution courante si valide
 			//Attribut un nouveau calcul
 		BASEMT_FIN_REQUETE(1)
 
 	BASEMT_DEBUT_FERMETURE(1)
-	  //utiliser BASEMT_MESSAGE(1) pour accédé a l'intance maclasse courante
-		//sauvegarde le résultat du dernier calcul
+	  //utiliser BASEMT_MESSAGE(1) pour accï¿½dï¿½ a l'intance maclasse courante
+		//sauvegarde le rï¿½sultat du dernier calcul
 	BASEMT_FIN_FERMETURE(1)
 
 //POUR CREER LA FONCTION HELPER
 	BASEMT_DEBUT_HELPERFCT(maclasse,1)
 		//utiliser BASEMT_HLPMES pour accede a l'intance ma classe actuel
-		//Lance le calcul et recupere le résultat
+		//Lance le calcul et recupere le rï¿½sultat
 	BASEMT_FIN_HELPERFCT() \
 */
 
@@ -62,7 +62,7 @@ struct CMtGlobalMessage
   CSema *sm;		//Semaphone pour la demande de resource au parent
 };
 
-
+#ifndef __APPLE__
 #define BASEMT_CREATE_GLOBALMESSAGE(NomClasseDerive,IdInstance)  \
 	static NomClasseDerive g_Message##IdInstance[MAXPROCESSOR];\
 	static CSema g_smMustGo##IdInstance; \
@@ -71,7 +71,7 @@ struct CMtGlobalMessage
 
 
 #define BASEMT_DEBUTBOUCLE_INITMESSAGE(IdInstance) \
-	/*Calcul du nombre de processus à utilisé*/ \
+	/*Calcul du nombre de processus ï¿½ utilisï¿½*/ \
 	int BASEMTThreadCount = processorCount(); /*4;*/\
 	if (BASEMTThreadCount>MAXPROCESSOR)\
 		BASEMTThreadCount = MAXPROCESSOR;\
@@ -106,7 +106,7 @@ struct CMtGlobalMessage
 			  {	
 
 #define BASEMT_FIN_REQUETE(IdInstance) \
-				/*redémarrage du thread*/\
+				/*redï¿½marrage du thread*/\
 				g_Message##IdInstance[i].control=PM_GO;\
 				goNextBoucle = i;\
 				CSema_post(g_Message##IdInstance[i].mtArret);\
@@ -185,4 +185,4 @@ struct CMtGlobalMessage
 	} /*fin fct*/
 
 #endif
-
+#endif

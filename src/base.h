@@ -275,9 +275,9 @@ struct CIndSimul
 struct haplotype
 {
 	std::string hap;  // the original haplotype that makes up the segment.
-	double pos;  // the relative position (> 0 and <1) where the segment represented by hap ends.
+	int pos;  // BP position where the segment represented by hap ends.
 	int fixe;    // determine if we should keep this haplo between each simulation.
-	haplotype* next_segment; // if not defined -> pos = 1.
+	haplotype* next_segment; // if not defined -> pos = BP_len.
 };
 
 ///Liste de Noeud. Utilise pour les enfants d un individu (CIndSimul)
