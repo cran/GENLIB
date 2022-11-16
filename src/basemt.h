@@ -12,33 +12,33 @@ struct maclasse : public CMtGlobalMessage
 
 };
 
-//Classe contenant les �l�ments n�cessaire a l'appel d'une fonction de calcul
-ainsi que le retour des r�sultats
+//Classe contenant les lments ncessaire a l'appel d'une fonction de calcul
+ainsi que le retour des rsultats
 
 BASEMT_CREATE_GLOBALMESSAGE(maclasse,1)
 
 //DANS LA FONCTION DE CALCUL 
 	//Initialisation du multithread
 	BASEMT_DEBUTBOUCLE_INITMESSAGE(1) 
-		//utiliser BASEMT_MESSAGE(1) pour acc�d� a l'intance maclasse courante
+		//utiliser BASEMT_MESSAGE(1) pour accd a l'intance maclasse courante
 	BASEMT_FINBOUCLE_INITMESSAGE(1)
 
 	//Dans la boucle de service
 		BASEMT_DEBUT_REQUETE(1) 
-			//utiliser BASEMT_MESSAGE(1) pour acc�d� a l'intance maclasse courante
+			//utiliser BASEMT_MESSAGE(1) pour accd a l'intance maclasse courante
 			//sauvegarde la solution courante si valide
 			//Attribut un nouveau calcul
 		BASEMT_FIN_REQUETE(1)
 
 	BASEMT_DEBUT_FERMETURE(1)
-	  //utiliser BASEMT_MESSAGE(1) pour acc�d� a l'intance maclasse courante
-		//sauvegarde le r�sultat du dernier calcul
+	  //utiliser BASEMT_MESSAGE(1) pour accd a l'intance maclasse courante
+		//sauvegarde le rsultat du dernier calcul
 	BASEMT_FIN_FERMETURE(1)
 
 //POUR CREER LA FONCTION HELPER
 	BASEMT_DEBUT_HELPERFCT(maclasse,1)
 		//utiliser BASEMT_HLPMES pour accede a l'intance ma classe actuel
-		//Lance le calcul et recupere le r�sultat
+		//Lance le calcul et recupere le rsultat
 	BASEMT_FIN_HELPERFCT() \
 */
 
@@ -71,7 +71,7 @@ struct CMtGlobalMessage
 
 
 #define BASEMT_DEBUTBOUCLE_INITMESSAGE(IdInstance) \
-	/*Calcul du nombre de processus � utilis�*/ \
+	/*Calcul du nombre de processus  utilis*/ \
 	int BASEMTThreadCount = processorCount(); /*4;*/\
 	if (BASEMTThreadCount>MAXPROCESSOR)\
 		BASEMTThreadCount = MAXPROCESSOR;\
@@ -106,7 +106,7 @@ struct CMtGlobalMessage
 			  {	
 
 #define BASEMT_FIN_REQUETE(IdInstance) \
-				/*red�marrage du thread*/\
+				/*redmarrage du thread*/\
 				g_Message##IdInstance[i].control=PM_GO;\
 				goNextBoucle = i;\
 				CSema_post(g_Message##IdInstance[i].mtArret);\

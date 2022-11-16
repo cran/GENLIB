@@ -2,10 +2,10 @@
 \brief Implementation toutes les fonctions d'interface de Splus
 
 	C'est dans ce fichier que sont placer toutes les interfaces pour Splus.
-	Seulement les fonctions d'ici sont caller � partir des wrappers des .ssc
+	Seulement les fonctions d'ici sont caller  partir des wrappers des .ssc
 
-\author S�bastien Leclerc
-\contributor Jean-Fran�ois Lefebvre
+\author Sbastien Leclerc
+\contributor Jean-Franois Lefebvre
 */
 
 #include "base.h"
@@ -911,7 +911,7 @@ RcppExport SEXP SPLUSCoeffApparentement(SEXP sGenealogie, SEXP sproposant, SEXP 
 
 
 /*! 
-	\brief SPLUSCALL: Creer une genealogie binaire � l'aide d'une genealogie de forme classique No Ind, No Pere, No Mere
+	\brief SPLUSCALL: Creer une genealogie binaire  l'aide d'une genealogie de forme classique No Ind, No Pere, No Mere
 
      Cette fonction est une interface SPLUS de la fonction CreerGenealogie()
 	
@@ -1011,7 +1011,7 @@ RcppExport SEXP SPLUSCALLCreerObjetGenealogie(SEXP SIndividu,SEXP SPere, SEXP SM
 
 	La fonction Extrait la genealogie et retourne 3 vecteur soit le No Individu, le No du pere et le No de la Mere.
 	
-	\param genealogie	[in] Une genealogie construite � l'aide de gen.genealogie 
+	\param genealogie	[in] Une genealogie construite  l'aide de gen.genealogie 
 
 	\retval plRetIndividu [out] Vecteur de taille LengthGenealogie
 								En cas de succes contient les No d'individus
@@ -1064,7 +1064,7 @@ RcppExport SEXP SPLUSOutgen(SEXP Rgenealogie, SEXP RplRetIndividu, SEXP RplRetPe
 		if (havesex)				plRetSexe[i]=Noeud[i].sex;
 		else						plRetSexe[i]=-1; //Pas utilisable
 	}
-	//Trie si n�cessaire
+	//Trie si ncessaire
 	if (*mustsort)
 		SortGenealogie3Vecteur(plRetIndividu,plRetPere,plRetMere,plRetSexe,lNIndividu);
 	STOPTIMER;
@@ -1081,7 +1081,7 @@ RcppExport SEXP SPLUSOutgen(SEXP Rgenealogie, SEXP RplRetIndividu, SEXP RplRetPe
 
 	La fonction Extrait la genealogie et retourne 3 vecteur soit le No Individu, le Indice du pere et le Indice de la Mere.
 	
-	\param genealogie	[in] Une genealogie construite � l'aide de gen.genealogie 
+	\param genealogie	[in] Une genealogie construite  l'aide de gen.genealogie 
 
 	\retval plRetIndividu [out] Vecteur de taille LengthGenealogie
 								En cas de succes contient les No d'individus
@@ -1136,7 +1136,7 @@ RcppExport SEXP SPLUSOutIndice(SEXP sgenealogie, SEXP splRetIndividu, SEXP splRe
 		else						plRetSexe[i]=-1; //Pas utilisable
 	}
 
-	//Trie si n�cessaire
+	//Trie si ncessaire
 	if (*mustsort)
 		SortGenealogie3Vecteur(plRetIndividu,plRetPere,plRetMere,plRetSexe,lNIndividu);
 	STOPTIMER;

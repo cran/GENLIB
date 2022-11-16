@@ -2,7 +2,7 @@
 \brief Library Genlib: fonction diverse
 
 
-\author S�bastien Leclerc
+\author Sbastien Leclerc
 \contributor Jean-Francois Lefebvre
 
 */
@@ -52,13 +52,13 @@ typedef std::vector<Tuple> vecTuple_t;
 /*! 
 	\brief Compte le nombre d'enfant d'une serie de parent
 
-	\param Genealogie		[in] Une genealogie construite � l'aide de gen.genealogie
+	\param Genealogie		[in] Une genealogie construite  l'aide de gen.genealogie
 
-	\param plProposant		[in] Vecteur avec les numeros des proposants � �tudier
-	\param NProposant		[in] Nombre d'�l�ments du vecteur proposant
+	\param plProposant		[in] Vecteur avec les numeros des proposants  tudier
+	\param NProposant		[in] Nombre d'lments du vecteur proposant
   	\retval retour			[out] Adressse d'un vecteur de taille NProposant.
 							En cas de Succes, contient le nombre d'enfant associer a chaque proposant
-	\return 0 si la fonction est execut� avec succ�s
+	\return 0 si la fonction est execut avec succs
 */
 int CountChild(int* Genealogie, int* plProposant,int NProposant, int* retour)
 {
@@ -74,7 +74,7 @@ int CountChild(int* Genealogie, int* plProposant,int NProposant, int* retour)
 
 	for(int i=0;i<NProposant;i++)
 	{		
-		//Ce Noeud est un proposant ou un depart il est forc�ment utile mais il faut explorer les enfants
+		//Ce Noeud est un proposant ou un depart il est forcment utile mais il faut explorer les enfants
 		Clist* current=NoeudPro[i]->fils;
 		int compteur=0;
 		if (current!=NULL)
@@ -101,15 +101,15 @@ int CountChild(int* Genealogie, int* plProposant,int NProposant, int* retour)
 	<br> alors la nouvelle genealogie ne contient que les descendants de tous les ancetres
 
 
-	\param Genealogie		[in] Une genealogie construite � l'aide de gen.genealogie
+	\param Genealogie		[in] Une genealogie construite  l'aide de gen.genealogie
 
-	\param plProposant	[in] Vecteur des no de proposant � �tudier
+	\param plProposant	[in] Vecteur des no de proposant  tudier
 							 Si le premier proposant est 0, alors tous les enfants
 							 d'un des ancetre seront conserver
-	\param lNProposant	[in] Nombre d'�l�ment du vecteur proposant
+	\param lNProposant	[in] Nombre d'lment du vecteur proposant
   
-	\param plAncetre	[in] Vecteur des no des ancetres correspondant au proposant � �tudier
-	\param lNAncetre	[in] Nombre d'�l�ment du vecteur plAncetre
+	\param plAncetre	[in] Vecteur des no des ancetres correspondant au proposant  tudier
+	\param lNAncetre	[in] Nombre d'lment du vecteur plAncetre
 
 
 	\retval NouvelGenealogie	[out] Adresse d'un vecteur de int de taille de Genealogie
@@ -119,7 +119,7 @@ int CountChild(int* Genealogie, int* plProposant,int NProposant, int* retour)
 							En cas de Succes, Contient la taille de la nouvelle genealogie
 							ce qui permet de tronquer NouvelGenealogie
 
-	\return 0 si la fonction est execut� avec succ�s
+	\return 0 si la fonction est execut avec succs
 */
 
 int ebranche(int* Genealogie, int* plProposant, int lNProposant, int* plAncetre, int lNAncetre, int* NouvelGenealogie, 
@@ -150,7 +150,7 @@ int ebranche(int* Genealogie, int* plProposant, int lNProposant, int* plAncetre,
 	if (LoadNIndMasc()>=0)
 		plRetSexe		=(int*)memalloc(lNIndividu,sizeof(int));
 
-	//R�INITIALISE LES CHAMPS UTILE DE LA GENEALOGIE
+	//RINITIALISE LES CHAMPS UTILE DE LA GENEALOGIE
 	for(int i=0;i<lNIndividu;i++)
 	{		
 		Noeud[i].etat=GENNONEXPLORER;
@@ -217,7 +217,7 @@ int ebranche(int* Genealogie, int* plProposant, int lNProposant, int* plAncetre,
 	//CREATION DE LA GENEALOGIE
 	*tailleNouvelGenealogie = TAILLEGENVERSION7(countInd,NombreEnfant);
 
-	//#Utilise CompleteGenealogie... je me pose s�rieusement la question...
+	//#Utilise CompleteGenealogie... je me pose srieusement la question...
 	CreerGenealogie(plRetIndividu,plRetPere,plRetMere,plRetSexe,countInd,NouvelGenealogie);
 	
 	//FIN
@@ -227,8 +227,8 @@ int ebranche(int* Genealogie, int* plProposant, int lNProposant, int* plAncetre,
 /*! 
 	\brief Traite une partie de l'algorithme
 
-	Pour chaque g�n�ration, traite l'ensemble des individus afin de modifier
-	le vecteur de Tuple associe � la generation suivante correctement
+	Pour chaque gnration, traite l'ensemble des individus afin de modifier
+	le vecteur de Tuple associe  la generation suivante correctement
 
 	\param nogen	[in]	numero de la generation consideree
 
@@ -238,34 +238,34 @@ int ebranche(int* Genealogie, int* plProposant, int lNProposant, int* plAncetre,
 
 	\return 0 si la fonction est execute avec succes
 
-	\remark ATTENTION : Cette fonction modifie le vecteur de Tuples, mais �galement
-	ptr[0], le tuple des parents des individus de cette g�n�ration
+	\remark ATTENTION : Cette fonction modifie le vecteur de Tuples, mais galement
+	ptr[0], le tuple des parents des individus de cette gnration
 */
-/*  PAS Utilis�e ..??
+/*  PAS Utilise ..??
 static int genereTuple(int nogen, vecTuple_t& vTuple, CIndSimul** tabgen)
 {
 	CIndSimul* indcour= tabgen[nogen];
-	int taille = 0; //nombre r�el de tuples dans vTuple
+	int taille = 0; //nombre rel de tuples dans vTuple
 
 	while (indcour!=NULL) //traiter chaque individu de la liste
 	{
 		int decale = 1;
 		CIndSimul* suivant = (CIndSimul*) indcour->pGen;
 
-		//pas oublier de mettre un flag pour �vite de remonte
-		//indcour de deux g�n�rations
+		//pas oublier de mettre un flag pour vite de remonte
+		//indcour de deux gnrations
 
 		if(indcour->pere != NULL)
 		{
-			// si le pere n'est pas dans la prochaine g�n�ration, 
-			// reporter l'individu � la prochaine generation
+			// si le pere n'est pas dans la prochaine gnration, 
+			// reporter l'individu  la prochaine generation
 			if(indcour->pere->bFlagSort > nogen+1)
 			{
 				indcour->pGen = (double*) tabgen[nogen+1];
 				tabgen[nogen+1] = indcour;
 				decale = 0;
 				//ICI
-				//printf("gen %d, d�calage de : %d\n", nogen, indcour->nom);
+				//printf("gen %d, dcalage de : %d\n", nogen, indcour->nom);
 			}
 			else if(indcour->pere->bFlagSort == nogen+1)//sinon traiter le pere
 			{
@@ -294,7 +294,7 @@ static int genereTuple(int nogen, vecTuple_t& vTuple, CIndSimul** tabgen)
 					indcour->pGen = (double*) tabgen[nogen+1];
 					tabgen[nogen+1] = indcour;
 					//ICI
-					//printf("gen %d, d�calage de : %d\n", nogen, indcour->nom);
+					//printf("gen %d, dcalage de : %d\n", nogen, indcour->nom);
 				}
 			}
 			else if(indcour->mere->bFlagSort == nogen+1)//sinon traiter le mere
@@ -332,9 +332,9 @@ static int genereTuple(int nogen, vecTuple_t& vTuple, CIndSimul** tabgen)
 	\return 0 si la fonction est execute avec succes
 
 	\remark ATTENTION : Cette fonction modifie l attribut allele
-	des individus associ�s aux tuples
+	des individus associs aux tuples
 */
-/* PAS UTILIS�E ..??
+/* PAS UTILISE ..??
 static int numeroteInd(int nbT, vecTuple_t& vTuple)
 {
 	int k= 1;
@@ -355,22 +355,22 @@ static int numeroteInd(int nbT, vecTuple_t& vTuple)
 }
 */
 /*! 
-	\brief Calcul du num�ro de g�n�ration
+	\brief Calcul du numro de gnration
 
-	Calcule et enregistre dans un premier temps le num�ro de g�n�ration de tous les individus de la 
-	g�n�alogie dans l'attribut bFlagSort. Enregistre dans retour le num�ro de g�n�ration
+	Calcule et enregistre dans un premier temps le numro de gnration de tous les individus de la 
+	gnalogie dans l'attribut bFlagSort. Enregistre dans retour le numro de gnration
 	de chaque proposant de plProposant.
 
-	\param plProposant	[in, out]	Vecteur des proposants � consid�rer
+	\param plProposant	[in, out]	Vecteur des proposants  considrer
 
-	\param Gen			[in, out]	Une genealogie construite � l'aide de gen.genealogie
+	\param Gen			[in, out]	Une genealogie construite  l'aide de gen.genealogie
 
 	\param retour		[out]	Adressse d'un vecteur de taille NProposant.
-							En cas de Succes, contient le num�ro de g�n�ration de chaque proposant
+							En cas de Succes, contient le numro de gnration de chaque proposant
 
 	\return 0 si la fonction est execute avec succes
 
-	\remark ATTENTION : Cette fonction modifie l attribut bFlagSort de tous les individus de la g�n�alogie
+	\remark ATTENTION : Cette fonction modifie l attribut bFlagSort de tous les individus de la gnalogie
 
 */
 int numeroGen(int* Genealogie, int* plProposant,int NProposant, int* retour)
@@ -387,10 +387,10 @@ int numeroGen(int* Genealogie, int* plProposant,int NProposant, int* retour)
 	for(int i=0;i<lNIndividu;i++)
 		Noeud[i].bFlagSort=0;
 
-	//num�rotation des g�n�rations
+	//numrotation des gnrations
 	classeGen(Noeud, lNIndividu, NULL , NULL);
 
-	// compl�ter le vecteur de retour
+	// complter le vecteur de retour
 	for(int i = 0; i< NProposant; i++)
 	{
 		retour[i]=NoeudPro[i]->bFlagSort;
@@ -399,22 +399,22 @@ int numeroGen(int* Genealogie, int* plProposant,int NProposant, int* retour)
 	return 0;
 }
 /*! 
-	\brief Calcul du num�ro de g�n�ration minimum
+	\brief Calcul du numro de gnration minimum
 
-	Calcule et enregistre dans un premier temps le num�ro de g�n�ration de tous les individus de la 
-	g�n�alogie dans l'attribut bFlagSort. Enregistre dans retour le num�ro de g�n�ration
+	Calcule et enregistre dans un premier temps le numro de gnration de tous les individus de la 
+	gnalogie dans l'attribut bFlagSort. Enregistre dans retour le numro de gnration
 	de chaque proposant de plProposant.
 
-	\param plProposant	[in, out]	Vecteur des proposants � consid�rer
+	\param plProposant	[in, out]	Vecteur des proposants  considrer
 
-	\param Gen			[in, out]	Une genealogie construite � l'aide de gen.genealogie
+	\param Gen			[in, out]	Une genealogie construite  l'aide de gen.genealogie
 
 	\param retour		[out]	Adressse d'un vecteur de taille NProposant.
-							En cas de Succes, contient le num�ro de g�n�ration de chaque proposant
+							En cas de Succes, contient le numro de gnration de chaque proposant
 
 	\return 0 si la fonction est execute avec succes
 
-	\remark ATTENTION : Cette fonction modifie l attribut bFlagSort de tous les individus de la g�n�alogie
+	\remark ATTENTION : Cette fonction modifie l attribut bFlagSort de tous les individus de la gnalogie
 
 */
 int numeroGenMin(int* Genealogie, int* plProposant,int NProposant, int* retour)
@@ -431,10 +431,10 @@ int numeroGenMin(int* Genealogie, int* plProposant,int NProposant, int* retour)
 	for(int i=0;i<lNIndividu;i++)
 		Noeud[i].bFlagSort=0;
 
-	//num�rotation des g�n�rations
+	//numrotation des gnrations
 	classeGenMin(Noeud, lNIndividu, NULL, NULL);
 
-	// compl�ter le vecteur de retour
+	// complter le vecteur de retour
 	for(int i = 0; i< NProposant; i++)
 	{
 		retour[i]=NoeudPro[i]->bFlagSort;
@@ -443,22 +443,22 @@ int numeroGenMin(int* Genealogie, int* plProposant,int NProposant, int* retour)
 	return 0;
 }
 /*! 
-	\brief Calcul du num�ro de g�n�ration moyen
+	\brief Calcul du numro de gnration moyen
 
-	Calcule et enregistre dans un premier temps le num�ro de g�n�ration de tous les individus de la 
-	g�n�alogie dans l'attribut bFlagSort. Enregistre dans retour le num�ro de g�n�ration
+	Calcule et enregistre dans un premier temps le numro de gnration de tous les individus de la 
+	gnalogie dans l'attribut bFlagSort. Enregistre dans retour le numro de gnration
 	de chaque proposant de plProposant.
 
-	\param plProposant	[in, out]	Vecteur des proposants � consid�rer
+	\param plProposant	[in, out]	Vecteur des proposants  considrer
 
-	\param Gen			[in, out]	Une genealogie construite � l'aide de gen.genealogie
+	\param Gen			[in, out]	Une genealogie construite  l'aide de gen.genealogie
 
 	\param retour		[out]	Adressse d'un vecteur de taille NProposant.
-							En cas de Succes, contient le num�ro de g�n�ration de chaque proposant
+							En cas de Succes, contient le numro de gnration de chaque proposant
 
 	\return 0 si la fonction est execute avec succes
 
-	\remark ATTENTION : Cette fonction modifie l attribut bFlagSort de tous les individus de la g�n�alogie
+	\remark ATTENTION : Cette fonction modifie l attribut bFlagSort de tous les individus de la gnalogie
 
 */
 int numeroGenMoy(int* Genealogie, int* plProposant,int NProposant, double* retour)
@@ -475,10 +475,10 @@ int numeroGenMoy(int* Genealogie, int* plProposant,int NProposant, double* retou
 	for(int i=0;i<lNIndividu;i++)
 		Noeud[i].dFlagSort=(double)0;
 
-	//num�rotation des g�n�rations
+	//numrotation des gnrations
 	classeGenMoy(Noeud, lNIndividu);
 
-	// compl�ter le vecteur de retour
+	// complter le vecteur de retour
 	for(int i = 0; i< NProposant; i++)
 	{
 		retour[i]=NoeudPro[i]->dFlagSort;

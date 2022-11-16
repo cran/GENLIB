@@ -270,7 +270,7 @@ int main( int argc, char *argv[] )
 
             for( j = 0; j < 16; j++ )
             {
-                sprintf( output + j * 2, "%02x", md5sum[j] );
+                snprintf( output + j * 2, 33, "%02x", md5sum[j] );
             }
 
             //printf( "test %d ", i + 1 );

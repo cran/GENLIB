@@ -1,8 +1,8 @@
 /***************************
-	Fichier qui contient les fonctions tr�s sp�cifique au hardware
+	Fichier qui contient les fonctions trs spcifique au hardware
 
 
-\contributor Jean-Fran�ois Lefebvre
+\contributor Jean-Franois Lefebvre
 
   ***********************************/
 #include "hal.h"

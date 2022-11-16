@@ -1,10 +1,10 @@
 /*! \file congen.h
 \brief Interface des fonctions de calcul de la Contribution Genetique
 
-Interface de toutes les fonctions en rapport avec la contribution génétique
+Interface de toutes les fonctions en rapport avec la contribution gntique
 
-\author Sébastien Leclerc
-\contributor Jean-François Lefebvre
+\author Sbastien Leclerc
+\contributor Jean-Franois Lefebvre
 */
 
 #ifndef GENCONGEN

@@ -8,7 +8,7 @@ typedef std::map<int, int> liste;
 
 /**
 
-	Cette classe permet de lier un individu à une série de nombres répétitifs non successifs
+	Cette classe permet de lier un individu  une srie de nombres rptitifs non successifs
 	Outil de la fonction compareGen
 
 */
@@ -22,12 +22,12 @@ public:
 	Tuple();
 	Tuple( const Tuple& );			///< constructeur de copie
 	~Tuple(); 
-	void addtab(int val);			///< incrémente d'un le nombre d'enfant ayant la valeur val
-	const liste& gettab() const;	///< accesseur à l'attribut tab
+	void addtab(int val);			///< incrmente d'un le nombre d'enfant ayant la valeur val
+	const liste& gettab() const;	///< accesseur  l'attribut tab
 	void setNoeud(CIndSimul* ref);	///< mutateur de l'attribut ind
-	CIndSimul* getNoeud();			///< accesseur à l'attribut ind
-	void clear(CIndSimul* ref=NULL);///< fonction de remise à zéro 
-	Tuple& operator=(const Tuple& original);///< opérateur de copie
+	CIndSimul* getNoeud();			///< accesseur  l'attribut ind
+	void clear(CIndSimul* ref=NULL);///< fonction de remise  zro 
+	Tuple& operator=(const Tuple& original);///< oprateur de copie
 
 // Declaration de fonction Friend
 friend int operator<(const Tuple& lhs, const Tuple& rhs);

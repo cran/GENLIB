@@ -5,8 +5,8 @@
 
 	Ce fichier prend en charge toute les modificatiosn du code pour rendre le tous compatible entre win32 et unix
 
-\author Sébastien Leclerc
-\contributor Jean-François Lefebvre
+\author Sbastien Leclerc
+\contributor Jean-Franois Lefebvre
 
 */
 

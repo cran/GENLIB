@@ -20,7 +20,7 @@ int getLastTimer();
 
 //PROGRESSBAR
 //Maintenant la progress bar inclus un chronometre qui arrete 
-//la procédure si remarque qu'un certain temps est sur le points d'etre dépassé
+//la procdure si remarque qu'un certain temps est sur le points d'etre dpass
 class CTextProgressBar
 {
 private:

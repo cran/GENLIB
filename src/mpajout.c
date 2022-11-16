@@ -1,7 +1,7 @@
 /*
     mpajout.c
 
-    by Sébastien 
+    by Sbastien 
     
     Arbitrary precision integer arithmetic library
 	
@@ -13,7 +13,7 @@
 #include "mplogic.h"
 #include <stdlib.h>
 
-/* Petite fonctions de l'intérieur de MPI que nous allons utilisé*/
+/* Petite fonctions de l'intrieur de MPI que nous allons utilis*/
 extern mp_err   s_mp_pad(mp_int *mp, mp_size min);
 
 #define  s_mp_clamp(mp)\
@@ -48,7 +48,7 @@ mp_err mpl_bit_clear(mp_int *a, int bit)
   ddigit = bit / DIGIT_BIT;
   bbit	 = bit % DIGIT_BIT;
 
-  if( ddigit >= USED(a) ) //il faut clear un bit déjà clear...
+  if( ddigit >= USED(a) ) //il faut clear un bit dj clear...
 	  return MP_OKAY;
 
   DIGIT(a, ddigit) = DIGIT(a, ddigit) &  ~(1 << bbit);

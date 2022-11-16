@@ -1,8 +1,8 @@
 /*! \file hashtable.h
-\brief Implémentation d'une table de hashage parametre
+\brief Implmentation d'une table de hashage parametre
 
 \author Claire Gires
-\contributor Jean-François Lefebvre
+\contributor Jean-Franois Lefebvre
 
 */ 
 
@@ -44,8 +44,8 @@ public:
 	~HashDouble();
 	char Error();
 	int Add(T& newElement);  ///Ajoute un nouvel element a la liste 
-							//retourne GTRUE si le rajout a été fait (pas dupplicata)
-							//retourne GFALSE si le rajout n'a pas été fait (dupplicata)
+							//retourne GTRUE si le rajout a t fait (pas dupplicata)
+							//retourne GFALSE si le rajout n'a pas t fait (dupplicata)
 };
 
 template<class T> inline HashDouble<T>::HashDouble(unsigned int nbElement, double ratio)
@@ -69,7 +69,7 @@ template<class T> inline HashDouble<T>::HashDouble(unsigned int nbElement, doubl
 		m_isError=(m_tab==NULL);
 		return;
 	}
-	//Remise à zero
+	//Remise  zero
 	for(unsigned int i=0; i<m_taille; i++)
 		m_tab[i] = VIDE;
 	
@@ -127,13 +127,13 @@ template<class T> inline int HashDouble<T>::Add(T& newElement)
 //DECLARATION DE SPECIALISATION MP_INT
 template<> inline HashDouble<mp_int>::HashDouble(unsigned int nbElement, double ratio) 
 {
-	//Nombre d'élément dans la table de hashage
+	//Nombre d'lment dans la table de hashage
 	m_taille = (unsigned int)(nbElement/ratio);
 
 	if (m_taille%2 == 0)
 		m_taille++;
 	
-	//Ajuste la taille du tableau au premier nombre impair suppérieur
+	//Ajuste la taille du tableau au premier nombre impair supprieur
 	while(millerRabin(m_taille, 40))	
 		m_taille+=2;
 	
@@ -165,7 +165,7 @@ template<> inline int HashDouble<mp_int>::Add(mp_int& newElement)
 	mp_mod_d(&newElement,m_clef1,&pos); //pos = newElement%m_clef1;
 		
 	//Est-ce que la case est vide
-	if(mp_cmp_d(&m_tab[pos],VIDE)==0) //0 donne égal
+	if(mp_cmp_d(&m_tab[pos],VIDE)==0) //0 donne gal
 	{
 			mp_copy(&newElement,&m_tab[pos]);	
 			return GTRUE;
@@ -189,14 +189,14 @@ template<> inline int HashDouble<mp_int>::Add(mp_int& newElement)
 			pos += interval;			
 	
 		//Est-ce que la case est vide
-		if(mp_cmp_d(&m_tab[pos],VIDE)==0) //0 donne égal
+		if(mp_cmp_d(&m_tab[pos],VIDE)==0) //0 donne gal
 		{
 				mp_copy(&newElement,&m_tab[pos]);		
 				return GTRUE;
 		}
 		
 		//Est-ce un dupplicata direct
-		if (mp_cmp(&newElement,&m_tab[pos])==0) //0 donne égal
+		if (mp_cmp(&newElement,&m_tab[pos])==0) //0 donne gal
 			return GFALSE;
 	}
 	m_isError=GTRUE;
@@ -230,11 +230,11 @@ public:
 	void Initialise(unsigned int nbElement, double ratio=HASH_TAUX_REMPLISSAGE);
  	
 	int add(T& newElement); ///Ajoute un nouvel element a la table de hashage
-							//retourne GTRUE si le rajout a été fait (pas dupplicata)
-							//retourne GFALSE si le rajout n'a pas été fait (dupplicata)
+							//retourne GTRUE si le rajout a t fait (pas dupplicata)
+							//retourne GFALSE si le rajout n'a pas t fait (dupplicata)
 	int del(T& newElement);
 							//retourne GTRUE si l'effacage est fait
-							//retourne GFALSE si newElement n'as pas été trouvé
+							//retourne GFALSE si newElement n'as pas t trouv
 };
 
 //FONCTION
@@ -270,7 +270,7 @@ template<class T> inline int HashTable<T>::add(T& newElement)
 	//Trouve la position du truc
 	const unsigned int pos = (unsigned int)(newElement) % m_taille;
 	
-	//Est-ce qu'il est là....
+	//Est-ce qu'il est l....
 	if (m_tab[pos].elem==VIDE)
 	{
 		//CASE VIDE DONC LE RAJOUTE...
@@ -307,7 +307,7 @@ template<class T> inline int HashTable<T>::del(T& newElement)
 	//TROUVE LA POSITION DU TRUC
 	const unsigned int pos = (unsigned int)(newElement) % m_taille;
 	
-	//Est-ce qu'il est là....
+	//Est-ce qu'il est l....
 	if (m_tab[pos].elem==VIDE)
 	{
 		//CASE VIDE PEUT DONC PAS L'EFFACE
@@ -318,10 +318,10 @@ template<class T> inline int HashTable<T>::del(T& newElement)
 		{
 			//BON, ON EFFACE
 			if (m_tab[pos].next==NULL)			
-				//Pas d'élément dans la liste chaine
+				//Pas d'lment dans la liste chaine
 				m_tab[pos].elem=VIDE;		
 			else
-			{ //Il y a un élément dans la liste chainé
+			{ //Il y a un lment dans la liste chain
 				InterE* next=m_tab[pos].next;
 				memcpy(&m_tab[pos],next,sizeof(InterE));
 				printf("\nUNDERFLOW");

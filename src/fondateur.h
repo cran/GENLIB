@@ -3,8 +3,8 @@
 
 Interface de toutes les fonctions en rapport avec le gene fondateur
 
-\author S�bastien Leclerc 
-\contributor Jean-Fran�ois Lefebvre
+\author Sbastien Leclerc 
+\contributor Jean-Franois Lefebvre
 
 */
 

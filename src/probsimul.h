@@ -1,9 +1,9 @@
 /*! \file probsimul.h
 \brief Interface library Genlib: fonction diverse
 
-non déterminé
+non dtermin
 
-\author Sébastien Leclerc, Claire Gires
+\author Sbastien Leclerc, Claire Gires
 \contributor Jean-Francois Lefebvre
 
 */

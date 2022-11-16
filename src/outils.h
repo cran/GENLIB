@@ -1,9 +1,9 @@
 /*! \file outils.h
-\brief Interface library Genlib: outils généraux
+\brief Interface library Genlib: outils gnraux
 
-Interface de toutes les fonctions qui sont d'un intéret général pour chaque menu
+Interface de toutes les fonctions qui sont d'un intret gnral pour chaque menu
 
-\author Sébastien Leclerc
+\author Sbastien Leclerc
 \contributor Jean-Francois Lefebvre
 */
 
@@ -34,7 +34,7 @@ int CreerGenealogie(int* plIndividu,int* plPere, int* plMere,int* plSexe,int lNI
 int ReCreeStructure(int* Genealogie,CIndSimul* Noeud, Clist* Children, int** IndexRecherche);
 
 
-//Recherche l'indice d'un individu dans le tableau de Noeud à l'aide d'un index de recherche
+//Recherche l'indice d'un individu dans le tableau de Noeud  l'aide d'un index de recherche
 int ReTrouverIndiceStructure(int nom, CIndSimul* Noeud, int* IndexRecherche, int iNind);
 
 //Ebranchage et etiquetage des noeuds
@@ -68,7 +68,7 @@ int LoadAncetre(int* Ancetre,int nbAncetre,CIndSimul*** anc);
 int LoadProfondeurMax();
 int LoadNIndMasc();
 int FlushGenealogie();
-//Fonction de haut-niveau pour l'assignation de groupe a une série de proposant
+//Fonction de haut-niveau pour l'assignation de groupe a une srie de proposant
 int LoadGroupeProposant(int* Proposant, int* BorneGr, int nbGroupe, CIndSimul**** GRpro,int** nIndGr);
 int LoadGroupeAncetre  (int* Ancetre  , int* BorneGr, int nbGroupe, CIndSimul**** GRanc,int** nIndGr);
 
@@ -82,7 +82,7 @@ int LoadVectorNC(int* vec,int nb, CIndSimul*** NproAnc,
 				 CIndSimul* NoeudArr,int nbind, int* IndexRecherche,
 				 GestionMemoire& MemCheck);
 
-//Fonction spécifique pour la gestion des valeurs spéciale IEEE
+//Fonction spcifique pour la gestion des valeurs spciale IEEE
 char* DescIEEEValue(int* val);
 
 #endif

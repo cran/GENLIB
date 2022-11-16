@@ -1,10 +1,10 @@
 /*! \file fondateur.cc
 \brief Implementation des fonctions de simulation calcul de probabilite
 
-Calcul et Analyse de diverse valeur d�riv� du gene fondateur
+Calcul et Analyse de diverse valeur driv du gene fondateur
 
 
-\author S�bastien Leclerc 
+\author Sbastien Leclerc 
 \contributor Jean-Francois Lefebvre
 */
 
@@ -59,10 +59,10 @@ extern "C"
 
 const int MEGAOCTET = 1048576;//octet
 
-///Liste de tableau de unsigned char.... Utilis� pour representer une liste de nombre binaire de longueur variable
+///Liste de tableau de unsigned char.... Utilis pour representer une liste de nombre binaire de longueur variable
 struct CApPath
 {
-	///Grand nombre binaire en format mpi repr�sentant le chemin....
+	///Grand nombre binaire en format mpi reprsentant le chemin....
 	mp_int num;
 	///Pointeur vers l'element suivant de la liste
 	CApPath *next;
@@ -70,9 +70,9 @@ struct CApPath
 
 //CONSTRUCTION ET DESTRUCTION DES PATHS
 static CIndSimul** g_ExpCoeff_CheminParcouru=NULL; 
-///Utilise par ExploreCoeff comme �tant le dernier chemin remplis (ou le premiers)
+///Utilise par ExploreCoeff comme tant le dernier chemin remplis (ou le premiers)
 static CApPath ** g_ExpCoeff_Path=NULL;
-///Utilise par ExploreCoeff comme �tant la cible de l'exploration
+///Utilise par ExploreCoeff comme tant la cible de l'exploration
 static CIndSimul* g_ExpCoeff_Cible=NULL;
 static void FASTCALL ExploreCoeff(CIndSimul* Noeud);
 static void PathDestruction(CApPath **Path,int npath);
@@ -328,7 +328,7 @@ void simulhaplo(int* Genealogie, int* plProposant, int lNProposant, int* plAncet
 	INITGESTIONMEMOIRE;
 	CIndSimul** Ordre = (CIndSimul**) memalloc(lNIndividu,sizeof(CIndSimul*));
 
-	//Pour le sort sp�cial		
+	//Pour le sort spcial		
 	int*	OrdreSaut	= (int*) memalloc(lNIndividu,sizeof(int*));				
 	int NOrdre;
 	
@@ -1101,18 +1101,18 @@ void recombine(haplotype* hapBegin, haplotype* hapEnd, haplotype* hapChild, int 
 	Calcule la probatilite que de un..n proposant soit atteint
 	Calcule la probabilie que chaque proposant soit atteint
 
-	\param Genealogie	[in] Une genealogie construite � l'aide de gen.genealogie 
+	\param Genealogie	[in] Une genealogie construite  l'aide de gen.genealogie 
 
-	\param plProposant	[in] Vecteur des no de proposant � �tudier
+	\param plProposant	[in] Vecteur des no de proposant  tudier
 	\param plProEtat    [in] vecteur de taille lNProposant et representant l'etat a considerer pour chaque proposant
 			<br>&nbsp; &nbsp;&nbsp; &nbsp;0: La condition est remplie si se proposant n'est pas malade 
 			<br>&nbsp; &nbsp;&nbsp; &nbsp;1: La condition est remplie si le proposant recois 1-2 allele 
 			<br>&nbsp; &nbsp;&nbsp; &nbsp;2: La condition est remplie si le proposant recois 2 allele 
-	\param lNProposant	[in] Nombre d'�l�ment du vecteur proposant
+	\param lNProposant	[in] Nombre d'lment du vecteur proposant
   
-	\param plAncetre	[in] Vecteur des no des ancetres correspondant proposant � �tudier
+	\param plAncetre	[in] Vecteur des no des ancetres correspondant proposant  tudier
 	\param plAncEtat	[in] Vecteur de taille plAncetre representant le nombre d'allele atteint pour chaque Ancetre (0,1,2) 
-	\param lNAncetre	[in] Nombre d'�l�ment du vecteur ancetre
+	\param lNAncetre	[in] Nombre d'lment du vecteur ancetre
 
 	\param lSimul		[in] Nombre de simulation a effectuer
 
@@ -1125,7 +1125,7 @@ void recombine(haplotype* hapBegin, haplotype* hapEnd, haplotype* hapChild, int 
 									
 	\param printprogress [in] imprime un message indiquant les progress accomplies
 
-	\return 0 si la fonction est execut� avec succ�s 
+	\return 0 si la fonction est execut avec succs 
 */ 
 int simul(int* Genealogie, int* plProposant, int* plProEtat,int lNProposant, int* plAncetre, int* plAncEtat, int lNAncetre,
 		int lSimul, double* pdRetConj, double* pdRetSimul, double* pdRetProp, double* probRecomb, double probSurvieHomo,
@@ -1136,7 +1136,7 @@ int simul(int* Genealogie, int* plProposant, int* plProEtat,int lNProposant, int
 	if (lSimul<=0){
 //		GENError("Number of simulation must be greater than zero");
 		throw std::range_error("Number of simulation must be greater than zero");
-		//GENError("Le nombre de simulation doit-�tre sup�rieur � zero");
+		//GENError("Le nombre de simulation doit-tre suprieur  zero");
 	}
 	//CREATION DE TABLEAU D'INDIVIDU
 	int lNIndividu;
@@ -1155,7 +1155,7 @@ int simul(int* Genealogie, int* plProposant, int* plProEtat,int lNProposant, int
 	INITGESTIONMEMOIRE;
 	CIndSimul** Ordre		=(CIndSimul**) memalloc(lNIndividu,sizeof(CIndSimul*));	
 	
-	//Pour le sort sp�cial		
+	//Pour le sort spcial		
 	int*		OrdreSaut	=(int*) memalloc(lNIndividu,sizeof(int*));				
 	int NOrdre;
 	
@@ -1251,7 +1251,7 @@ int simul(int* Genealogie, int* plProposant, int* plProEtat,int lNProposant, int
 			{
 				double alea    = (double)gen()/(double)gen.max();//(double)rd()/(double)rd.max(); // pour la recombinaison.**chgt IGES**
 				int sex = Ordre[i]->sex;
-				if(alea < probRecomb[1]) // tx femme (plus �lev�)
+				if(alea < probRecomb[1]) // tx femme (plus lev)
 				{
 				// si femme ou si prob < au taux male et inconnu (le plus petit)
 				// si le morceau recombine (selon tx male et aussi sexe inconnu) OU si le morceau recombine (selon tx femelle)
@@ -1330,23 +1330,23 @@ int simul(int* Genealogie, int* plProposant, int* plProEtat,int lNProposant, int
 
 	Calcule un etat possible pour chaque proposant en tenant compte de chaque ancetre et son etat
 
-	\param Genealogie	[in] Une genealogie construite � l'aide de gen.genealogie 
+	\param Genealogie	[in] Une genealogie construite  l'aide de gen.genealogie 
 
-	\param plProposant	[in] Vecteur des no de proposant � �tudier
-	\param lNProposant	[in] Nombre d'�l�ment du vecteur proposant
+	\param plProposant	[in] Vecteur des no de proposant  tudier
+	\param lNProposant	[in] Nombre d'lment du vecteur proposant
   
-	\param plAncetre	[in] Vecteur des no des ancetres correspondant proposant � �tudier
+	\param plAncetre	[in] Vecteur des no des ancetres correspondant proposant  tudier
 	\param plAncEtat	[in] Vecteur de taille plAncetre representant le nombre d'allele atteint pour chaque Ancetre (0,1,2) 
-	\param lNAncetre	[in] Nombre d'�l�ment du vecteur ancetre
+	\param lNAncetre	[in] Nombre d'lment du vecteur ancetre
 	
-	\param lSimul		[in] Nombre de simulation � effectuer
+	\param lSimul		[in] Nombre de simulation  effectuer
 
 	\retval pdRetour	[out] Pointeur vers un vecteur de NProposant x lSimul
 								En cas de succes, ce vecteur le nombre d'allele assigne a chaque proposant pour la simulation
 	
 	\param printprogress imprime un message indiquant les progress accomplies
 
-	\return 0 si la fonction est execut� avec succ�s
+	\return 0 si la fonction est execut avec succs
 */
 int simulsingle(int* Genealogie, int* plProposant, int lNProposant, int* plAncetre, int* plAncEtat, int lNAncetre, int lSimul,
 			 double* pdRetour,int printprogress)
@@ -1356,7 +1356,7 @@ int simulsingle(int* Genealogie, int* plProposant, int lNProposant, int* plAncet
 	if (lSimul<=0){
 //		GENError("Number of simulation must be greater than zero");
 		throw std::range_error("Number of simulation must be greater than zero");
-		//GENError("Le nombre de simulation doit-�tre sup�rieur � zero");
+		//GENError("Le nombre de simulation doit-tre suprieur  zero");
 	}
 	//CREATION DE TABLEAU D'INDIVIDU
 	int lNIndividu;
@@ -1376,7 +1376,7 @@ int simulsingle(int* Genealogie, int* plProposant, int lNProposant, int* plAncet
 	INITGESTIONMEMOIRE;
 	CIndSimul** Ordre		=(CIndSimul**) memalloc(lNIndividu,sizeof(CIndSimul*));	
 	
-	//Pour le sort sp�cial		
+	//Pour le sort spcial		
 	int*		OrdreSaut	=(int*) memalloc(lNIndividu,sizeof(int*));				
 	int NOrdre;
 	/**F***/
@@ -1511,38 +1511,38 @@ int simulsingle(int* Genealogie, int* plProposant, int lNProposant, int* plAncet
 
 	Calcule un etat possible pour chaque proposant en tenant en comple chaque ancetre et son etat
 
-	\param Genealogie	[in] Une genealogie construite � l'aide de gen.genealogie 
+	\param Genealogie	[in] Une genealogie construite  l'aide de gen.genealogie 
 
-	\param plProposant	[in] Vecteur des no de proposant � �tudier
-	\param lNProposant	[in] Nombre d'�l�ment du vecteur proposant
+	\param plProposant	[in] Vecteur des no de proposant  tudier
+	\param lNProposant	[in] Nombre d'lment du vecteur proposant
   
-	\param plAncetre	[in] Vecteur des no des ancetres correspondant proposant � �tudier
+	\param plAncetre	[in] Vecteur des no des ancetres correspondant proposant  tudier
 	\param plAncEtat	[in] Vecteur de taille plAncetre representant le nombre d'allele atteint pour chaque Ancetre (0,1,2) 
-	\param lNAncetre	[in] Nombre d'�l�ment du vecteur ancetre
+	\param lNAncetre	[in] Nombre d'lment du vecteur ancetre
 	
-	\param lSimul		[in] Nombre de simulation � effectuer
-	\param mtProb		[in] Matrice S-PLUS: tableau des probabilit�s
+	\param lSimul		[in] Nombre de simulation  effectuer
+	\param mtProb		[in] Matrice S-PLUS: tableau des probabilits
 
 	\retval pdRetour	[out] Pointeur vers un vecteur de NProposant x lSimul
 								En cas de succes, ce vecteur le nombre d'allele assigne a chaque proposant pour la simulation
 	
 	\param printprogress imprime un message indiquant les progress accomplies
 
-	\return 0 si la fonction est execut� avec succ�s
+	\return 0 si la fonction est execut avec succs
 */
 
 SEXP simulsingleProb(int* Genealogie, int* plProposant, int lNProposant, int* plAncetre, int lNAncetre, int* plAncEtat, SEXP mtProb,
 				 int lSimul, int printprogress)
 {
 	try{
-	//Conversion des param�tres
+	//Conversion des paramtres
 	Rcpp::NumericMatrix matprob(mtProb);
 
 	//VALIDATION GENEALOGIE
 	if (lSimul<=0){
 //		GENError("Number of simulation must be greater than zero");
 		throw std::range_error("Number of simulation must be greater than zero");
-		//GENError("Le nombre de simulations doit-�tre sup�rieur � zero");
+		//GENError("Le nombre de simulations doit-tre suprieur  zero");
 	}
 	//CREATION DE TABLEAU D'INDIVIDU
 	int lNIndividu;
@@ -1646,27 +1646,27 @@ SEXP simulsingleProb(int* Genealogie, int* plProposant, int lNProposant, int* pl
 
 /*! 
 	\brief Execute une plusieur simulation et retourne le nombre d'allele transmit a chaque proposant en tableau
-			de fr�quences pour toutes les simulations.
+			de frquences pour toutes les simulations.
 
 	Calcule un etat possible pour chaque proposant en tenant en compte chaque ancetre et son etat
 
-	\param Genealogie	[in] Une genealogie construite � l'aide de gen.genealogie 
+	\param Genealogie	[in] Une genealogie construite  l'aide de gen.genealogie 
 
-	\param plProposant	[in] Vecteur des no de proposant � �tudier
-	\param lNProposant	[in] Nombre d'�l�ment du vecteur proposant
+	\param plProposant	[in] Vecteur des no de proposant  tudier
+	\param lNProposant	[in] Nombre d'lment du vecteur proposant
   
-	\param plAncetre	[in] Vecteur des no des ancetres correspondant proposant � �tudier
+	\param plAncetre	[in] Vecteur des no des ancetres correspondant proposant  tudier
 	\param plAncEtat	[in] Vecteur de taille plAncetre representant le nombre d'allele atteint pour chaque Ancetre (0,1,2) 
-	\param lNAncetre	[in] Nombre d'�l�ment du vecteur ancetre
+	\param lNAncetre	[in] Nombre d'lment du vecteur ancetre
 	
-	\param lSimul		[in] Nombre de simulations � effectuer
+	\param lSimul		[in] Nombre de simulations  effectuer
 
-	\retval pdRetour	[out] Pointeur vers un vecteur de NProposant x 0-1-2 pour la fr�quence d'all�les tramises pour toutes les
+	\retval pdRetour	[out] Pointeur vers un vecteur de NProposant x 0-1-2 pour la frquence d'allles tramises pour toutes les
 							  simulations. 
 	
 	\param printprogress imprime un message indiquant les progress accomplies
 
-	\return 0 si la fonction est execut� avec succ�s
+	\return 0 si la fonction est execut avec succs
 */
 int simulsingleFreq(int* Genealogie, int* plProposant, int lNProposant, int* plAncetre, int* plAncEtat, int lNAncetre,
 				int lSimul, double* pdRetour,int printprogress)
@@ -1676,7 +1676,7 @@ int simulsingleFreq(int* Genealogie, int* plProposant, int lNProposant, int* plA
 	if (lSimul<=0) {
 //		GENError("Number of simulation must be greater than zero");
 		throw std::range_error("Number of simulation must be greater than zero");
-		//GENError("Le nombre de simulation doit-�tre sup�rieur � zero");
+		//GENError("Le nombre de simulation doit-tre suprieur  zero");
 	}
 	//CREATION DE TABLEAU D'INDIVIDU
 	int lNIndividu;
@@ -1711,9 +1711,9 @@ int simulsingleFreq(int* Genealogie, int* plProposant, int lNProposant, int* plA
 	}
 
 	//Indice de tableau pour la variable de sortie
-	const int tmp0 = 0*lNProposant; //Fr�quence de 0 all�le
-	const int tmp1 = 1*lNProposant; //Fr�quence de 1 all�le
-	const int tmp2 = 2*lNProposant; //Fr�quence de 2 all�le
+	const int tmp0 = 0*lNProposant; //Frquence de 0 allle
+	const int tmp1 = 1*lNProposant; //Frquence de 1 allle
+	const int tmp2 = 2*lNProposant; //Frquence de 2 allle
 
 	//INITIALISATION
 	//initrand(); 
@@ -1781,23 +1781,23 @@ int simulsingleFreq(int* Genealogie, int* plProposant, int lNProposant, int* plA
 
 	Calcule un etat possible pour chaque proposant en tenant en comple chaque ancetre et son etat
 
-	\param Genealogie	[in] Une genealogie construite � l'aide de gen.genealogie 
+	\param Genealogie	[in] Une genealogie construite  l'aide de gen.genealogie 
 
-	\param plProposant	[in] Vecteur des no de proposant � �tudier
-	\param lNProposant	[in] Nombre d'�l�ment du vecteur proposant
+	\param plProposant	[in] Vecteur des no de proposant  tudier
+	\param lNProposant	[in] Nombre d'lment du vecteur proposant
   
-	\param plAncetre	[in] Vecteur des no des ancetres correspondant proposant � �tudier
+	\param plAncetre	[in] Vecteur des no des ancetres correspondant proposant  tudier
 	\param plAncEtat	[in] Vecteur de taille plAncetre representant le nombre d'allele atteint pour chaque Ancetre (0,1,2) 
-	\param lNAncetre	[in] Nombre d'�l�ment du vecteur ancetre
+	\param lNAncetre	[in] Nombre d'lment du vecteur ancetre
 	
-	\param lSimul		[in] Nombre de simulation � effectuer
+	\param lSimul		[in] Nombre de simulation  effectuer
 
 	\retval pdRetour	[out] Pointeur vers un vecteur de NProposant x lSimul
 								En cas de succes, ce vecteur le nombre d'allele assigne a chaque proposant pour la simulation
 	
 	\param printprogress imprime un message indiquant les progress accomplies
 
-	\return 0 si la fonction est execut� avec succ�s
+	\return 0 si la fonction est execut avec succs
 */
 SEXP simulsingleFct(int * Genealogie, int * proposant, int lproposant, int * plAncetre, int * plAncEtatAll1, int * plAncEtatAll2, int lNAncetre, int lSimul, SEXP SfctSousGrp, int printprogress)
 {	
@@ -1806,7 +1806,7 @@ SEXP simulsingleFct(int * Genealogie, int * proposant, int lproposant, int * plA
 	if (lSimul<=0){
 //		GENError("Number of simulation must be greater than zero");
 		throw std::range_error("Number of simulation must be greater than zero");
-		//GENError("Le nombre de simulation doit-�tre sup�rieur � zero");
+		//GENError("Le nombre de simulation doit-tre suprieur  zero");
 	}
 	//CREATION DE TABLEAU D'INDIVIDU
 	int lNIndividu;
@@ -1845,7 +1845,7 @@ SEXP simulsingleFct(int * Genealogie, int * proposant, int lproposant, int * plA
 	int lptrAm[2];
 
 	//Partie 3: SIMULATION	
-	//D�claration de la liste de r�sultats de la fonction de l'utilisation pour chaque simulation
+	//Dclaration de la liste de rsultats de la fonction de l'utilisation pour chaque simulation
 	//CSPlist resultFct;
 	Rcpp::List resultFct; //(lSimul);
 	Rcpp::Function f(SfctSousGrp);
@@ -1881,7 +1881,7 @@ SEXP simulsingleFct(int * Genealogie, int * proposant, int lproposant, int * plA
 
 		}// fin for pour chaque noeud	
 		/*
-		//D�claration de la liste de r�sultats
+		//Dclaration de la liste de rsultats
 		//CSPlist resultGrp;
 		Rcpp::List resultGrp(igrp);
 		//Pour chaque groupe
@@ -1906,9 +1906,9 @@ SEXP simulsingleFct(int * Genealogie, int * proposant, int lproposant, int * plA
 			
 			for(int j=0;j<lind.length();j++)//Pour chaque individus du groupe
 			{
-				 // **tmp(j+1) = NoeudPro[i][j]->allele2Pos[0];	//R�sultat dans un tableau	
+				 // **tmp(j+1) = NoeudPro[i][j]->allele2Pos[0];	//Rsultat dans un tableau	
 				 ans(j+1, 0) = NoeudPro[i][j]->allele2Pos[0];
-				 // **tmp2(j+1) = NoeudPro[i][j]->allele2Pos[1];	//R�sultat dans un tableau	
+				 // **tmp2(j+1) = NoeudPro[i][j]->allele2Pos[1];	//Rsultat dans un tableau	
 				 ans(j+1, 1) = NoeudPro[i][j]->allele2Pos[1];
 			}
 			// **ans.SetJthColumnDirect(0, tmp.Detach());
@@ -1920,7 +1920,7 @@ SEXP simulsingleFct(int * Genealogie, int * proposant, int lproposant, int * plA
 		}
 		// **CSPfunction f(SfctSousGrp); //Call the S function.
 		//Rcpp::Function f(SfctSousGrp);
-		//En liste de r�sultats de la fct de l'utilisateur
+		//En liste de rsultats de la fct de l'utilisateur
 		// **resultFct.Add(f.Eval(resultGrp));
 		resultFct.push_back(f(resultGrp));
 		*/
@@ -1948,7 +1948,7 @@ SEXP simulsingleFct(int * Genealogie, int * proposant, int lproposant, int * plA
 
 	///nettoyer
 	//outrand();
-	//Retourne la liste de r�sultat pour chaque simulation de la fct de l'utilisateur
+	//Retourne la liste de rsultat pour chaque simulation de la fct de l'utilisateur
 	return Rcpp::wrap(resultFct); //.Detach();
  			} catch(std::exception &ex) {
  				forward_exception_to_r(ex);
@@ -1962,29 +1962,29 @@ SEXP simulsingleFct(int * Genealogie, int * proposant, int lproposant, int * plA
 //	CALCUL DE LA PROBABILITE EXACTE
 // ************************************************************************* 
 //const int PBARINTERVAL_PROB=9;
-//100 devrais �tre plus que suffisant pour occup� un ordinateur moderne un bon bout de temps
+//100 devrais tre plus que suffisant pour occup un ordinateur moderne un bon bout de temps
 //const int PROB_MAXIMUM_NORDRE = 100; //646 Taille maximale d'un double (utiliser numeric_limits<double>::max() ? )
 
 /*! 
 	\brief Evalue la probabilite exacte de transfert d'un allele a une serie de proposant
 
-	Cette fonction d�termine la probabilit� conjointe qu'un ou plusieurs proposant re�oivent  un certain nombre d'all�le malade.
-	En prenant pour acquis qu'un ou plusieurs anc�tre poss�de un ou deux d'all�le malade. 
-	Pour ce faire, cette fonction calcule la valeur de toute les branches de mani�re � obtenir la probabilit� EXACT. 
-	Le temps de calcul peut-�tre tr�s prohibitif.
+	Cette fonction dtermine la probabilit conjointe qu'un ou plusieurs proposant reoivent  un certain nombre d'allle malade.
+	En prenant pour acquis qu'un ou plusieurs anctre possde un ou deux d'allle malade. 
+	Pour ce faire, cette fonction calcule la valeur de toute les branches de manire  obtenir la probabilit EXACT. 
+	Le temps de calcul peut-tre trs prohibitif.
 
-	\param Genealogie	[in] Une genealogie construite � l'aide de gen.genealogie 
+	\param Genealogie	[in] Une genealogie construite  l'aide de gen.genealogie 
 
-	\param plProposant	[in] Vecteur des no de proposant � �tudier
+	\param plProposant	[in] Vecteur des no de proposant  tudier
 	\param plProEtat    [in] vecteur de taille lNProposant et representant l'etat a considerer pour chaque proposant
 			<br>&nbsp; &nbsp;&nbsp; &nbsp;0: La condition est remplie si se proposant n'est pas malade 
 			<br>&nbsp; &nbsp;&nbsp; &nbsp;1: La condition est remplie si le proposant recois 1-2 allele 
 			<br>&nbsp; &nbsp;&nbsp; &nbsp;2: La condition est remplie si le proposant recois 2 allele 
-	\param lNProposant	[in] Nombre d'�l�ment du vecteur proposant
+	\param lNProposant	[in] Nombre d'lment du vecteur proposant
   
-	\param plAncetre	[in] Vecteur des no des ancetres correspondant proposant � �tudier
+	\param plAncetre	[in] Vecteur des no des ancetres correspondant proposant  tudier
 	\param plAncEtat	[in] Vecteur de taille plAncetre representant le nombre d'allele atteint pour chaque Ancetre (0,1,2) 
-	\param lNAncetre	[in] Nombre d'�l�ment du vecteur ancetre
+	\param lNAncetre	[in] Nombre d'lment du vecteur ancetre
 
 	\param OrdreMaximum [in] Le nombre de noeud touche au maximum, si le nombre de noeud touche est trop grand alors la procedure s'interromp automatiquement
 
@@ -1993,7 +1993,7 @@ SEXP simulsingleFct(int * Genealogie, int * proposant, int lproposant, int * plA
 	\retval pdRetSimul	[out] Un pointeur vers une vecteur de taille lNProposant.. 
 								En cas de succes, Probabilite que la condition de chaque proposant soit remplis
 							
-	\return 0 si la fonction est execut� avec succ�s
+	\return 0 si la fonction est execut avec succs
 */
 SEXP prob( int* Genealogie, int* plProposant, int* plProEtat,int lNProposant, int* plAncetre, int* plAncEtat, int lNAncetre,
 		double* pdRetConj,double* pdRetSimul,int printprogress,int onlyConj)
@@ -2066,7 +2066,7 @@ SEXP prob( int* Genealogie, int* plProposant, int* plProEtat,int lNProposant, in
 		throw std::range_error("There is no link between any ancetres and any probands");
 		//GENError("Il n'y a pas de lien entre aucun des ancetres et aucun proposant");
 	}
-	//Liste de tableau d�pendante de l'ordre
+	//Liste de tableau dpendante de l'ordre
 	double *Cumul		= (double*) memalloc(NOrdre+1,sizeof(double));
 
 	// Valeur cumulative courante
@@ -2081,13 +2081,13 @@ SEXP prob( int* Genealogie, int* plProposant, int* plProEtat,int lNProposant, in
 	const int Lastindex=NOrdre-1;
 	double ConjProb=0;
 	
-	//Initialisation de d�but de simulation
+	//Initialisation de dbut de simulation
 	for(i=0;i<NOrdre;i++)	
 	{
 		Ordre[i]->allele=-1;		
 	}
 	
-	//On r�utilise la variable bFlagSort pour indique si la condition d'un proposant
+	//On rutilise la variable bFlagSort pour indique si la condition d'un proposant
 	//est acceptable ou non (1 oui, non =0)
 	int nbCritereValid=0;
 	for(i=0;i<lNProposant;i++)
@@ -2104,11 +2104,11 @@ SEXP prob( int* Genealogie, int* plProposant, int* plProEtat,int lNProposant, in
 		}
 	}
 	
-	//Verifie que la dur�e d'execution ne sera pas trop intue
+	//Verifie que la dure d'execution ne sera pas trop intue
 //	if (NOrdre > PROB_MAXIMUM_NORDRE){
 //		GENError("Execution time is too great to launch this function call");
 //		throw std::exception();
-		//GENError("La dur�e d'ex�cution de cet appel de fonction serait surement comparable � l'�ge de l'univers");
+		//GENError("La dure d'excution de cet appel de fonction serait surement comparable  l'ge de l'univers");
 //	}
 	//PROGRESS BAR	
 	//Construction du vecteur de valeur
@@ -2130,7 +2130,7 @@ SEXP prob( int* Genealogie, int* plProposant, int* plProEtat,int lNProposant, in
 */
 
 #ifdef USESDEBUG
-	//Informatin de d�buggage
+	//Informatin de dbuggage
 	SXLONG iter =0;
 	//printf("\nThe order is = %d\n",NOrdre);
 	//printf("Maximum number of iterations used:%.15G\n",pow(3,NOrdre)/2);
@@ -2143,7 +2143,7 @@ SEXP prob( int* Genealogie, int* plProposant, int* plProEtat,int lNProposant, in
 			//n niveau de l'ordre qui est en traitement
 			//a nombre d'allele du noeud courant
 
-			//pour �conomiser du code
+			//pour conomiser du code
 			CIndSimul& nd = *Ordre[n];
 			int &a = nd.allele;
 
@@ -2172,14 +2172,14 @@ SEXP prob( int* Genealogie, int* plProposant, int* plProEtat,int lNProposant, in
 				
 				//ebranchage (C'est ce qui empeche de calcule atteint)
 				if (TransGen[ap][am][a]!=0.0) {
-					//Probabilit� d'�tre dans l'�tat courant					
+					//Probabilit d'tre dans l'tat courant					
 					Cumul[n+1]=Cumul[n]*TransGen[ap][am][a];
 					
-					//Si on d�sirer la probabili� individuel d�coch� en dessous		
+					//Si on dsirer la probabili individuel dcoch en dessous		
 					if (nd.etat==GENPROPOSANT){
 						nd.prob[a]+=Cumul[n+1];							
 
-						//Evaluation des criteres pour probabilit� conjointe
+						//Evaluation des criteres pour probabilit conjointe
 						if (nd.bFlagSort==1) {
 							--nbCritereValid;
 							nd.bFlagSort=0;
@@ -2190,20 +2190,20 @@ SEXP prob( int* Genealogie, int* plProposant, int* plProEtat,int lNProposant, in
 							nd.bFlagSort=1;							
 						}						
 
-						//Si tous les proposants sont consid�r� comme valide alors...
-						//Compet dans la propabilit� conjointe
+						//Si tous les proposants sont considr comme valide alors...
+						//Compet dans la propabilit conjointe
 						if (n==Lastindex && nbCritereValid==lNProposant)												
 							ConjProb+=Cumul[n+1];
 
-						//Passe � la sous-�tape suivante	
+						//Passe  la sous-tape suivante	
 						if (n!=Lastindex && (!onlyConj || (onlyConj && nd.bFlagSort==1) ) )	++n;
 					}//fin si proposant
 					else
 					{
-						//Passe � la sous-�tape suivante	
+						//Passe  la sous-tape suivante	
 						if (n!=Lastindex)	++n;
 					}//fin else proposant
-				} //Fin �branchage
+				} //Fin branchage
 			}//Fin de la boucle pour iteration valide
 	}//Fin de la boucle principale
 	//END_FLOAT_PROGRESS_BAR();
@@ -2252,27 +2252,27 @@ SEXP prob( int* Genealogie, int* plProposant, int* plProEtat,int lNProposant, in
  */
 const double COAPPMOD_HASHAGECHARGEMAXIMAL=.8;
 
-///M�moire utilisable au grand maximum en octet;
+///Mmoire utilisable au grand maximum en octet;
 const long double COAPPMOD_MAXMEMORY_USABLE=(long double) 4000*MEGAOCTET; //800*MEGAOCTET;
-///Nombre maximal de possibilit� autoris� par l'algorithme...
-//COAPPMOD_NBPOSSMAX_DUPP doit-�tre plus petit qu'un unsigned long (d'une bonne marge)
-const long double COAPPMOD_NBPOSSMAX_DUPP=(long double)ULONG_MAX*COAPPMOD_HASHAGECHARGEMAXIMAL*.7;  //.7 = Facteur s�curit�
-//COAPPMOD_NBPOSSMAX_DUPP doit-�tre plus petit qu'un XLONG (pour la progresse bar et autre)
+///Nombre maximal de possibilit autoris par l'algorithme...
+//COAPPMOD_NBPOSSMAX_DUPP doit-tre plus petit qu'un unsigned long (d'une bonne marge)
+const long double COAPPMOD_NBPOSSMAX_DUPP=(long double)ULONG_MAX*COAPPMOD_HASHAGECHARGEMAXIMAL*.7;  //.7 = Facteur scurit
+//COAPPMOD_NBPOSSMAX_DUPP doit-tre plus petit qu'un XLONG (pour la progresse bar et autre)
 const long double COAPPMOD_NBPOSSMAX_NODUPP=(long double)1E16;  //SERIEUSEMENT LONG SUR QUOI QUE CE SOIT  ( avant 1E12 ) **JFL**
 
 
 /*! 
 	\brief Calcul de l'apparentement modifier entre un ancetre et quelques proposants
 
-	Cette fonction calcule l'apparentement modifier d'entre un anc�tre et n proposant. 
-	Plusieurs calcul � partir d'anc�tre diff�rent vers le m�me nombre n de proposant peuvent-�tre fait lors du m�me appel de fonction.
+	Cette fonction calcule l'apparentement modifier d'entre un anctre et n proposant. 
+	Plusieurs calcul  partir d'anctre diffrent vers le mme nombre n de proposant peuvent-tre fait lors du mme appel de fonction.
 
-	\param Genealogie	[in] Une genealogie construite � l'aide de gen.genealogie 
+	\param Genealogie	[in] Une genealogie construite  l'aide de gen.genealogie 
 
 	\param plInput	 [in] Vecteur representant une matrice d'entier (Selon Formule: col * NLigne + ligne)
-						Matrice d'entier de n colonne,  sur chaque ligne, on retrouve n proposant � �tudier p/r � un anc�tre. 
-						<br>Chaque ligne repr�sente un calcul compl�tement distinct
-						<br>Le nombre de ligne de la matrice doit �tre �gale au nombre d'�l�ment du vecteur anc�tre pour faire la correspondance.
+						Matrice d'entier de n colonne,  sur chaque ligne, on retrouve n proposant  tudier p/r  un anctre. 
+						<br>Chaque ligne reprsente un calcul compltement distinct
+						<br>Le nombre de ligne de la matrice doit tre gale au nombre d'lment du vecteur anctre pour faire la correspondance.
 						<br>Ex :  
 							<br>ancetre =  Vecteur 10, 20
 							<br>
@@ -2291,9 +2291,9 @@ const long double COAPPMOD_NBPOSSMAX_NODUPP=(long double)1E16;  //SERIEUSEMENT L
 								</tr>
 							</table>
 						<br>Dans ce cas, la fonction calculera.
-							<br>&nbsp;&nbsp;1- 	L'apparentement modifi� des proposant 1, 2, 3 avec l'anc�tre 10
-							<br>&nbsp;&nbsp;2- 	Et l'apparentement modifi� des proposant 4, 5, 6 avec l'anc�tre 20
-						<br><br>La valeur de retour sera un vecteur avec les deux r�sultats pr�c�dents.
+							<br>&nbsp;&nbsp;1- 	L'apparentement modifi des proposant 1, 2, 3 avec l'anctre 10
+							<br>&nbsp;&nbsp;2- 	Et l'apparentement modifi des proposant 4, 5, 6 avec l'anctre 20
+						<br><br>La valeur de retour sera un vecteur avec les deux rsultats prcdents.
 
 	\param lNColonne [in] Nombre de Colone de la matrice (Incluant la 1e colonne des ancetres)
 	\param lNLigne	 [in] Nombre de ligne de la matrice
@@ -2310,7 +2310,7 @@ const long double COAPPMOD_NBPOSSMAX_NODUPP=(long double)1E16;  //SERIEUSEMENT L
 
 	\param printprogress	[in] imprime un message indiquant les progress accomplies
 
-	\return 0 si la fonction est execut� avec succ�s 
+	\return 0 si la fonction est execut avec succs 
 	
 	 \sa CoPro
 */ 
@@ -2371,7 +2371,7 @@ int CoefApparentement(int* Genealogie,	int* plProposant, int NProposant, int* pl
 			Noeud[i].iind=++cbit;
 		}
 	}
-	//Nombre de noeud touch�, taille de la chaine de char 8 bit
+	//Nombre de noeud touch, taille de la chaine de char 8 bit
 	//const long NOrdre=cbit;
 	const int taille=(int) ceil(double(cbit)/MP_DIGIT_BIT); //MPI
 	
@@ -2407,7 +2407,7 @@ int CoefApparentement(int* Genealogie,	int* plProposant, int NProposant, int* pl
 			tmp=tmp->next;
 		}
 		dnbposs *= tmpcountpath;
-		NbIteration *= tmpcountpath; //Peut d�bord�
+		NbIteration *= tmpcountpath; //Peut dbord
 	}
 	
 	//VALIDE SI LE NOMBRE DE COMBINAISON EST TROP GRAND
@@ -2419,7 +2419,7 @@ int CoefApparentement(int* Genealogie,	int* plProposant, int NProposant, int* pl
 			PathDestruction(Path,NProposant);
 //			GENError("Number of combination to evaluate is too great for duplicata detection\nDeactivate it if you want to continue.");
 			throw std::range_error("Number of combination to evaluate is too great for duplicata detection\nDeactivate it if you want to continue.");
-			//GENError("Le nombre de combinaison a �valuer est trop grand pour pouvoir utilis� la d�tection de dupplicata\n D�activ� la d�tection de dupplication si vous d�sir� continuer"); 
+			//GENError("Le nombre de combinaison a valuer est trop grand pour pouvoir utilis la dtection de dupplicata\n Dactiv la dtection de dupplication si vous dsir continuer"); 
 		}
 
 		if (MaxMemoryUsed>COAPPMOD_MAXMEMORY_USABLE)
@@ -2432,13 +2432,13 @@ int CoefApparentement(int* Genealogie,	int* plProposant, int NProposant, int* pl
 			
 			double maxMemAllowed = COAPPMOD_MAXMEMORY_USABLE/MEGAOCTET;
 			double memUsed = MaxMemoryUsed/MEGAOCTET;
-			sprintf(erreur, "Memory usage is too great for duplicata detection\nDeactivate it if you want to continue\nMaximum memory allowed: %f Mo  memory needed: %f Mo\n\n",
+			snprintf(erreur, TAILLEDESCRIPTION, "Memory usage is too great for duplicata detection\nDeactivate it if you want to continue\nMaximum memory allowed: %f Mo  memory needed: %f Mo\n\n",
 				maxMemAllowed, memUsed);
 			//sprintf(erreur, "Memory usage is too great for duplicata detection\nDeactivate it if you want to continue\nMaximum memory allowed: %Lf Mo  memory needed: %Lf Mo\n\n",
 				// (COAPPMOD_MAXMEMORY_USABLE/MEGAOCTET),(MaxMemoryUsed/MEGAOCTET));
 			throw std::range_error(erreur);
-			//GENError("La quantite de m�moire utilis� par la d�tection de dupplicata est trop importante\n D�activ� la d�tection de dupplication si vous d�sir� continuer"
-					 //"\nTaille maximal permise : %lG Mo   M�moire demand� : %lG Mo\n\n",	 COAPPMOD_MAXMEMORY_USABLE/MEGAOCTET,MaxMemoryUsed/MEGAOCTET);
+			//GENError("La quantite de mmoire utilis par la dtection de dupplicata est trop importante\n Dactiv la dtection de dupplication si vous dsir continuer"
+					 //"\nTaille maximal permise : %lG Mo   Mmoire demand : %lG Mo\n\n",	 COAPPMOD_MAXMEMORY_USABLE/MEGAOCTET,MaxMemoryUsed/MEGAOCTET);
 		}
 	}
 	else
@@ -2448,7 +2448,7 @@ int CoefApparentement(int* Genealogie,	int* plProposant, int NProposant, int* pl
 			PathDestruction(Path,NProposant);
 //			GENError("Execution time of this function call is too great");
 			throw std::range_error("Execution time of this function call is too great");
-			//GENError("La dur�e d'ex�cution de cet appel de fonction serait surement comparable � l'�ge de l'univers");
+			//GENError("La dure d'excution de cet appel de fonction serait surement comparable  l'ge de l'univers");
 		}
 	}
 
@@ -2457,7 +2457,7 @@ int CoefApparentement(int* Genealogie,	int* plProposant, int NProposant, int* pl
 	if (NbIteration==0)
 	{
 		PathDestruction(Path,NProposant);
-		return 0;  //Operation r�ussi mais le r�sultat est simplement zero
+		return 0;  //Operation russi mais le rsultat est simplement zero
 	}
 
 	//CREATION DE LA TABLE ANTI DUPPLICATA	
@@ -2473,18 +2473,18 @@ int CoefApparentement(int* Genealogie,	int* plProposant, int NProposant, int* pl
 //				"Memory needed: %lG Mo\n", MaxMemoryUsed/MEGAOCTET);
 		char erreur[TAILLEDESCRIPTION];
 		double memUsed = MaxMemoryUsed/MEGAOCTET;
-		sprintf(erreur, "Insufficient memory to create an anti-duplicata table\n Deactivate duplicata detection if you want to continue\nMemory needed: %f Mo\n",
+		snprintf(erreur, TAILLEDESCRIPTION, "Insufficient memory to create an anti-duplicata table\n Deactivate duplicata detection if you want to continue\nMemory needed: %f Mo\n",
 			memUsed);
 		//sprintf(erreur, "Insufficient memory to create an anti-duplicata table\n Deactivate duplicata detection if you want to continue\nMemory needed: %Lf Mo\n",
 		//	 (MaxMemoryUsed/MEGAOCTET));
 		throw std::range_error(erreur);
-		//GENError("M�moire insuffisante pour utilis� cr�er une table anti-dupplicata\n D�activ� la d�tection de dupplication si vous d�sir� continuer"
-				 //"\nM�moire n�cessaire : %lG Mo\n",MaxMemoryUsed/MEGAOCTET);
+		//GENError("Mmoire insuffisante pour utilis crer une table anti-dupplicata\n Dactiv la dtection de dupplication si vous dsir continuer"
+				 //"\nMmoire ncessaire : %lG Mo\n",MaxMemoryUsed/MEGAOCTET);
 	}
 
 	//SOMMATION DE LA PROBABILITE CONJOINTE DE CHAQUE CHEMIN POSSIBLE
-	//l'�quivalent d'un ensemble de nbproposant boucle imbriqu�.
-	//Chaque boucle repr�sente l'ensemble des chemins partant de l'ancetre
+	//l'quivalent d'un ensemble de nbproposant boucle imbriqu.
+	//Chaque boucle reprsente l'ensemble des chemins partant de l'ancetre
 	//et ce rendant au proposant de cette boucle
 	
 	//Initialisation
@@ -2493,7 +2493,7 @@ int CoefApparentement(int* Genealogie,	int* plProposant, int NProposant, int* pl
 
 	int n=0; //Curseur qui indique sur que chemin on est actuellement
 		
-	mp_int tmpResult; //La solution courante � �tudier
+	mp_int tmpResult; //La solution courante  tudier
 	mp_int tmp; 
 	mp_init(&tmpResult);
 	mp_init(&tmp);
@@ -2520,7 +2520,7 @@ int CoefApparentement(int* Genealogie,	int* plProposant, int NProposant, int* pl
 				{						
 					//OR pour combiner le tout
 					mpl_or(&tmpResult, &(Current[cCol]->num), &tmp);
-					//Remet le r�sultat dans tmpResult					
+					//Remet le rsultat dans tmpResult					
 					mp_exch(&tmpResult, &tmp);									
 				}
 				
@@ -2528,7 +2528,7 @@ int CoefApparentement(int* Genealogie,	int* plProposant, int NProposant, int* pl
 				if (!DuppDetection ||
 					 (DuppDetection && ptrHashTable->Add(tmpResult)==GTRUE) )
 				{
-					//Calcul et ajout de la distance au r�sultat		
+					//Calcul et ajout de la distance au rsultat		
 					int distance=0;
 					mpl_num_set(&tmpResult, &distance);  
 					*pdRetour += pow2(distance-1); //Me rappelle plus pourquoi -1... 
@@ -2544,7 +2544,7 @@ int CoefApparentement(int* Genealogie,	int* plProposant, int NProposant, int* pl
 	//VALEUR DE RETOUR
 	//*pdRetour
 
-	//NETTOYER LES ASSIGNEMENTS DE M�MOIRES			
+	//NETTOYER LES ASSIGNEMENTS DE MMOIRES			
 	//outrand();
 	PathDestruction(Path,NProposant);
 
@@ -2599,12 +2599,12 @@ static void PathDestruction(CApPath **Path,int npath)
 }
 
 
-///Utilise par ExploreCoeff pour repr�sent� le chemin parcouru
+///Utilise par ExploreCoeff pour reprsent le chemin parcouru
 /*
 static CIndSimul** g_ExpCoeff_CheminParcouru=NULL; 
-///Utilise par ExploreCoeff comme �tant le dernier chemin remplis (ou le premiers)
+///Utilise par ExploreCoeff comme tant le dernier chemin remplis (ou le premiers)
 static CApPath ** g_ExpCoeff_Path=NULL;
-///Utilise par ExploreCoeff comme �tant la cible de l'exploration
+///Utilise par ExploreCoeff comme tant la cible de l'exploration
 static CIndSimul* g_ExpCoeff_Cible=NULL;*/
 /*! 
 	\brief (INTERNE) Explore une genealogie et construit une liste CapPath
@@ -2626,7 +2626,7 @@ static CIndSimul* g_ExpCoeff_Cible=NULL;*/
 	\param profondeur	[in] Profondeur actuel (au depart:0 normalement)
 	\param Cible		[in] Noeud Cible 
 	\param Array2		[in] Pointeur vers un vecteur de cindsimul* de taille nombre de noeud max implique 
-							 (utilis� pour m�moris� le chemin utilis�)
+							 (utilis pour mmoris le chemin utilis)
 	\param InputPath	[in] Taille du vecteur Path
 	\param taille2		[in] Taille du vecteur Path
 	
@@ -2634,7 +2634,7 @@ static CIndSimul* g_ExpCoeff_Cible=NULL;*/
 */
 static void FASTCALL ExploreCoeff(CIndSimul* Noeud)
 {
-	//Explore l'arbre et retourne tous les path utilis�		
+	//Explore l'arbre et retourne tous les path utilis		
 	static int profondeur=0;
 
 	//Trace le chemin parcouru
@@ -2650,11 +2650,11 @@ static void FASTCALL ExploreCoeff(CIndSimul* Noeud)
 		mp_init( &tmp->num );		
 		tmp->next=NULL;
 
-		//Complete la s�rie
+		//Complete la srie
 		*g_ExpCoeff_Path=tmp;
 		g_ExpCoeff_Path=&(tmp->next);	//Avance le curseur
 		
-		//Ajuste le nombre en cons�quence....
+		//Ajuste le nombre en consquence....
 		for(int i=0;i<=profondeur;i++)
 		{
 #ifdef USESDEBUG
@@ -2672,7 +2672,7 @@ static void FASTCALL ExploreCoeff(CIndSimul* Noeud)
 	}	
 	else
 	{
-		//Non.. on continue a cherch�
+		//Non.. on continue a cherch
 		Clist *current=Noeud->fils;
 		if (current!=NULL)
 		{

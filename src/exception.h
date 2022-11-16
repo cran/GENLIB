@@ -2,7 +2,7 @@
 #ifndef GENEXCEPTION
 #define GENEXCEPTION
 
-///Fonction pour récupéré le dernier message d'erreur
+///Fonction pour recupere le dernier message d'erreur
 const char* getLastMessage();
 
 
@@ -17,36 +17,36 @@ template<class T1,class T2,class T3,class T4>
 void GENError(const char* format,T1 item1,T2 item2,T3 item3,T4 item4)
 {
 	char buffer[TAILLEDESCRIPTION];
-	sprintf(buffer,"%s\n",format);
-	sprintf(buffer,format,item1,item2,item3,item4);
-	sprintf(g_LastMessage,"\nError: %s \n",buffer);
+	snprintf(buffer, TAILLEDESCRIPTION, "%s\n",format);
+	snprintf(buffer, TAILLEDESCRIPTION, format,item1,item2,item3,item4);
+	snprintf(g_LastMessage, TAILLEDESCRIPTION, "\nError: %s \n",buffer);
 	ErrorHandler();
 }
 template<class T1,class T2,class T3> 
 void GENError(const char* format,T1 item1,T2 item2,T3 item3)
 {
 	char buffer[TAILLEDESCRIPTION];
-	sprintf(buffer,"%s\n",format);
-	sprintf(buffer,format,item1,item2,item3);
-	sprintf(g_LastMessage,"\nError: %s \n",buffer);
+	snprintf(buffer, TAILLEDESCRIPTION, "%s\n",format);
+	snprintf(buffer, TAILLEDESCRIPTION, format,item1,item2,item3);
+	snprintf(g_LastMessage,TAILLEDESCRIPTION, "\nError: %s \n",buffer);
 	ErrorHandler();
 }
 template<class T1,class T2> 
 void GENError(const char* format,T1 item1,T2 item2)
 {
 	char buffer[TAILLEDESCRIPTION];
-	sprintf(buffer,"%s\n",format);
-	sprintf(buffer,format,item1,item2);
-	sprintf(g_LastMessage,"\nError: %s \n",buffer);
+	snprintf(buffer, TAILLEDESCRIPTION, "%s\n",format);
+	snprintf(buffer, TAILLEDESCRIPTION, format,item1,item2);
+	snprintf(g_LastMessage, TAILLEDESCRIPTION, "\nError: %s \n",buffer);
 	ErrorHandler();
 }
 template<class T1> 
 void GENError(const char* format,T1 item1)
 {
 	char buffer[TAILLEDESCRIPTION];
-	sprintf(buffer,"%s\n",format);
-	sprintf(buffer,format,item1);
-	sprintf(g_LastMessage,"\nError: %s \n",buffer);
+	snprintf(buffer,TAILLEDESCRIPTION, "%s\n",format);
+	snprintf(buffer,TAILLEDESCRIPTION, format,item1);
+	snprintf(g_LastMessage, TAILLEDESCRIPTION, "\nError: %s \n",buffer);
 	ErrorHandler();
 }
 void GENError(const char* format);

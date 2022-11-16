@@ -1,12 +1,12 @@
 /*! \file outils.cc
 \brief Outils d'utilisation generale pour toute la library
 
-Groupes de fonctions d'utilit� g�n�rale. comme la creation des classe INDsimul,
+Groupes de fonctions d'utilit gnrale. comme la creation des classe INDsimul,
 reordonnancement, creation d'ordre, ordre saut etc... 
 
-  plus les petites fonction math�matiques
+  plus les petites fonction mathmatiques
 
-	\author S�bastien Leclerc
+	\author Sbastien Leclerc
 \contributor Jean-Francois Lefebvre
 
 */
@@ -28,8 +28,8 @@ reordonnancement, creation d'ordre, ordre saut etc...
 using namespace std;
 
 
-// TransGenCum[p][m][a] : chances d'avoir a all�les si le p�re a p
-// all�les mutants et la m�re m all�les mutants. (Cumulatif)
+// TransGenCum[p][m][a] : chances d'avoir a allles si le pre a p
+// allles mutants et la mre m allles mutants. (Cumulatif)
 double TransGenCum[3][3][3] =
 {
 	{ {  1,  1,  1}, { .5,  1,  1}, {  0,  1,  1} },
@@ -38,8 +38,8 @@ double TransGenCum[3][3][3] =
 };
 
 	
-// TransGenCum[p][m][a] : chances d'avoir a all�les si le p�re a p
-// all�les mutants et la m�re m all�les mutants. (non-Cumulatif)
+// TransGenCum[p][m][a] : chances d'avoir a allles si le pre a p
+// allles mutants et la mre m allles mutants. (non-Cumulatif)
 double TransGen[3][3][3] =
 {
 	{ {  1,  0,  0}, { .5, .5,  0}, {  0,  1,  0} },
@@ -105,7 +105,7 @@ static int FlushGroupeProposantAncetre(ENUMBANQUE banque);
 	const char* DescIEEEValue(int* val)
 	{
 		char c[10];
-		sprintf(c, "%d", *val);
+		snprintf(c, 10, "%d", *val);
 		double valTmp = atof(c);
 		const char* buffer[]={"NA","Not a Number","Infinite"};
 		//if (is_na(val,S_MODE_INT))
@@ -191,7 +191,7 @@ GestionMemoire::GestionMemoire(char UseStdMalloc)
 
 	\param size	[in] Taille (en byte) de chaque element du vecteur.
 	
-	\param NLigne [in] Utiliser au d�buggage, no de la ligne qui fait l'appel
+	\param NLigne [in] Utiliser au dbuggage, no de la ligne qui fait l'appel
 
 	\return Un pointeur vers un bloc d'adresse de taille nelement*size
 */
@@ -231,13 +231,13 @@ void* GestionMemoire::alloc(int nelement, size_t size)
 /*! 
 	\brief Ajoute la valeur d'un pointeur a la table de GestionMemoire
 	
-	Cette fonction peut-�tre utilise si on desire rajoute un pointeur dans la table de GestionMemoire.
+	Cette fonction peut-tre utilise si on desire rajoute un pointeur dans la table de GestionMemoire.
 	Car a la destruction de GestionMemoire, tout les blocs memoire contenu dans la table seront
 	relacher (Free). 
 	  
 	\param item	[in] Pointeur vers un bloc d'adresse valide (allouer a l'aide de malloc)
 
-	\return 0 si la fonction est execut� avec succ�s
+	\return 0 si la fonction est execut avec succs
 */
 
 void GestionMemoire::add(void* item)
@@ -255,7 +255,7 @@ void GestionMemoire::add(void* item)
 /*! 
 	\brief Destruction et "Garbage collector" de la classe GestionMemoire
 
-	A la destruction de GestionMemoire, la toutes les adresses qui on �t� memorise
+	A la destruction de GestionMemoire, la toutes les adresses qui on t memorise
 	sont relache (delete). 
 */
 
@@ -272,7 +272,7 @@ GestionMemoire::~GestionMemoire()
 		else
 			MAX=n+1;  //OUI
 
-		//Liberer la ram de chaque �l�ment du tableau
+		//Liberer la ram de chaque lment du tableau
 		for(int i=0;i<MAX;i++)
 		{
 			if (current->tableau[i]!=NULL)
@@ -310,7 +310,7 @@ GestionMemoire::~GestionMemoire()
 	  
 	\param Noeud	[in] Adresse d'un vecteur de CIndSimul de iNind de int.
 
-	\param noind	[in] Vecteur de taille iNind se composant des no des individu � �tudier
+	\param noind	[in] Vecteur de taille iNind se composant des no des individu tudier
 	\param pere		[in] Vecteur de taille iNind se composant des no des peres
 	\param mere		[in] Vecteur de taille iNind se composant des no des meres
 	\param sex		[in] Vecteur de taille iNind se composant des no des sexes
@@ -325,10 +325,10 @@ GestionMemoire::~GestionMemoire()
 									et leur indide dans ce meme vecteur. Mais le vecteur est 
 									ordonne par ordre croissant de noind.
 									
-	\param ChildArrayStart		[in/out] Si !=NULL alors les parents/enfants seront charg� dans les noeud (CIndSimul).
+	\param ChildArrayStart		[in/out] Si !=NULL alors les parents/enfants seront charg dans les noeud (CIndSimul).
 								 Dans le cas contraire, seul les pointeurs vers les parents
 								 seront construit.
-								 ChildArray sera affecte la valeur vers le tableau d'enfants (n.b que l'on doit d�truire avec d�truit structure)
+								 ChildArray sera affecte la valeur vers le tableau d'enfants (n.b que l'on doit dtruire avec dtruit structure)
 								 									
 	\remark Cette fonction ne devrais pas etre utilise directement dans une fonction.
 			Utiliser ReCreeStructure de preference car celle-ci n'est pas tres efficace.
@@ -454,7 +454,7 @@ void CreeStructure(CIndSimul* Noeud,int* noind,int* pere, int* mere,int* sex, in
 /*! 
 	\brief Recupere la memoire alloue par CreeStructure
 		  
-	\param ChildArray	[in, out] Clist � d�truire
+	\param ChildArray	[in, out] Clist  dtruire
 
 	\sa CreeStructure
 */
@@ -568,31 +568,31 @@ static int ReTrouverIndice(int nom, CDuoPair* Pair, int iNind , int* resultat)
 */
 int ExploreArbre(CIndSimul* Noeud)
 {
-	//Explore l'arbre et change l'�tat des noeud explorer selon qu'il sont utile ou non pour r�soudre
-	//le probl�me actuel
-	//un noeud est utile s'il fait parti d'une chemin qui part d'un point de d�part et vas � un proposant
+	//Explore l'arbre et change l'tat des noeud explorer selon qu'il sont utile ou non pour rsoudre
+	//le problme actuel
+	//un noeud est utile s'il fait parti d'une chemin qui part d'un point de dpart et vas  un proposant
 
 	int isutile;
 	Clist *current;
 
 	//printf("\n%d == %s",Noeud->nom,stype[Noeud->etat]);
 
-	//cas sp�ciaux
+	//cas spciaux
 	switch (Noeud->etat)
 	{
 		case GENINUTILE:
-				//Le noeud est d�j� explorer inutile de le refaire
+				//Le noeud est dj explorer inutile de le refaire
 				return 0;
 			break;
 
 		case GENNOEUD:
 		case GENPROPOSANT:
-			//Le noeud est d�j� explorer inutile de le refaire
+			//Le noeud est dj explorer inutile de le refaire
 				return 1;
 			break;
 		
 		case GENDEPART:
-			//Ce Noeud est un proposant ou un depart il est forc�ment utile mais il faut explorer les enfants
+			//Ce Noeud est un proposant ou un depart il est forcment utile mais il faut explorer les enfants
 			current=Noeud->fils;
 			if (current!=NULL)
 			{
@@ -607,7 +607,7 @@ int ExploreArbre(CIndSimul* Noeud)
 			break;		
 
 		case GENPROPOSANTINUTILE:
-			//Ce Noeud est un proposant ou un depart il est forc�ment utile mais il faut explorer les enfants
+			//Ce Noeud est un proposant ou un depart il est forcment utile mais il faut explorer les enfants
 			Noeud->etat=GENPROPOSANT;
 			current=Noeud->fils;
 			if (current!=NULL)
@@ -624,7 +624,7 @@ int ExploreArbre(CIndSimul* Noeud)
 			break;
 		
 		case GENNONEXPLORER:
-			//Noeud non-explorer. sont status d�pend des ses enfants (s'Il y a un proposant dans sa descendance)
+			//Noeud non-explorer. sont status dpend des ses enfants (s'Il y a un proposant dans sa descendance)
 			isutile=0;
 			current=Noeud->fils;
 			if (current!=NULL)
@@ -684,13 +684,13 @@ int ExploreArbre(CIndSimul* Noeud)
  */
 void ExploreArbreTousDescendant(CIndSimul* Noeud)
 {
-	//Explore l'arbre et change l'�tat des noeud explorer selon qu'il sont utile ou non pour r�soudre
-	//le probl�me actuel
-	//un noeud est utile s'il fait parti d'une chemin qui part d'un point de d�part et vas � un proposant
+	//Explore l'arbre et change l'tat des noeud explorer selon qu'il sont utile ou non pour rsoudre
+	//le problme actuel
+	//un noeud est utile s'il fait parti d'une chemin qui part d'un point de dpart et vas  un proposant
 
 	Clist *current;
 
-	//cas sp�ciaux
+	//cas spciaux
 	switch (Noeud->etat)
 	{
 		
@@ -820,17 +820,17 @@ void PrepareSortPrioriteArbre(CIndSimul* Noeud,int iNind)
 */
 void StartSortPrioriteArbre(CIndSimul* Noeud,CIndSimul** Ordre,int* index,int* TableSaut)
 {
-	//Complete un ordre et un nombre de saut en tenant compte des d�pendances		
+	//Complete un ordre et un nombre de saut en tenant compte des dpendances		
 	Clist *listedebut;	
 	Clist *current;
 	Clist *tmp;
 	//int oldflag;
 
 	//oldflag=Noeud->bFlagSort;
-	Noeud->bFlagSort=5; //Ce noeud � d�j� �t� trait�
+	Noeud->bFlagSort=5; //Ce noeud  dj t trait
 
 
-	// *******Premi�re passe.. les fils � un parent "utile" (ce noeud-ci)*******
+	// *******Premire passe.. les fils  un parent "utile" (ce noeud-ci)*******
 	current=Noeud->fils;
 	if (current!=NULL)
 	{
@@ -856,7 +856,7 @@ void StartSortPrioriteArbre(CIndSimul* Noeud,CIndSimul** Ordre,int* index,int* T
 			}			
 	}
 
-	// *******Deuxi�me passe.. les fils � deux parent "utile"***
+	// *******Deuxime passe.. les fils  deux parent "utile"***
 	current=Noeud->fils;
 	if (current!=NULL)
 	{
@@ -867,7 +867,7 @@ void StartSortPrioriteArbre(CIndSimul* Noeud,CIndSimul** Ordre,int* index,int* T
 
 				switch(current->noeud->bFlagSort)
 				{
-				case -1:	//dej� fait
+				case -1:	//dej fait
 					break;
 				case 0:
 					//Dans ce cas on set le flag et on vas traiter ce noeud au passage suivant
@@ -936,7 +936,7 @@ int SortPrioriteArbre(CIndSimul* Noeud,CIndSimul** Ordre,int *index,int *TableSa
 	}
 
 
-	//Les noeuds d�j� trait� sont ignorer ainsi que les autres types de noeuds
+	//Les noeuds dj trait sont ignorer ainsi que les autres types de noeuds
 	if ((Noeud->etat!=GENPROPOSANT && Noeud->etat!=GENNOEUD) || Noeud->bFlagSort==5)
 		return 0;
 	
@@ -946,9 +946,9 @@ int SortPrioriteArbre(CIndSimul* Noeud,CIndSimul** Ordre,int *index,int *TableSa
 	*index+=1;
 	
 	oldflag=Noeud->bFlagSort;
-	Noeud->bFlagSort=5; //Ce noeud � d�j� �t� trait�
+	Noeud->bFlagSort=5; //Ce noeud  dj t trait
 
-	//Premi�re passe.. les fils � un parent "utile" (ce noeud-ci)
+	//Premire passe.. les fils  un parent "utile" (ce noeud-ci)
 	current=Noeud->fils;
 	if (current!=NULL)
 	{
@@ -965,7 +965,7 @@ int SortPrioriteArbre(CIndSimul* Noeud,CIndSimul** Ordre,int *index,int *TableSa
 	if (oldflag==-1)
 		++Saut; 	
 
-	//Deuxi�me passe.. les fils � deux parent "utile"
+	//Deuxime passe.. les fils  deux parent "utile"
 	current=Noeud->fils;
 	if (current!=NULL)
 	{
@@ -973,7 +973,7 @@ int SortPrioriteArbre(CIndSimul* Noeud,CIndSimul** Ordre,int *index,int *TableSa
 			{
 				switch(current->noeud->bFlagSort)
 				{
-				case -1:	//dej� fait
+				case -1:	//dej fait
 					break;
 				case 0:
 					//Dans ce cas on set le flag et on vas traiter ce noeud au passage suivant
@@ -1003,8 +1003,8 @@ return Saut;
 	Trie les noeuds par ordre les parents toujours avant les enfants.
 	Le resultat est retourne sous la forme d'un vecteur de pointeur de taille iNind.
 
-	<br>Les noind de chaque noeud sont modifier pour indiqu� leur nouvel ordre.
-	Soit de 0 � (iNind-1) 
+	<br>Les noind de chaque noeud sont modifier pour indiqu leur nouvel ordre.
+	Soit de 0  (iNind-1) 
 
 	\param Noeud	 [in]  Adresse d'un vecteur de CIndSimul representant une genealogie
 
@@ -1014,7 +1014,7 @@ return Saut;
 						 
   	\param iNind	 [in]  Adresse d'un vecteur de CIndSimul representa une genealogie
 
-	\param SensInverse [in] Si SensInverse!=0 alors l'ordre des noeuds est invers�.
+	\param SensInverse [in] Si SensInverse!=0 alors l'ordre des noeuds est invers.
 							Auto pour les Noind que pour le vecteur ordre.
 */
 int OrdonneStructure(CIndSimul* Noeud, CIndSimul** Ordre, int iNind, int SensInverse, int* profMax)
@@ -1032,7 +1032,7 @@ int OrdonneStructure(CIndSimul* Noeud, CIndSimul** Ordre, int iNind, int SensInv
 	for(i=0;i<iNind;i++)
 	{
 		Noeud[i].noind=-1; 
-		Noeud[i].bFlagSort=-1;  //Flag qui indique a quel iteration le noeud a �t� place
+		Noeud[i].bFlagSort=-1;  //Flag qui indique a quel iteration le noeud a t place
 		next[i]=i+1;
 	}
 	next[iNind-1]=-1;
@@ -1081,10 +1081,10 @@ int OrdonneStructure(CIndSimul* Noeud, CIndSimul** Ordre, int iNind, int SensInv
 	  if (itemchange==0){ //La combinaison est invalide.. (existe des cycles)
 //		GENError("The genealogy has at least one cycle (Number of individuals involved: %d    Number of an individual: %d )",iNind-n,indiceBoucle);
 		char erreur[TAILLEDESCRIPTION];
-		sprintf(erreur, "The genealogy has at least one cycle (Number of individuals involved: %d    Number of an individual: %d )",
+		snprintf(erreur, TAILLEDESCRIPTION, "The genealogy has at least one cycle (Number of individuals involved: %d    Number of an individual: %d )",
 				iNind-n,indiceBoucle);
 		throw std::range_error(erreur);
-		//GENError("LA G�N�ALOGIE COMPORTE AU MOINS UN CYCLE (Nombre d'individus impliqu�s: %d    No d'un individu: %d )",iNind-n,indiceBoucle);
+		//GENError("LA GNALOGIE COMPORTE AU MOINS UN CYCLE (Nombre d'individus impliqus: %d    No d'un individu: %d )",iNind-n,indiceBoucle);
 	  }
 	}//jusqu'a la fin de la recherche
 
@@ -1124,7 +1124,7 @@ int OrdonneStructure(CIndSimul* Noeud, CIndSimul** Ordre, int iNind, int SensInv
 
 
 // *************************************************************************** //
-//		utilitaire math�matique
+//		utilitaire mathmatique
 // *************************************************************************** //
 
 int interval(int x, int min, int max)
@@ -1191,10 +1191,10 @@ double pow2(int y)
 //TEST PRIMALITE MILLER RABIN 
 
 /*! 
-	\brief Algorithme miller Rabin �value la primalite de n
+	\brief Algorithme miller Rabin value la primalite de n
 
 	Evalue la primalite de n et ce pour t test.
-	La probabilit� d'erreur est de l'ordre de 2^t.
+	La probabilit d'erreur est de l'ordre de 2^t.
 					
 	\param n [in] Nombre entier a tester
 
@@ -1209,7 +1209,7 @@ int millerRabin(unsigned int n, unsigned int t)
 		unsigned int a = irand(2, n-1);
 		if (temoin(a,n)) 
 		{
-				return 1;          // n est compos�
+				return 1;          // n est compos
 		}
 	}
 	return 0;             // n est tres probablement premier
@@ -1218,10 +1218,10 @@ int millerRabin(unsigned int n, unsigned int t)
 /*! 
 	\brief Procedure Interne utiliser dans miller-rabin
 				
-	\param a [in] nombre tire al�atoirement entre 2..n-1
-	\param n [in] Nombre donc on evalue la primalit�
+	\param a [in] nombre tire alatoirement entre 2..n-1
+	\param n [in] Nombre donc on evalue la primalit
   	
-	\return	1 s'il y a confirmation que n est compos�. 0 dans le cas contraire
+	\return	1 s'il y a confirmation que n est compos. 0 dans le cas contraire
 */
 static int temoin(unsigned int a, unsigned int n) 
 {
@@ -1243,21 +1243,21 @@ static int temoin(unsigned int a, unsigned int n)
 			if (a==1 && b!=1 && b!=n-1) 
 			{
 				  // b est une racine carre non triviale de 1
-				  return 1;        // n est compos�
+				  return 1;        // n est compos
 			}
 			m = m/2;
 		}
 	}
     
     if (y != 1) 
-		return 1;            // n est compos�
+		return 1;            // n est compos
     else 
 		return 0;			// ?
 
 }
 
 /*! 
-	\brief Tire un nombre al�atoire entre a et b [inclus]
+	\brief Tire un nombre alatoire entre a et b [inclus]
 				
 	\param a [in] Limite inferieur
 	\param b [in] Limite superieur
@@ -1295,7 +1295,7 @@ unsigned int irand(unsigned int a, unsigned int b)
 
 	Cette fonction attribue a chaque individu de la genealogie son numero de generation qu il enregistre dans l attribut bFlagSort
 	Selon les parametres fournis, cette fonction peut en plus calculer le nombre d'individus par generation
-	et/ou un tableau donnant pour chaque generation � partir de 0, la liste des individus qu elle contient
+	et/ou un tableau donnant pour chaque generation  partir de 0, la liste des individus qu elle contient
 						
 	\param Gen [in, out] Genealogie obtenue par LoadGenealogie ou chaque individu connait sa liste d enfants
 
@@ -1336,14 +1336,14 @@ int classeGen(CIndSimul* Gen, int nbInd, int* tab , CIndSimul** tabind)
 			Gen[i].bFlagSort=fmax +1;	
 		}
 
-		// curpro : profondeur courante ie celle de l'individu trait�
+		// curpro : profondeur courante ie celle de l'individu trait
 		const int curpro = Gen[i].bFlagSort;
 
-		// incr�menter le nombre d'individus de la generation courante
+		// incrmenter le nombre d'individus de la generation courante
 		if(tab != NULL)
 			tab[curpro]++;
 
-		// ajouter l individu � la liste des individus de la generation courante
+		// ajouter l individu  la liste des individus de la generation courante
 		if(tabind != NULL)
 		{
 			if(tabind[curpro]!=NULL)
@@ -1363,7 +1363,7 @@ int classeGen(CIndSimul* Gen, int nbInd, int* tab , CIndSimul** tabind)
 
 	Cette fonction attribue a chaque individu de la genealogie son numero de generation minimale qu il enregistre dans l attribut bFlagSort
 	Selon les parametres fournis, cette fonction peut en plus calculer le nombre d'individus par generation
-	et/ou un tableau donnant pour chaque generation � partir de 0, la liste des individus qu elle contient
+	et/ou un tableau donnant pour chaque generation  partir de 0, la liste des individus qu elle contient
 						
 	\param Gen [in, out] Genealogie obtenue par LoadGenealogie ou chaque individu connait sa liste d enfants
 
@@ -1406,14 +1406,14 @@ int classeGenMin(CIndSimul* Gen, int nbInd, int* tab , CIndSimul** tabind)
 			Gen[i].bFlagSort=fmin +1;	
 		}
 
-		// curpro : profondeur courante ie celle de l'individu trait�
+		// curpro : profondeur courante ie celle de l'individu trait
 		const int curpro = Gen[i].bFlagSort;
 
-		// incr�menter le nombre d'individus de la generation courante
+		// incrmenter le nombre d'individus de la generation courante
 		if(tab != NULL)
 			tab[curpro]++;
 
-		// ajouter l individu � la liste des individus de la generation courante
+		// ajouter l individu  la liste des individus de la generation courante
 		if(tabind != NULL)
 		{
 			if(tabind[curpro]!=NULL)
@@ -1589,7 +1589,7 @@ int CompleteGenealogie(int* plIndividu,int* plPere,int* plMere,int* plSexe,int* 
 	\brief Cette fonction creer un vecteur Genealogie (version 5) a partir d'une genealogie No Individu,No pere,No mere
 
 	La fonction convertis une genealogie a 3 vecteur en une a un vecteur.
-	le resultat est retourne dans le vecteur saveptr dont la taille doit avoir �t� calcul�e au prealabe
+	le resultat est retourne dans le vecteur saveptr dont la taille doit avoir t calcule au prealabe
 	a l'aide de TAILLEGENVERSION3
     	  
 	<br><br>FORMAT DU FICHIER DE SAUVEGARDE
@@ -1625,7 +1625,7 @@ int CompleteGenealogie(int* plIndividu,int* plPere,int* plMere,int* plSexe,int* 
 	\retval saveptr [out] Vecteur de int de taille calculer par la macro TAILLEGENVERSION3
 						 Si Succes, contient la genealogie a un vecteur
   	
-	\return 0 dans le cas contraire retourne un code d'erreur correspondant � sCodeErreurCreation
+	\return 0 dans le cas contraire retourne un code d'erreur correspondant  sCodeErreurCreation
 
 	\sa sCodeErreurCreation
 */
@@ -1658,28 +1658,28 @@ int CreerGenealogie(int* plIndividu, int* plPere, int* plMere, int* plSexe, int 
 	    if (plIndividu[i]<=0){
 //			GENError("The index of an individual must be greater than zero.");
 			throw std::range_error("The index of an individual must be greater than zero.");
-			//GENError("L'indice d'un individu doit-�tre plus grand que zero");		
+			//GENError("L'indice d'un individu doit-tre plus grand que zero");		
 		}
 		if (plPere[i]<0){
 //			GENError("The father of individual %d must be greater than or equal to zero",plIndividu[i]);
 			char erreur[TAILLEDESCRIPTION];
-			sprintf(erreur, "The father of individual %d must be greater than or equal to zero",plIndividu[i]);
+			snprintf(erreur, TAILLEDESCRIPTION, "The father of individual %d must be greater than or equal to zero",plIndividu[i]);
 			throw std::range_error(erreur);
-			//GENError("Le pere de l'individu %d doit �tre plus grand ou �gal � zero",plIndividu[i]);			
+			//GENError("Le pere de l'individu %d doit tre plus grand ou gal  zero",plIndividu[i]);			
 		}
 	    if (plMere[i]<0){
 //			GENError("The mother of individual %d must be greater than or equal to zero",plIndividu[i]);
 			char erreur[TAILLEDESCRIPTION];
-			sprintf(erreur, "The mother of individual %d must be greater than or equal to zero",plIndividu[i]);
+			snprintf(erreur, TAILLEDESCRIPTION, "The mother of individual %d must be greater than or equal to zero",plIndividu[i]);
 			throw std::range_error(erreur);
-			//GENError("La mere de l'individu %d doit �tre plus grand ou �gal � zero",plIndividu[i]);
+			//GENError("La mere de l'individu %d doit tre plus grand ou gal  zero",plIndividu[i]);
 		}
 	    if (plPere[i]==plMere[i] && plPere[i]!=0){
 //			GENError("Individual %d must have different mother and father",plIndividu[i]);
 			char erreur[TAILLEDESCRIPTION];
-			sprintf(erreur, "Individual %d must have different mother and father",plIndividu[i]);
+			snprintf(erreur, TAILLEDESCRIPTION, "Individual %d must have different mother and father",plIndividu[i]);
 			throw std::range_error(erreur);
-			//GENError("L'individu %d doit avoir un pere et une mere diff�rent",plIndividu[i]);
+			//GENError("L'individu %d doit avoir un pere et une mere diffrent",plIndividu[i]);
 		}
 	}
 	
@@ -1693,7 +1693,7 @@ int CreerGenealogie(int* plIndividu, int* plPere, int* plMere, int* plSexe, int 
 		if (Noeud[i].sex<GEN_INCONNU || Noeud[i].sex>GEN_FEM){
 //				GENError("The sexe of individual %d is not valid (0=SEXE UNKNOWN, 1=MAN, 2=WOMAN)",plIndividu[i]);
 				char erreur[TAILLEDESCRIPTION];
-				sprintf(erreur, "The sexe of individual %d is not valid (0=SEXE UNKNOWN, 1=MAN, 2=WOMAN)",plIndividu[i]);
+				snprintf(erreur, TAILLEDESCRIPTION, "The sexe of individual %d is not valid (0=SEXE UNKNOWN, 1=MAN, 2=WOMAN)",plIndividu[i]);
 				throw std::range_error(erreur);
 				//GENError("Le sexe de l'individu %d n'est pas une valeur valide (0=SEXE INCONNU, 1=HOMME, 2=FEMME)",plIndividu[i]);
 		}
@@ -1702,7 +1702,7 @@ int CreerGenealogie(int* plIndividu, int* plPere, int* plMere, int* plSexe, int 
 			if (Noeud[Noeud[i].pere->noind].sex==GEN_FEM){
 //				GENError("Individual %d is both mother and father to two different individuals\n\n",Noeud[i].pere->nom);
 				char erreur[TAILLEDESCRIPTION];
-				sprintf(erreur, "Individual %d is both mother and father to two different individuals\n\n",Noeud[i].pere->nom);
+				snprintf(erreur, TAILLEDESCRIPTION, "Individual %d is both mother and father to two different individuals\n\n",Noeud[i].pere->nom);
 				throw std::range_error(erreur);
 				//GENError("L'individu %d est a la fois un pere et une mere pour deux individu different\n\n",Noeud[i].pere->nom);
 			}
@@ -1714,7 +1714,7 @@ int CreerGenealogie(int* plIndividu, int* plPere, int* plMere, int* plSexe, int 
 			if (Noeud[Noeud[i].mere->noind].sex==GEN_MASC){
 //				GENError("Individual %d is both mother and father to two different individuals\n\n",Noeud[i].mere->nom);
 				char erreur[TAILLEDESCRIPTION];
-				sprintf(erreur, "Individual %d is both mother and father to two different individuals\n\n",Noeud[i].mere->nom);
+				snprintf(erreur, TAILLEDESCRIPTION, "Individual %d is both mother and father to two different individuals\n\n",Noeud[i].mere->nom);
 				throw std::range_error(erreur);
 				//GENError("L'individu %d est a la fois un pere et une mere pour deux individu different\n\n",Noeud[i].mere->nom);
 			}
@@ -1725,9 +1725,9 @@ int CreerGenealogie(int* plIndividu, int* plPere, int* plMere, int* plSexe, int 
 		if (Trie[i].nom==oldnumber){
 //			GENError("Individual %d is duplicated in the genealogy",Trie[i].nom);
 			char erreur[TAILLEDESCRIPTION];
-			sprintf(erreur, "Individual %d is duplicated in the genealogy",Trie[i].nom);
+			snprintf(erreur, TAILLEDESCRIPTION, "Individual %d is duplicated in the genealogy",Trie[i].nom);
 			throw std::range_error(erreur);
-			//GENError("L'individu %d est duppliqu� dans la g�n�alogie",Trie[i].nom);			
+			//GENError("L'individu %d est duppliqu dans la gnalogie",Trie[i].nom);			
 		}
 		oldnumber=Trie[i].nom;
 	}
@@ -1740,9 +1740,9 @@ int CreerGenealogie(int* plIndividu, int* plPere, int* plMere, int* plSexe, int 
 			if (Noeud[i].sex==GEN_INCONNU){
 //				GENError("The sexe of individual %d is unknown and must be set",plIndividu[i]);
 				char erreur[TAILLEDESCRIPTION];
-				sprintf(erreur, "The sexe of individual %d is unknown and must be set",plIndividu[i]);
+				snprintf(erreur, TAILLEDESCRIPTION, "The sexe of individual %d is unknown and must be set",plIndividu[i]);
 				throw std::range_error(erreur);
-				//GENError("Le sexe de l'individu %d est inconnu et doit-�tre fournie",plIndividu[i]);
+				//GENError("Le sexe de l'individu %d est inconnu et doit-tre fournie",plIndividu[i]);
 			}
 			//Compte le nombre d'individu masculin
 			if (Noeud[i].sex==GEN_MASC)
@@ -1805,7 +1805,7 @@ int CreerGenealogie(int* plIndividu, int* plPere, int* plMere, int* plSexe, int 
 
 	//FINAL
 	saveptr[curseur++]=99999999; 	
-	//NETTOYER LES ASSIGNEMENTS DE M�MOIRES
+	//NETTOYER LES ASSIGNEMENTS DE MMOIRES
 	DetruireStructure(childrenArray);
 
 	//GENERATION DE LA CHAINE POUR MD5
@@ -1844,7 +1844,7 @@ int CreerGenealogie(int* plIndividu, int* plPere, int* plMere, int* plSexe, int 
 	md5_finish(&context,digest);
 
 	//return 10; //TailleGen;
-	//Sauvegarde du r�sultat	
+	//Sauvegarde du rsultat	
 	saveptr[GENBIN_MD5_1]= (int) (
 				(digest[ 0] << 0)  |
 				(digest[ 1] << 8)  |
@@ -1881,7 +1881,7 @@ int CreerGenealogie(int* plIndividu, int* plPere, int* plMere, int* plSexe, int 
 /*! 
 	\brief Valide et retourne la taille d'une genealogie
 	
-	\param Genealogie [in] Une genealogie construite � l'aide de gen.genealogie
+	\param Genealogie [in] Une genealogie construite  l'aide de gen.genealogie
 
 	\retval nenfant [out] Si !=NULL, alors retourne le nombre total d'enfant de la genealogie
   	
@@ -1895,12 +1895,12 @@ int LengthGenealogie(int* Genealogie, int* nenfant, int* nprofmax, int* nindmasc
 	if (Genealogie[0]!='G' || Genealogie[1]!='E' || Genealogie[2]!='N' ){
 //	  GENError("\nError: invalid genealogy given. Create one using gen.genealogie(ind,father,mother).");
 	  throw std::range_error("Error: invalid genealogy given. Create one using gen.genealogie(ind,father,mother).");
-	  //GENError("\nErreur: La g�n�alogie fournie n'est pas valide. Cr�er en une � l'aide de gen.genealogie(ind,pere,mere).");
+	  //GENError("\nErreur: La gnalogie fournie n'est pas valide. Crer en une  l'aide de gen.genealogie(ind,pere,mere).");
 	}
 	if (Genealogie[3]!=VERSIONGENEALOGIE){
 //	  GENError("\nError: Given genealogy is not from current version.");
 	  throw std::range_error("Error: Given genealogy is not from current version.");
-	  //GENError("\nErreur: La g�n�alogie fournie n'est pas de la version courante.");
+	  //GENError("\nErreur: La gnalogie fournie n'est pas de la version courante.");
 	}
 	//Initialisation
 	const int iNind=Genealogie[GENBIN_NIND_OFFSET];
@@ -1965,7 +1965,7 @@ int ValidateGenealogie(int* Genealogie)
 	}
 	md5_finish(&context,digest);
 
-	//Comparaison du r�sultat
+	//Comparaison du rsultat
 	int Md5_1= (int) (
 				(digest[ 0] << 0)  |
 				(digest[ 1] << 8)  |
@@ -2001,14 +2001,14 @@ int ValidateGenealogie(int* Genealogie)
 /*! 
 	\brief 	Initialise un vecteur de CIndSimul pour qu'il represente une genealogie 
 		
-	  A partir d'une genealogie a un vecteur construite � l'aide de gen.genealogie.
+	  A partir d'une genealogie a un vecteur construite  l'aide de gen.genealogie.
 
 	<br>Il faut fournir 2 vecteur a cette fonction.
 	<br>Un vecteur de CIndSimul
 	<br>Et un vecteur de Clist (optionnel)
-	<br> La taille requise pour ces deux vecteur pour etre d�termin� a l'aide de la fonction LengthGenealogie
+	<br> La taille requise pour ces deux vecteur pour etre dtermin a l'aide de la fonction LengthGenealogie
 	
-	\param Genealogie [in] Une genealogie construite � l'aide de gen.genealogie
+	\param Genealogie [in] Une genealogie construite  l'aide de gen.genealogie
 
 	\retval Noeud [out] Un vecteur CIndSimul de taille fournit par LengthGenealogie
 					   Si succes, les noeuds sont initialiser de maniere a ce que le vecteur Noeud
@@ -2016,17 +2016,17 @@ int ValidateGenealogie(int* Genealogie)
 	
 	\retval Children [out] Un vecteur de CList taille founit par  LengthGenealogie
 							Si succes, le vecteur est utiliser pour genere les liste d'enfant pour chaque Noeud
-							Si NULL, alors la liste fils de chaque NOEUD ne sera PAS initialis�.
+							Si NULL, alors la liste fils de chaque NOEUD ne sera PAS initialis.
 	  	
 	\retval IndexRecherche [out] pointeur vers un pointeur de int.
-							      Si succes, le pointeur pointe vers le premier �l�ment de la liste ordonn� de
+							      Si succes, le pointeur pointe vers le premier lment de la liste ordonn de
 								  no etiquette de la genealogie
   	
 	\return Si succes, retourne le nombre d'individu de la genealogie
 			dans le cas contraire retourne une valeur negative
 
-	\remark La raison de se faire fourni au depart des vecteurs de bonne taille permet d'utilis� le "gargage collecteur"
-			facilement a partir de la proc�dure appelante.
+	\remark La raison de se faire fourni au depart des vecteurs de bonne taille permet d'utilis le "gargage collecteur"
+			facilement a partir de la procdure appelante.
 
 	\sa LengthGenealogie
 */
@@ -2110,7 +2110,7 @@ int ReCreeStructure(int* Genealogie,CIndSimul* Noeud, Clist* Children, int** Ind
 
 	\param iNind [in] Nombre d'individu dans la genealogie (Taille du vecteur Noeud)
   	
-	\return l'indice de nom dans la genealogie. -1 s'il n'est pas trouv�
+	\return l'indice de nom dans la genealogie. -1 s'il n'est pas trouv
 	
 	 \sa ReCreeStructure
 */
@@ -2189,35 +2189,35 @@ void SortGenealogie3Vecteur(int* ind,int *pere, int* mere, int* sex, int nind)
 
 //CACHE GENEALOGIE
 int		g_CacheMD5Sign[4]	={0,0,0,0};
-CIndSimul*  g_CacheGenArray	=NULL;		//Contient un tableau assign�
-Clist*	g_CacheChildList	=NULL;		//Contient un tableau assign�
-int*	g_CacheRecherche	=NULL;		//Contient un tableau assign�
+CIndSimul*  g_CacheGenArray	=NULL;		//Contient un tableau assign
+Clist*	g_CacheChildList	=NULL;		//Contient un tableau assign
+int*	g_CacheRecherche	=NULL;		//Contient un tableau assign
 int		g_CacheNInd			=0;
 int		g_CacheProfMax		=0;
 int		g_CacheNIndMasc		=0;		//Nombre d'individu Masculin
 
 //CACHE PROPOSANT & ANCETRE
 //enum ENUMBANQUE {PROPOSANT,ANCETRE};
-CIndSimul** g_CacheVec[2]	={NULL,NULL};	//Contient deux tableau assign�
+CIndSimul** g_CacheVec[2]	={NULL,NULL};	//Contient deux tableau assign
 int	   g_CacheVecInd[2]	={-1,-1};
 
 //CACHE GROUPE PROPOSANT & ANCETRE
 int			g_CacheNbGroupe[2]	={-1,-1};		//Nombre total de groupe dans chaque banque
 int*			g_CacheGrVecInd[2]	={NULL,NULL};	//Tableau nb individu dans groupe
-CIndSimul***	g_CacheGroup[2]	={NULL,NULL};	//Tableau vers le d�but de chaque groupe
+CIndSimul***	g_CacheGroup[2]	={NULL,NULL};	//Tableau vers le dbut de chaque groupe
 
 int LoadGenealogie(int* Genealogie,int loadChildren,int* NInd, CIndSimul **Noeudarr, int** IndexRecherche) 
 {
 	try{
-/*	//Compare indice MD5 et la pr�sence d'enfant
+/*	//Compare indice MD5 et la prsence d'enfant
 #ifndef USESPLUSALLOC
-	//Detruit la genealogie pr�c�dente
+	//Detruit la genealogie prcdente
 	if(Genealogie[GENBIN_MD5_1]==g_CacheMD5Sign[0] && Genealogie[GENBIN_MD5_2]==g_CacheMD5Sign[1] &&
 	   Genealogie[GENBIN_MD5_3]==g_CacheMD5Sign[2] && Genealogie[GENBIN_MD5_4]==g_CacheMD5Sign[3] &&
 	   (loadChildren==GFALSE || g_CacheChildList) )				
 	{	//C'est la meme genealogie pas besoin de reloader..	
 #ifdef USESDEBUG		
-		//printf("\nLa genealogie a �t� charge depuis la cache\n"); //#
+		//printf("\nLa genealogie a t charge depuis la cache\n"); //#
 #endif 			
 		*NInd = g_CacheNInd;
 		if (IndexRecherche)
@@ -2240,7 +2240,7 @@ int LoadGenealogie(int* Genealogie,int loadChildren,int* NInd, CIndSimul **Noeud
 		FlushGenealogie();
 //		GENError("Not enough memory to load genealogy.");
 		throw std::range_error("Not enough memory to load genealogy.");
-		//GENError("Il n'y a pas assez de m�moire disponible pour charger la g�n�alogie.");
+		//GENError("Il n'y a pas assez de mmoire disponible pour charger la gnalogie.");
 	}	
 	if (loadChildren)
 	{
@@ -2250,7 +2250,7 @@ int LoadGenealogie(int* Genealogie,int loadChildren,int* NInd, CIndSimul **Noeud
 			FlushGenealogie();
 //			GENError("Not enough memory to load genealogy.");
 			throw std::range_error("Not enough memory to load genealogy.");
-			//GENError("Il n'y a pas assez de m�moire disponible pour charger la g�n�alogie.");
+			//GENError("Il n'y a pas assez de mmoire disponible pour charger la gnalogie.");
 		}	
 	}
 	
@@ -2268,11 +2268,11 @@ int LoadGenealogie(int* Genealogie,int loadChildren,int* NInd, CIndSimul **Noeud
 		FlushGenealogie();
 //		GENError("Not enough memory to load genealogy.");
 		throw std::range_error("Not enough memory to load genealogy.");
-		//GENError("Il n'y a pas assez de m�moire disponible pour charger la g�n�alogie.");
+		//GENError("Il n'y a pas assez de mmoire disponible pour charger la gnalogie.");
 	}	
 	memcpy(g_CacheRecherche,VecteurRecherche,g_CacheNInd*sizeof(int));
 
-	//Retourne la structure cr�er
+	//Retourne la structure crer
 	*NInd = g_CacheNInd;
 	if (IndexRecherche)
 		*IndexRecherche=g_CacheRecherche;
@@ -2294,7 +2294,7 @@ int LoadGenealogie(int* Genealogie,int loadChildren,int* NInd, CIndSimul **Noeud
 
 int FlushGenealogie()
 {	
-	//Detruit la genealogie pr�c�dente
+	//Detruit la genealogie prcdente
 	g_CacheMD5Sign[0]=g_CacheMD5Sign[1]=g_CacheMD5Sign[2]=g_CacheMD5Sign[3]=0;	
 	g_CacheNInd			=0;
 	g_CacheProfMax		=0;	
@@ -2353,9 +2353,9 @@ static int LoadVec(ENUMBANQUE banque,int* vec, int nb, CIndSimul*** NproAnc)
 			FlushGenealogie();
 //			GENError("Not enough memory to load the %s.",type[banque]);
 			char erreur[TAILLEDESCRIPTION];
-			sprintf(erreur, "Not enough memory to load the %s.",type[banque]);
+			snprintf(erreur, TAILLEDESCRIPTION, "Not enough memory to load the %s.",type[banque]);
 			throw std::range_error(erreur);
-			//GENError("Il n'y a pas assez de m�moire disponible pour charger les %s.",type[banque]);
+			//GENError("Il n'y a pas assez de mmoire disponible pour charger les %s.",type[banque]);
 		}	
 		g_CacheVecInd[banque]=nb;
 		canRestaure = NULL;
@@ -2372,9 +2372,9 @@ static int LoadVec(ENUMBANQUE banque,int* vec, int nb, CIndSimul*** NproAnc)
 //			if(i>0) return 1;
 //			GENError("Special IEEE caracter %s is not a valid %s", DescIEEEValue(vec+i),type[banque]);
 			char erreur[TAILLEDESCRIPTION];
-			sprintf(erreur, "Special IEEE caracter %s is not a valid %s", DescIEEEValue(vec+i),type[banque]);
+			snprintf(erreur, TAILLEDESCRIPTION, "Special IEEE caracter %s is not a valid %s", DescIEEEValue(vec+i),type[banque]);
 			throw std::range_error(erreur);
-			//GENError("Le caract�re sp�cial IEEE %s n'est pas un %s valide",DescIEEEValue(vec+i),type[banque]);
+			//GENError("Le caractre spcial IEEE %s n'est pas un %s valide",DescIEEEValue(vec+i),type[banque]);
 		}
 
 		//Tentative de recherche dans la cache		
@@ -2392,11 +2392,11 @@ static int LoadVec(ENUMBANQUE banque,int* vec, int nb, CIndSimul*** NproAnc)
 				//printf("on retourne -1\n");
 //				GENError("%s %d is not included in the genealogy ...",type[banque],vec[i]);
 				char erreur[TAILLEDESCRIPTION];
-				sprintf(erreur, "%s %d is not included in the genealogy ...",type[banque],vec[i]);
+				snprintf(erreur, TAILLEDESCRIPTION, "%s %d is not included in the genealogy ...",type[banque],vec[i]);
 				throw std::range_error(erreur);
 				//return -1;
-				//printf("on devrait pas lire �a...\n");
-				//GENError("Le %s %d n'est pas inclus dans la g�n�alogie",type[banque],vec[i]);
+				//printf("on devrait pas lire a...\n");
+				//GENError("Le %s %d n'est pas inclus dans la gnalogie",type[banque],vec[i]);
 			}
 			//g_CacheVec[banque][i] = &(g_CacheGenArray[tmpindice]);
 			//g_CacheVec[banque][i] = (CIndSimul*) memallocIN( 1, sizeof(CIndSimul));  (g_CacheGenArray + tmpindice) = 51426104
@@ -2426,7 +2426,7 @@ static int FlushProposantAncetre(ENUMBANQUE banque)
 		memfreeIN(g_CacheVec[banque]);
 	g_CacheVec[banque]=NULL;
 	g_CacheVecInd[banque]=-1;
-	//Flush les groupe associ�s
+	//Flush les groupe associs
 	FlushGroupeProposantAncetre(banque);
 	return 0;
 }
@@ -2446,7 +2446,7 @@ int LoadGroupeAncetre  (int* Ancetre  , int* BorneGr, int nbGroupe, CIndSimul***
 static int LoadVecGroupe(ENUMBANQUE banque,int* BorneGr,int nbGroupe, CIndSimul**** GrProAnc,int** nIndGr)
 {	
 	try{
-	//Verifie si une g�n�alogie a d�j� �t� charge avec loadGenealogie
+	//Verifie si une gnalogie a dj t charge avec loadGenealogie
 	if (!g_CacheGenArray)
 	{
 		FlushProposantAncetre(banque);
@@ -2455,7 +2455,7 @@ static int LoadVecGroupe(ENUMBANQUE banque,int* BorneGr,int nbGroupe, CIndSimul*
 		throw std::range_error("Invalid use of LoadGroupeProposant or LoadGroupeAncetre function: start with LoadGenealogie");
 		//GENError("Utilisation invalide de la fonction LoadGroupeProposant ou LoadGroupeAncetre : il faut utiliser LoadGenealogie avant.");
 	}
-	//Verifie si des proposants et ancetre ont d�j� �t� charg� a l'aide de loadproposant ou loadancetre
+	//Verifie si des proposants et ancetre ont dj t charg a l'aide de loadproposant ou loadancetre
 	if (!g_CacheVec[banque])
 	{
 		FlushProposantAncetre(banque);
@@ -2477,7 +2477,7 @@ static int LoadVecGroupe(ENUMBANQUE banque,int* BorneGr,int nbGroupe, CIndSimul*
 			FlushProposantAncetre(banque);
 //			GENError("Invalid use of LoadGroupeProposant or LoadGroupeAncetre function: too many individuals in the group compared to those loaded by loadproposant");
 			throw std::range_error("Invalid use of LoadGroupeProposant or LoadGroupeAncetre function: too many individuals in the group compared to those loaded by loadproposant");
-			//GENError("Utilisation invalide de la fonction LoadGroupeProposant ou LoadGroupeAncetre : il y a trop d'individus dans le groupe p/r � ceux charg�s par loadproposant");
+			//GENError("Utilisation invalide de la fonction LoadGroupeProposant ou LoadGroupeAncetre : il y a trop d'individus dans le groupe p/r  ceux chargs par loadproposant");
 		}
 		g_CacheGroup[banque][i]=g_CacheVec[banque]+BorneGr[i];
 		if (i<(nbGroupe-1))
@@ -2501,7 +2501,7 @@ static int LoadVecGroupe(ENUMBANQUE banque,int* BorneGr,int nbGroupe, CIndSimul*
 
 static int FlushGroupeProposantAncetre(ENUMBANQUE banque)
 {
-	//D�truit les groupe pr�c�demment charg�	
+	//Dtruit les groupe prcdemment charg	
 	if (g_CacheGroup[banque])
 		memfreeIN(g_CacheGroup[banque]);
 	if (g_CacheGrVecInd[banque])
@@ -2519,7 +2519,7 @@ static int FlushGroupeProposantAncetre(ENUMBANQUE banque)
 //     	FONCTION POUR LOADER UNE GENEALOGIE,PROPOSANT & ANCETRE MAIS SANS CACHE
 //
 //***************************************************************************/
-// Utilise un objet GestionMemoire pour g�n� la memoire
+// Utilise un objet GestionMemoire pour gn la memoire
 
 int LoadGenealogieNC(int* Genealogie,int* NInd, CIndSimul **Noeudarr, int** IndexRecherche,	int* profMax,int* nenfant,int* nindmasc,
 					 GestionMemoire& MemCheck) 
@@ -2554,17 +2554,17 @@ int LoadVectorNC(int* vec,int nb, CIndSimul*** NproAnc, CIndSimul* NoeudArr,int 
 		if (DescIEEEValue(vec+i)!=NULL){
 //			GENError("Special IEEE %s is not a valid proband",DescIEEEValue(vec+i));
 			char erreur[TAILLEDESCRIPTION];
-			sprintf(erreur, "Special IEEE %s is not a valid proband",DescIEEEValue(vec+i));
+			snprintf(erreur, TAILLEDESCRIPTION, "Special IEEE %s is not a valid proband",DescIEEEValue(vec+i));
 			throw std::range_error(erreur);
-			//GENError("Le caract�re sp�cial IEEE %s n'est pas un proposant valide",DescIEEEValue(vec+i));
+			//GENError("Le caractre spcial IEEE %s n'est pas un proposant valide",DescIEEEValue(vec+i));
 		}
 		int tmpindice = ReTrouverIndiceStructure(vec[i],NoeudArr,IndexRecherche, nbind);
 		if (tmpindice==-1){
 //			GENError("Proband %d is not in the genealogy",vec[i]);
 			char erreur[TAILLEDESCRIPTION];
-			sprintf(erreur, "Proband %d is not in the genealogy",vec[i]);
+			snprintf(erreur, TAILLEDESCRIPTION, "Proband %d is not in the genealogy",vec[i]);
 			throw std::range_error(erreur);
-			//GENError("Le proposant %d n'est pas inclus dans la g�n�alogie",vec[i]);
+			//GENError("Le proposant %d n'est pas inclus dans la gnalogie",vec[i]);
 		}
 		else
 			(*NproAnc)[i]=NoeudArr+tmpindice;					

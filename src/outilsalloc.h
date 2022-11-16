@@ -1,7 +1,7 @@
 /*! \file blockalloc.h
-\brief Impl�mentation d'une table d'allocation par block
+\brief Implmentation d'une table d'allocation par block
 
-\author S�bastien Leclerc
+\author Sbastien Leclerc
 \contributor Jean-Francois Lefebvre
 
 */ 
@@ -23,8 +23,8 @@ private:
 	GestionMemoire memcheck; //Pour la gestion de memoire par bloc
 
 	int m_taille; //Taille de chaque block
-	int m_count; //Nombre d'�l�ment restant dans le block courant;
-	P* current; //Pointeur vers le prochain �l�ment a retourn�
+	int m_count; //Nombre d'lment restant dans le block courant;
+	P* current; //Pointeur vers le prochain lment a retourn
 
 	int m_used;
 
@@ -42,7 +42,7 @@ public:
 	inline void setTaille(size_t taille) 
 	{
 		//if (m_used==1)
-		//	GENError("Utilisation de BlockAlloc invalide, l'objet est d�j� initialis�");
+		//	GENError("Utilisation de BlockAlloc invalide, l'objet est dj initialis");
 		m_used=1;m_taille=taille;
 	}
 	
@@ -50,7 +50,7 @@ public:
 	{
 		try{
 		if (!m_used){
-			//GENError("Utilisation de BlockAlloc invalide, doit-�tre initialis� avant");
+			//GENError("Utilisation de BlockAlloc invalide, doit-tre initialis avant");
 //			GENError("Invalid use of BlockAlloc, must be initialized first.");
 			throw std::range_error("Invalid use of BlockAlloc, must be initialized first.");
 		}

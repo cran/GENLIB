@@ -1,10 +1,10 @@
 /*! \file congen.cc
 \brief Implementation des fonctions de calcul de la Contribution Genetique
 
-Calcul et Analyse de diverse valeur dérivé de la contribution génétique
+Calcul et Analyse de diverse valeur driv de la contribution gntique
 
-\author Sébastien Leclerc
-\contributor Jean-François Lefebvre
+\author Sbastien Leclerc
+\contributor Jean-Franois Lefebvre
 
 */
 
@@ -71,15 +71,15 @@ static void ExploreConGenProposantPLUS(CIndSimul* Noeud, int profondeur, double*
 	 Calcule la contribution genetique entre une serie d'ancetres et une serie de proposants.
 	 Le resultat se presente sous la forme d'une matrice de Nancetre*Nproposant elements.
 
-	\param Genealogie	[in] Une genealogie construite à l'aide de gen.genealogie 
+	\param Genealogie	[in] Une genealogie construite  l'aide de gen.genealogie 
 
-	\param plProposant	[in] Vecteur des no de proposant à étudier
-	\param lNProposant	[in] Nombre d'élément du vecteur proposant
+	\param plProposant	[in] Vecteur des no de proposant  tudier
+	\param lNProposant	[in] Nombre d'lment du vecteur proposant
   
-	\param plAncetre	[in] Vecteur des no des ancetres correspondant proposant à étudier
-	\param lNAncetre	[in] Nombre d'élément du vecteur ancetre
+	\param plAncetre	[in] Vecteur des no des ancetres correspondant proposant  tudier
+	\param lNAncetre	[in] Nombre d'lment du vecteur ancetre
 
-	\retval pdCongen	[out] Un pointeur vers une vecteur de taille  lNAncetre*NProposant pour recevoir résultat
+	\retval pdCongen	[out] Un pointeur vers une vecteur de taille  lNAncetre*NProposant pour recevoir rsultat
 						En cas de succes, on peut allez cherche la contribution genetique de la maniere suivante.
 						<br>Ex:
 						<br>&nbsp; &nbsp; anc : Indice de l'ancetre
@@ -89,9 +89,9 @@ static void ExploreConGenProposantPLUS(CIndSimul* Noeud, int profondeur, double*
 
 	\param printprogress [in] Imprime un message indiquant les progress accomplies
 
-	\return 0 si la fonction est executé avec succès
+	\return 0 si la fonction est execut avec succs
 
-	\remark les no d'individu ne sont que des étiquettes, ne sont utilisé qu'en référence au père et mère
+	\remark les no d'individu ne sont que des tiquettes, ne sont utilis qu'en rfrence au pre et mre
 */
 int Congen(int* Genealogie, int* plProposant,int lNProposant, int* plAncetre, int lNAncetre, double* pdCongen, int printprogress) 
 {
@@ -148,16 +148,16 @@ int Congen(int* Genealogie, int* plProposant,int lNProposant, int* plAncetre, in
 	 Calcule la contribution genetique entre une serie d'ancetres et une serie de proposants.
 	 Le resultat se presente sous la forme d'une matrice de Nancetre*Nproposant elements.
 
-	\param Genealogie	[in] Une genealogie construite à l'aide de gen.genealogie 
+	\param Genealogie	[in] Une genealogie construite  l'aide de gen.genealogie 
 
-	\param plProposant	[in] Vecteur des no de proposant à étudier
-	\param lNProposant	[in] Nombre d'élément du vecteur proposant
+	\param plProposant	[in] Vecteur des no de proposant  tudier
+	\param lNProposant	[in] Nombre d'lment du vecteur proposant
   
-	\param plAncetre	[in] Vecteur des no des ancetres correspondant proposant à étudier
-	\param lNAncetre	[in] Nombre d'élément du vecteur ancetre
-	\param pdSexe		[in] Probabilité de transmission selon le sexe
+	\param plAncetre	[in] Vecteur des no des ancetres correspondant proposant  tudier
+	\param lNAncetre	[in] Nombre d'lment du vecteur ancetre
+	\param pdSexe		[in] Probabilit de transmission selon le sexe
 
-	\retval pdCongen	[out] Un pointeur vers une vecteur de taille  lNAncetre*NProposant pour recevoir résultat
+	\retval pdCongen	[out] Un pointeur vers une vecteur de taille  lNAncetre*NProposant pour recevoir rsultat
 						En cas de succes, on peut allez cherche la contribution genetique de la maniere suivante.
 						<br>Ex:
 						<br>&nbsp; &nbsp; anc : Indice de l'ancetre
@@ -167,9 +167,9 @@ int Congen(int* Genealogie, int* plProposant,int lNProposant, int* plAncetre, in
 
 	\param printprogress [in] Imprime un message indiquant les progress accomplies
 
-	\return 0 si la fonction est executé avec succès
+	\return 0 si la fonction est execut avec succs
 
-	\remark les no d'individu ne sont que des étiquettes, ne sont utilisé qu'en référence au père et mère
+	\remark les no d'individu ne sont que des tiquettes, ne sont utilis qu'en rfrence au pre et mre
 */
 int CongenPLUS(int* Genealogie, int* plProposant,int lNProposant, int* plAncetre, int lNAncetre, double* pdSexe, 
 			double* pdCongen,int printprogress) 
@@ -222,13 +222,13 @@ int CongenPLUS(int* Genealogie, int* plProposant,int lNProposant, int* plAncetre
 
   Produit une matrice de Nancetre*Nproposant ou la contribution genetique entre chaque ancetre/proposant est calculer   
 
-	\param Genealogie	[in] Une genealogie construite à l'aide de gen.genealogie 
+	\param Genealogie	[in] Une genealogie construite  l'aide de gen.genealogie 
 
-	\param plProposant	[in] vecteur des no de proposant à étudier 
-	\param lNProposant	[in] Nombre d'élément du vecteur proposant 
+	\param plProposant	[in] vecteur des no de proposant  tudier 
+	\param lNProposant	[in] Nombre d'lment du vecteur proposant 
   
-	\param plAncetre	[in] Vecteur des no d'ancetre à étudier
-	\param lNAncetre	[in] Nombre d'élément du vecteur ancetre 
+	\param plAncetre	[in] Vecteur des no d'ancetre  tudier
+	\param lNAncetre	[in] Nombre d'lment du vecteur ancetre 
 
 	\retval AncRet		[out] Un pointeur vers un vecteur de int de taille lNAncetre
 						 En cas de success, il contient le no de ancetre une par ordre decroissant de contribution genetique total (voir pdSomAnc) 						
@@ -241,7 +241,7 @@ int CongenPLUS(int* Genealogie, int* plProposant,int lNProposant, int* plAncetre
 
 	\param printprogress imprime un message indiquant les progress accomplies 
 
-	\return 0 si la fonction est executé avec succès 	
+	\return 0 si la fonction est execut avec succs 	
 */
 int CongenCumul(int* Genealogie,
 	int* plProposant,int lNProposant,
@@ -319,13 +319,13 @@ int CongenCumul(int* Genealogie,
 
   Produit une matrice de Nancetre*Nproposant ou la contribution genetique entre chaque ancetre/proposant est calculer   
 
-	\param Genealogie	[in] Une genealogie construite à l'aide de gen.genealogie 
+	\param Genealogie	[in] Une genealogie construite  l'aide de gen.genealogie 
 
-	\param plProposant	[in] vecteur des no de proposant à étudier 
-	\param lNProposant	[in] Nombre d'élément du vecteur proposant 
+	\param plProposant	[in] vecteur des no de proposant  tudier 
+	\param lNProposant	[in] Nombre d'lment du vecteur proposant 
   
-	\param plAncetre	[in] Vecteur des no d'ancetre à étudier
-	\param lNAncetre	[in] Nombre d'élément du vecteur ancetre 
+	\param plAncetre	[in] Vecteur des no d'ancetre  tudier
+	\param lNAncetre	[in] Nombre d'lment du vecteur ancetre 
 
 	\retval AncRet		[out] Un pointeur vers un vecteur de int de taille lNAncetre
 						 En cas de success, il contient le no de ancetre une par ordre decroissant de contribution genetique total (voir pdSomAnc) 						
@@ -340,7 +340,7 @@ int CongenCumul(int* Genealogie,
 	
 	\remark marche mal
 
-	\return 0 si la fonction est executé avec succès 	
+	\return 0 si la fonction est execut avec succs 	
 */
 int CongenCumuldirect(int* matriceCG,
 	int lNProposant,
@@ -425,7 +425,7 @@ static int WINCDECL PairCompare(const void *p1,const void *p2)
 */
 static void ExploreConGenProposant(CIndSimul* Noeud, int profondeur)
 {
-	//Calcule la contribution génétique de tout les descendants d'un noeud	
+	//Calcule la contribution gntique de tout les descendants d'un noeud	
 	if (Noeud->etat==GENPROPOSANTINUTILE)
 	{
 		Noeud->prob[0]+=pow2(profondeur);	
@@ -456,7 +456,7 @@ static void ExploreConGenProposant(CIndSimul* Noeud, int profondeur)
 */
 static void ExploreConGenProposantPLUS(CIndSimul* Noeud, int profondeur, double* pdSexe, vector<double>& vProb)
 {
-	//Calcule la contribution génétique de tout les descendants d'un noeud	
+	//Calcule la contribution gntique de tout les descendants d'un noeud	
 	if (Noeud->etat==GENPROPOSANTINUTILE)
 	{
 		double dprob = 0;

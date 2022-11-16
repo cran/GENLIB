@@ -37,7 +37,7 @@ void ErrorHandler()
 void GENError(const char* format)
 {
 	char buffer[TAILLEDESCRIPTION];
-	sprintf(buffer, "%s\n", format);
-	sprintf(g_LastMessage,"\nError: %s \n",buffer);
+	snprintf(buffer, TAILLEDESCRIPTION, "%s\n", format);
+	snprintf(g_LastMessage, TAILLEDESCRIPTION+13, "\nError: %s \n",buffer);
 	ErrorHandler();
 }

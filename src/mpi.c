@@ -243,7 +243,7 @@ mp_err mp_init(mp_int *mp)
 
 /* {{{ mp_init_array(mp[], count) */
 
-//Initialise un tableau de mp_int a la précision voulu mais d'un seul coup .. plus efficacement
+//Initialise un tableau de mp_int a la prcision voulu mais d'un seul coup .. plus efficacement
 mp_err mp_init_array(mp_int mp[], int count)
 {  
   int     pos;
@@ -251,7 +251,7 @@ mp_err mp_init_array(mp_int mp[], int count)
 
   ARGCHK(mp !=NULL && count > 0, MP_BADARG);
 
-  //Creation du tableau de donné
+  //Creation du tableau de donn
   if((tableau = (mp_digit *)s_mp_alloc(s_mp_defprec*count, sizeof(mp_digit))) == NULL)
     return MP_MEM;
  
@@ -447,7 +447,7 @@ void   mp_clear_array(mp_int mp[], int count)
 {
   ARGCHK(mp != NULL && count > 0, MP_BADARG);
 	
-  //Effacer le tableau (devrais-être celui du premier nombre demandé)
+  //Effacer le tableau (devrais-tre celui du premier nombre demand)
   s_mp_free(DIGITS(&mp[0]));
 
   //Remise a zero

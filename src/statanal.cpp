@@ -25,7 +25,7 @@
 //			MACRO
 //
 // ********************************************************************
-/**	\brief	macro pour déterminer quel est le plus grand des deux
+/**	\brief	macro pour dterminer quel est le plus grand des deux
 
 	\param	x [in]
 
@@ -45,13 +45,13 @@
 // ********************************************************************
 
 /**	\brief
-	de type int*, g_Complet est une variable globale qui sert au décompte des individus par génération
+	de type int*, g_Complet est une variable globale qui sert au dcompte des individus par gnration
 	dans les fonctions addCompl et initComplet
 */
 static int* g_Complet;
 
 /**	\brief
-	de type int*, g_Fond est une variable globale qui sert au décompte des fondateurs par génération
+	de type int*, g_Fond est une variable globale qui sert au dcompte des fondateurs par gnration
 	dans les fonctions addFond et FondParGen
 */
 static int* g_Fond;
@@ -60,8 +60,8 @@ static int* g_Fond;
 
 	\brief	outil pour initComplet
 	\internal
-	\param	ind		[in] individu de la généalogie
-	\param	prof	[in] profondeur courante ie numéro de génération
+	\param	ind		[in] individu de la gnalogie
+	\param	prof	[in] profondeur courante ie numro de gnration
 
 	\return	static void
 
@@ -84,8 +84,8 @@ static void addCompl(CIndSimul* ind, int prof)
 
 	\brief	outils pour FondParGen
 	\internal
-	\param	ind		[in] individu de la généalogie
-	\param	prof	[in] profondeur courante ie numéro de génération
+	\param	ind		[in] individu de la gnalogie
+	\param	prof	[in] profondeur courante ie numro de gnration
 
 	\return	static void
 
@@ -107,22 +107,22 @@ static void addFond(CIndSimul* ind, int prof)
 /*! 
 	\brief Calcule le nombre de fondateurs par generation
 
-	Considérant les proposants donnés de génération 0, on effectue une remonté, génération par
-	génération afin de déterminer le nombre de fondateurs à chaque génération. Les résultats
-	sont présentés dans le tableau de retour.
+	Considrant les proposants donns de gnration 0, on effectue une remont, gnration par
+	gnration afin de dterminer le nombre de fondateurs  chaque gnration. Les rsultats
+	sont prsents dans le tableau de retour.
 
 	\param Genealogie	[in] Une genealogie binaire (gen.genealogie)
 
-	\param prop			[in] Vecteur des individus de depart à considérer
+	\param prop			[in] Vecteur des individus de depart  considrer
 
 	\param nbProp		[in] Le nombre de ces individus
 	
 	\retval retour		[out] Un pointeur vers un double
 
-	\return 0 si la fonction est executé avec succès
+	\return 0 si la fonction est execut avec succs
 
-	\remark lors de l'appel, retour doit être impérativement de taille nbgen(Genealogie)
-			et doit être initialise avec des zeros dans chaque case
+	\remark lors de l'appel, retour doit tre imprativement de taille nbgen(Genealogie)
+			et doit tre initialise avec des zeros dans chaque case
 */
 int FondParGen(int* Genealogie,int* prop,int nbProp, int* retour)
 {

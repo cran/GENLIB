@@ -1,6 +1,6 @@
 //#define MODETEST
 
-//contributor Jean-Fran�ois Lefebvre
+//contributor Jean-Franois Lefebvre
 
 /// Authorise l'affichage du niveau de progression sur la sortie standard
 /** 
@@ -36,10 +36,10 @@ string divisor = "K";
 	La fonction calcule la valeur de l'apparentement entre chaque proposant qui lui est fourni. 
 	Le resultat retourne sous la forme d'une matrice NProposant x NProposant   
 
-	\param Genealogie		[in] Une genealogie construite � l'aide de gen.genealogie 
+	\param Genealogie		[in] Une genealogie construite  l'aide de gen.genealogie 
 
-	\param proposant		[in] Vecteur avec les numeros des proposants � �tudier 
-	\param NProposant		[in] Nombre d'�l�ments du vecteur proposant 
+	\param proposant		[in] Vecteur avec les numeros des proposants  tudier 
+	\param NProposant		[in] Nombre d'lments du vecteur proposant 
   
 	\param Niveau			[in] Profondeur fixe 
 
@@ -57,7 +57,7 @@ string divisor = "K";
 						
 	\param printprogress	[in] Imprime une serie de message indiquant la progression du calcul 
  
-	\return 0 si la fonction est execut� avec succ�s 
+	\return 0 si la fonction est execut avec succs 
 */ 
 int PhiMatrix(int* Genealogie, int* proposant, int NProposant,int Niveau, double* pdMatricePhi, int printprogress)
 {
@@ -78,9 +78,9 @@ int PhiMatrix(int* Genealogie, int* proposant, int NProposant,int Niveau, double
 	if (Niveau>SHRT_MAX){
 //		GENError("Niveau must be smaller than %d", SHRT_MAX);
 		char erreur[TAILLEDESCRIPTION];
-		sprintf(erreur, "depthmin must be smaller than %d",SHRT_MAX);
+		snprintf(erreur, TAILLEDESCRIPTION, "depthmin must be smaller than %d",SHRT_MAX);
 		throw std::range_error(erreur);
-		//GENError("Le niveau doit-�tre inf�rieur � %d",SHRT_MAX);
+		//GENError("Le niveau doit-tre infrieur  %d",SHRT_MAX);
 	}
 	const short niveauMax = short(Niveau);
 
@@ -106,8 +106,8 @@ int PhiMatrix(int* Genealogie, int* proposant, int NProposant,int Niveau, double
 				//Affichage des progress
 				//INCREMENT_PROGRESS_BAR();
 			//}//Fin IF
-		}//Fin it�rateur proposant 2
-	}//Fin it�rateur proposant 1
+		}//Fin itrateur proposant 2
+	}//Fin itrateur proposant 1
 	return 0;
  			} catch(std::exception &ex) {
  				forward_exception_to_r(ex);
@@ -167,15 +167,15 @@ struct CBASEMTPhiMatrixMT : public CMtGlobalMessage
 		if (Niveau>SHRT_MAX){
 	//		GENError("Niveau must be smaller than %d", SHRT_MAX);
 			char erreur[TAILLEDESCRIPTION];
-			sprintf(erreur, "depthmin must be smaller than %d",SHRT_MAX);
+			snprintf(erreur, TAILLEDESCRIPTION, "depthmin must be smaller than %d",SHRT_MAX);
 			throw std::range_error(erreur);
-			//GENError("Le niveau doit-�tre inf�rieur � %d",SHRT_MAX);
+			//GENError("Le niveau doit-tre infrieur  %d",SHRT_MAX);
 		}
 		const short niveauMax = short(Niveau);
 
 		//Initialisation d'une structure multithread
 		BASEMT_DEBUTBOUCLE_INITMESSAGE(1) 		
-			//initialisation des donn�es Phi de la structure
+			//initialisation des donnes Phi de la structure
 			BASEMT_MESSAGE(1).niv=niveauMax;	 	  
 			BASEMT_MESSAGE(1).indice1 = -1;
 			BASEMT_MESSAGE(1).indice2 = -1;	 
@@ -197,7 +197,7 @@ struct CBASEMTPhiMatrixMT : public CMtGlobalMessage
 				else
 				{*/
 					BASEMT_DEBUT_REQUETE(1) 
-						//R�supere le r�sultat de phi
+						//Rsupere le rsultat de phi
 						if (BASEMT_MESSAGE(1).indice1!=-1)
 						{
 							pdMatricePhi[BASEMT_MESSAGE(1).indice1*NProposant+BASEMT_MESSAGE(1).indice2]=BASEMT_MESSAGE(1).danswer;
@@ -213,8 +213,8 @@ struct CBASEMTPhiMatrixMT : public CMtGlobalMessage
 					//Affichage des progress
 					INCREMENT_PROGRESS_BAR();
 				//}//fin if pour chaque case de la matrice
-			}//Fin it�rateur proposant 2
-		}//Fin it�rateur proposant 1
+			}//Fin itrateur proposant 2
+		}//Fin itrateur proposant 1
 		
 		//Fermeture des threads
 		BASEMT_DEBUT_FERMETURE(1)

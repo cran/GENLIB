@@ -1,10 +1,10 @@
 /*! \file consanguinite.h
 \brief Interface des fonctions de calcul de F
 
-Interface de toutes les fonctions en rapport avec la consanguinité
+Interface de toutes les fonctions en rapport avec la consanguinit
 
-\author Sébastien Leclerc
-\contributor Jean-François Lefebvre
+\author Sbastien Leclerc
+\contributor Jean-Franois Lefebvre
 
 */
 

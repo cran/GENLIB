@@ -27,7 +27,7 @@ Tuple::~Tuple()
 {
 }
 
-/**	\brief	Tuple::addtab  incrémente le nombre correspondant à la valeur val dans tab
+/**	\brief	Tuple::addtab  incrmente le nombre correspondant  la valeur val dans tab
 
 	\param	val		[in] variable de type int
 
@@ -53,7 +53,7 @@ const liste& Tuple::gettab() const
 
 /**	\brief	modifie l'attribut ind
 
-	\param	ref	[in] le nouvel individu associé au Tuple
+	\param	ref	[in] le nouvel individu associ au Tuple
 
 	\return	void
 
@@ -77,11 +77,11 @@ CIndSimul* Tuple::getNoeud()
 }
 
 
-/**	\brief	remise à zéro
+/**	\brief	remise  zro
 
-	Cette fonction remet à zero les autres attributs que ind, et donne à ind la valeur de ref
+	Cette fonction remet  zero les autres attributs que ind, et donne  ind la valeur de ref
 
-	\param	ref	[in] le nouvel individu associé au Tuple
+	\param	ref	[in] le nouvel individu associ au Tuple
 
 	\return	void
 
@@ -95,7 +95,7 @@ void Tuple::clear(CIndSimul* ref)
 
 /**	\brief	comparaison lexicographique de deux Tuples
 
-	teste si le Tuple courrant est plus petit que celui passé en paramètre au sens lexicographique.
+	teste si le Tuple courrant est plus petit que celui pass en paramtre au sens lexicographique.
 
 	\param	lhs	[in] Premier tuple (gauche) a comparer
 	\param	rhs	[in] Deuxieme tuple (droite) a comparer
@@ -107,9 +107,9 @@ int operator<(const Tuple& lhs, const Tuple& rhs)
 	return lhs.tab < rhs.tab;	
 }
 
-/**	\brief	The Tuple::operator= opérateur de copie
+/**	\brief	The Tuple::operator= oprateur de copie
 
-	\param	original	[in] a parameter of type const Tuple&, Tuple à copier
+	\param	original	[in] a parameter of type const Tuple&, Tuple  copier
 
 	\return	Tuple&
 
@@ -129,11 +129,11 @@ Tuple& Tuple::operator=(const Tuple& original)
 }
 
 
-/**	\brief	fonction  qui teste l'égalité entre deux Tuple
+/**	\brief	fonction  qui teste l'galit entre deux Tuple
 
-	deux Tuple sont égaux si leurs attributs tab sont égaux.
+	deux Tuple sont gaux si leurs attributs tab sont gaux.
 	(rappelons que tab est une map)
-	Les individus auxquels ils font référence peuvent être différents
+	Les individus auxquels ils font rfrence peuvent tre diffrents
 
 	\param	t1	a parameter of type const Tuple&
 	\param	t2	a parameter of type const Tuple&

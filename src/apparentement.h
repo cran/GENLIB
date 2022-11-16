@@ -2,8 +2,8 @@
 \brief Interface des fonctions de calcul de Phi
 
 
-\author S�bastien Leclerc
-\contributor Jean-Fran�ois Lefebvre
+\author Sbastien Leclerc
+\contributor Jean-Franois Lefebvre
 
 */
 
@@ -14,7 +14,7 @@
 #include "hashtable.h"
 #include <Rcpp.h>
 
-/// Structure de gestion memoire m�moire utilise par kinship2
+/// Structure de gestion memoire mmoire utilise par kinship2
 /**
 	Utiliser pour effectuer une serie d'assignement memoire et ensuite laisser la voie libre au
 	gestionnaire de memoire pour qu'il effectue lui-meme la "gargage collection"
@@ -30,7 +30,7 @@ struct Kinship4Struct
 private:	
 	short NiveauMax; //Niveau maximal voulu 0..Niveaumax = NiveauMax+1 Case...
 	BlockAlloc<double> memblock; 
-	SMPile<double*,MAX_SUPPORTED_GENERATION> PileCosan; //L'adresse de la cosanguinit� a �crire
+	SMPile<double*,MAX_SUPPORTED_GENERATION> PileCosan; //L'adresse de la cosanguinit a crire
 
 	//SUPPORT MT		
 	static CSema m_acces; //Semaphore pour l'acces a allele qui sert de variable partage	

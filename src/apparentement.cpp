@@ -2,10 +2,10 @@
 /*! \file apparentement.cc
 \brief Implementation des fonctions de calcul de Phi
 
-Calcul et Analyse de diverse valeur d�riv� de Phi et Phi moyen
+Calcul et Analyse de diverse valeur driv de Phi et Phi moyen
 
-\author S�bastien Leclerc
-\contributor Jean-Fran�ois Lefebvre
+\author Sbastien Leclerc
+\contributor Jean-Franois Lefebvre
 
 */
 
@@ -61,12 +61,12 @@ using namespace std;
 	\brief Calcule les matrices Phis pour chaque profondeur de NiveauMin a NiveauMax (OPTIMISER)
 
 		La fonction calcule l'apparentement entre chaque proposant qui lui est fourni.
-		Et ce pour chaque profondeur de NiveauMin � NiveauMax soit ((NiveauMax - NiveauMin)+1) Matrices.
+		Et ce pour chaque profondeur de NiveauMin  NiveauMax soit ((NiveauMax - NiveauMin)+1) Matrices.
 		
-	\param Genealogie		[in] Une genealogie construite � l'aide de gen.genealogie
+	\param Genealogie		[in] Une genealogie construite  l'aide de gen.genealogie
 
-	\param proposant		[in] Vecteur avec les numeros des proposants � �tudier
-	\param NProposant		[in] Nombre d'�l�ments du vecteur proposant
+	\param proposant		[in] Vecteur avec les numeros des proposants  tudier
+	\param NProposant		[in] Nombre d'lments du vecteur proposant
   
 	\param NiveauMin		[in] Profondeur minimale
 	\param NiveauMax		[in] Profondeur maximale
@@ -95,7 +95,7 @@ using namespace std;
 						
 	\param printprogress	[in] Imprime une serie de message indiquant la progression du calcul
 
-	\return 0 si la fonction est execut� avec succ�s
+	\return 0 si la fonction est execut avec succs
 	
 	\remark Version optimise de Phis(), au lieu de lancer une fois kinship pour chaque niveau possible.
 			elle utilise kinship2 qui ne fait qu'une seule remonter et note la valeur du kinship pour chaque profondeur
@@ -120,7 +120,7 @@ int Phis(int* Genealogie, int* proposant, int NProposant,int NiveauMin,int Nivea
 	if (NiveauMax>SHRT_MAX){
 //		GENError("depthmax must be smaller than %d",SHRT_MAX);
 		char erreur[TAILLEDESCRIPTION];
-		sprintf(erreur, "depthmax must be smaller than %d\n", SHRT_MAX);
+		snprintf(erreur, TAILLEDESCRIPTION, "depthmax must be smaller than %d\n", SHRT_MAX);
 		throw std::range_error(erreur);
 	}
 	//CREATION DU TABLEAU D'INDIVIDU
@@ -170,13 +170,13 @@ int Phis(int* Genealogie, int* proposant, int NProposant,int NiveauMin,int Nivea
 				//Partie 2: EBRANCHER L'ARBRE, ORGANISER LE NOEUD EN VECTEUR EN RESPECTANT PRECEDENCE
   				//Calcul de la valeur de retours
 				 
-				//remise � zero de phi deep
+				//remise  zero de phi deep
 				for(int a=0;a<=niveauMax;a++)	Phideep[a]=0.0;
 
 				//calcul de phi				
 				Kinship4(NoeudPro[cPro1],NoeudPro[cPro2],niveauMax,niveauMax,Element);				
 
-				//Recupere le r�sultat de phideep				
+				//Recupere le rsultat de phideep				
 				for(int a=0;a<LongEcart;a++)
 				{
 					if (Phideep[a]<0.5)
@@ -189,9 +189,9 @@ int Phis(int* Genealogie, int* proposant, int NProposant,int NiveauMin,int Nivea
 //				INCREMENT_PROGRESS_BAR()
 			//}			
 
-		}//Fin it�rateur proposant 2
+		}//Fin itrateur proposant 2
 		
-	}//Fin it�rateur proposant 1
+	}//Fin itrateur proposant 1
 		
 	//Completer les matrices
 
@@ -231,14 +231,14 @@ int Phis(int* Genealogie, int* proposant, int NProposant,int NiveauMin,int Nivea
 	{
 		CIndSimul* ind1;
 		CIndSimul* ind2;
-		short niveauMax;		//Nombre de remonte dans la g�n�alogie
+		short niveauMax;		//Nombre de remonte dans la gnalogie
 
 		//Indice ou placer la reponse dans le tableau de reponse
 		int indice1;			
 		int indice2;			
 		
 		// C'est lui qui contient les valeurs de retours
-		Kinship4Struct elem; //Doit-�tre initialis�
+		Kinship4Struct elem; //Doit-tre initialis
 		double* ret;
 	};
 
@@ -263,19 +263,19 @@ int Phis(int* Genealogie, int* proposant, int NProposant,int NiveauMin,int Nivea
 		if (NiveauMin<0){
 	//		GENError("depthmax and depthmin must be greater than zero.");
 			throw std::range_error("depthmin and depthmin must be greater than zero.");
-			//GENError("Le niveau minimum et le niveau maximum doivent-�tre sup�rieur � z�ro");
+			//GENError("Le niveau minimum et le niveau maximum doivent-tre suprieur  zro");
 		}
 		if (NiveauMax<NiveauMin){
 	//		GENError("depthmax must be greater or equal to depthmin");
 			throw std::range_error("depthmax must be greater or equal to depthmin");
-			//GENError("Le niveau maximum doit-�tre sup�rieur ou �gal au niveau minimum");
+			//GENError("Le niveau maximum doit-tre suprieur ou gal au niveau minimum");
 		}
 		if (NiveauMax>SHRT_MAX){
 	//		GENError("depthmax must be smaller than %d",SHRT_MAX);
 			char erreur[TAILLEDESCRIPTION];
-			sprintf(erreur, "depthmin must be smaller than %d",SHRT_MAX);
+			snprintf(erreur, TAILLEDESCRIPTION, "depthmin must be smaller than %d",SHRT_MAX);
 			throw std::range_error(erreur);
-			//GENError("Le niveau maximum doit-�tre inf�rieur � %d",SHRT_MAX);
+			//GENError("Le niveau maximum doit-tre infrieur  %d",SHRT_MAX);
 		}
 		//CREATION DU TABLEAU D'INDIVIDU
 		int lNIndividu;
@@ -302,7 +302,7 @@ int Phis(int* Genealogie, int* proposant, int NProposant,int NiveauMin,int Nivea
 		
 		//Initialisation d'une structure multithread
 		BASEMT_DEBUTBOUCLE_INITMESSAGE(1) 		
-			//initialisation des donn�es Phis de la structure
+			//initialisation des donnes Phis de la structure
 			BASEMT_MESSAGE(1).ind1=NULL;
 			BASEMT_MESSAGE(1).ind2=NULL;
 			BASEMT_MESSAGE(1).niveauMax=niveauMax;
@@ -311,7 +311,7 @@ int Phis(int* Genealogie, int* proposant, int NProposant,int NiveauMin,int Nivea
 			BASEMT_MESSAGE(1).indice1	= -1;
 			BASEMT_MESSAGE(1).indice2	= -1;	 			
 			
-			//Initialise la structure associe pour le retour de r�sultat
+			//Initialise la structure associe pour le retour de rsultat
 			BASEMT_MESSAGE(1).ret = (double*) memalloc(NiveauMax+1,sizeof(double)); 
 			BASEMT_MESSAGE(1).elem.Initialise(niveauMax, BASEMT_MESSAGE(1).ret);
 			//Initialisation
@@ -325,7 +325,7 @@ int Phis(int* Genealogie, int* proposant, int NProposant,int NiveauMin,int Nivea
 		const int taillematrix	 = NProposant*NProposant;
 		
 		//Barre de progression
-		//Tres important.. initialise la s�maphore
+		//Tres important.. initialise la smaphore
 		Kinship4Struct::InitMT();
 		CREATE_PROGRESS_BAR_MATRIX(NProposant,printprogress)
 		for(int cPro1=0;cPro1<NProposant;++cPro1)
@@ -344,10 +344,10 @@ int Phis(int* Genealogie, int* proposant, int NProposant,int NiveauMin,int Nivea
 					//Calcul de la valeur de retours
 					
 					BASEMT_DEBUT_REQUETE(1) 
-						//R�supere le r�sultat de phi
+						//Rsupere le rsultat de phi
 						if (BASEMT_MESSAGE(1).indice1!=-1)
 						{
-							//Recupere le r�sultat de phideep				
+							//Recupere le rsultat de phideep				
 							double* retour	= BASEMT_MESSAGE(1).ret;
 							const int ind1	= BASEMT_MESSAGE(1).indice1;
 							const int ind2	= BASEMT_MESSAGE(1).indice2;
@@ -361,7 +361,7 @@ int Phis(int* Genealogie, int* proposant, int NProposant,int NiveauMin,int Nivea
 								MatrixArray[(a*taillematrix)+ind2*NProposant+ind1]=retour[a+NiveauMin];					
 							}	
 							
-							//remise � zero de phi deep
+							//remise  zero de phi deep
 							for(int a=0;a<=niveauMax;a++)
 								retour[a]=0.0;
 						}
@@ -376,16 +376,16 @@ int Phis(int* Genealogie, int* proposant, int NProposant,int NiveauMin,int Nivea
 					INCREMENT_PROGRESS_BAR()
 				//}			
 
-			}//Fin it�rateur proposant 2
+			}//Fin itrateur proposant 2
 			
-		}//Fin it�rateur proposant 1	
+		}//Fin itrateur proposant 1	
 
 		//Fermeture des threads
 		BASEMT_DEBUT_FERMETURE(1)
 			//RECUPERE LES DERNIERS RESULTATS DE PHI S'IL SONT VALIDE
 			if (BASEMT_MESSAGE(1).indice1!=-1)
 			{
-				//Recupere le r�sultat de phideep				
+				//Recupere le rsultat de phideep				
 				double* retour	= BASEMT_MESSAGE(1).ret;
 				const int ind1	= BASEMT_MESSAGE(1).indice1;
 				const int ind2	= BASEMT_MESSAGE(1).indice2;
@@ -399,7 +399,7 @@ int Phis(int* Genealogie, int* proposant, int NProposant,int NiveauMin,int Nivea
 					MatrixArray[(a*taillematrix)+ind2*NProposant+ind1]=retour[a+NiveauMin];					
 				}	
 				
-				//remise � zero de phi deep
+				//remise  zero de phi deep
 				for(int a=0;a<=niveauMax;a++)
 					retour[a]=0.0;
 			}
@@ -409,7 +409,7 @@ int Phis(int* Genealogie, int* proposant, int NProposant,int NiveauMin,int Nivea
 		for(int Niveau=0;Niveau<LongEcart;Niveau++)
 			pdMoyenne[Niveau]/=NItem;
 		
-		//Retourne la s�maphore
+		//Retourne la smaphore
 		Kinship4Struct::ReleaseMT();
 		return 0;
 				} catch(std::exception &ex) {
@@ -432,9 +432,9 @@ int Phis(int* Genealogie, int* proposant, int NProposant,int NiveauMin,int Nivea
 	\brief Calcule l'apparentement entre deux noeud a l'interieur d'une genealogie
 
 		La fonction calcule l'apparentement entre chaque proposant qui lui est fourni.
-		Et ce pour chaque profondeur de NiveauMin � NiveauMax soit ((NiveauMax - NiveauMin)+1) Matrices.
+		Et ce pour chaque profondeur de NiveauMin  NiveauMax soit ((NiveauMax - NiveauMin)+1) Matrices.
 
-	\attention prob[1] doit-�tre initialise a -1 avant de lancer cette fonction pour la 1e fois.
+	\attention prob[1] doit-tre initialise a -1 avant de lancer cette fonction pour la 1e fois.
 
 	\param Ind1				[in] Ptr vers le Noeud de l'individu 1 et fesant partie d'une genealogie valide
 	\param Ind2				[in] Ptr vers le Noeud de l'individu 2 et fesant partie d'une genealogie valide
@@ -444,7 +444,7 @@ int Phis(int* Genealogie, int* proposant, int NProposant,int NiveauMin,int Nivea
  
 	\return La valeur de l'apparentement calculer
 	
-	\remark Normalement, ttl1 et ttl2 sont �gale lorsque l'on lance un calcul
+	\remark Normalement, ttl1 et ttl2 sont gale lorsque l'on lance un calcul
 */
 double FASTCALL Kinship(CIndSimul* Ind1,CIndSimul* Ind2,short ttl1,short ttl2)
 {
@@ -495,7 +495,7 @@ double FASTCALL Kinship(CIndSimul* Ind1,CIndSimul* Ind2,short ttl1,short ttl2)
 //     if (deep==0) tableau[profondeur]=Ind1->nom;
 // #endif
 
-	//Trie improvis�: Toujours le plus bas de la h�rarchie en premiers
+	//Trie improvis: Toujours le plus bas de la hrarchie en premiers
 	if (Ind2->noind > Ind1->noind)
 	{
 		CIndSimul* tmp=Ind1;
@@ -552,7 +552,7 @@ double FASTCALL Kinship(CIndSimul* Ind1,CIndSimul* Ind2,short ttl1,short ttl2)
 //TABLEAU POUR LES UTILISATION MULTIPROCESSOR
 
 
-//DEFINITION DES FONCTIONS DE LA CLASSE KINSHIP4STRUCT UTILIS� PAR KINSHIP4
+//DEFINITION DES FONCTIONS DE LA CLASSE KINSHIP4STRUCT UTILIS PAR KINSHIP4
 //need to leave kinship4 accessible even though disabling MT for apple
 //kinship4 used in the single-thread versions too, but initializing this struct requires CSema
 //So... willl leave CSema defined even on apple, just leave the rest of the seamphore fxs undeclared
@@ -572,7 +572,7 @@ void Kinship4Struct::Initialise(short NiveauMax, double* Resultat)
 	\brief Calcule l'apparentement entre deux noeud a l'interieur d'une genealogie pour toute une serie de profondeur
 
 		La fonction calcule l'apparentement entre chaque proposant qui lui est fourni.
-		Et ce pour chaque profondeur de NiveauMin � NiveauMax soit ((NiveauMax - NiveauMin)+1) Matrices.
+		Et ce pour chaque profondeur de NiveauMin  NiveauMax soit ((NiveauMax - NiveauMin)+1) Matrices.
 
 	\attention pGen doit etre initialiser a Null avant de lancer cette fonction la premiere fois
 			   allele doit etre initialiser a 0 avant de lancer cette fonction la premiere fois
@@ -587,8 +587,8 @@ void Kinship4Struct::Initialise(short NiveauMax, double* Resultat)
 	\retval TabResultat		[out] Ptr vers un tableau de (NiveauMax-NiveauMin+1)
 									En cas de succes, contient l'apparentement entre ind1 et in2 pour chaque profondeur
 
-	\param NiveauMin		[in] Doit-�tre egal a NiveauMax de kinship4struct lors du lancement initial
-	\param NiveauMax		[in] Doit-�tre egal a NiveauMax de kinship4struct  lors du lancement initial
+	\param NiveauMin		[in] Doit-tre egal a NiveauMax de kinship4struct lors du lancement initial
+	\param NiveauMax		[in] Doit-tre egal a NiveauMax de kinship4struct  lors du lancement initial
 
 	\param InputStruct		[in] Ptr vers une structure Kinship2Struct remplie correctement.
 									La structure Kinship2Struct contient un gestionnaire de memoire qui permet d'assigne
@@ -602,7 +602,7 @@ void Kinship4Struct::Initialise(short NiveauMax, double* Resultat)
 
 	\return (NE PAS UTILISER) Devrais etre la valeur de l'apparentement pour un niveau quelconque
 	
-	\remark Normalement, ttl1 et ttl2 sont �gale a NiveauMax lorsque l'on lance le calcul
+	\remark Normalement, ttl1 et ttl2 sont gale a NiveauMax lorsque l'on lance le calcul
 			
 */
 void FASTCALL Kinship4(CIndSimul* Ind1, CIndSimul* Ind2, short ttl1, short ttl2,Kinship4Struct &T)
@@ -620,17 +620,17 @@ void FASTCALL Kinship4(CIndSimul* Ind1, CIndSimul* Ind2, short ttl1, short ttl2,
 		//Si requis calcule le facteur de cosanguinite
 		if (Ind1->mere && Ind1->pere && Ind1->pGen==NULL)  
 		{					
-				//alloue un nouveau block de m�moire
+				//alloue un nouveau block de mmoire
 				Ind1->pGen=T.memblock.Alloc();
 			
-				//Calcule la consanguinit�
+				//Calcule la consanguinit
 				T.PileCosan.push(Ind1->pGen); //Fera un autre essais....							
 					Kinship4(Ind1->pere,Ind1->mere,niveauMax,niveauMax,T);	//C'est pas niveauMax-1 surtout pas
 				T.PileCosan.pop(); //Retour en arriere					
 													
 		}//if (Ind1->mere && Ind1->pere && pgen==null)
 
-		//Il y a de la consanguinit� et on la traite...							
+		//Il y a de la consanguinit et on la traite...							
 		double *retour = T.PileCosan.top(); //Valeur de retour
 
 		//Ce calcul est correct
@@ -644,7 +644,7 @@ void FASTCALL Kinship4(CIndSimul* Ind1, CIndSimul* Ind2, short ttl1, short ttl2,
 		if (Ind1->pGen)			
 			for(short niv=niveauMax,sim=0;niv>=Niv_min_touchable;niv--,sim--)
 			{								
-				const short post= (max-1)+sim; //manque peut-�tre une legere correction...
+				const short post= (max-1)+sim; //manque peut-tre une legere correction...
 				if (post>=0)
 				{
 					assert(Ind1->pGen[post]!=-1);
@@ -660,9 +660,9 @@ void FASTCALL Kinship4(CIndSimul* Ind1, CIndSimul* Ind2, short ttl1, short ttl2,
 	}//fin if end1 == end2
 	
 	//Inversion pour la priorite	
-	//Trie improvis�: Toujours le plus bas de la h�rarchie en premiers
+	//Trie improvis: Toujours le plus bas de la hrarchie en premiers
 
-	if (Ind2->noind > Ind1->noind) //Pour v�rifier....
+	if (Ind2->noind > Ind1->noind) //Pour vrifier....
 	{
 		//ON SWAP
 		//si on remonte pas plus loin
@@ -722,12 +722,12 @@ void FASTCALL Kinship4(CIndSimul* Ind1, CIndSimul* Ind2, short ttl1, short ttl2,
 			//Si requis calcule le facteur de cosanguinite
 			if (Ind1->mere && Ind1->pere && Ind1->pGen==NULL)  
 			{					
-					//alloue un nouveau block de m�moire
+					//alloue un nouveau block de mmoire
 					Ind1->pGen=T.memblock.Alloc();
 				
-					//Calcule la consanguinit�
+					//Calcule la consanguinit
 					T.PileCosan.push(Ind1->pGen); //Fera un autre essais....
-						//On appelle la version non-mt pour �vit� deadlock...
+						//On appelle la version non-mt pour vit deadlock...
 						Kinship4(Ind1->pere,Ind1->mere,niveauMax,niveauMax,T);	//C'est pas niveauMax-1 surtout pas
 					T.PileCosan.pop(); //Retour en arriere					
 														
@@ -736,7 +736,7 @@ void FASTCALL Kinship4(CIndSimul* Ind1, CIndSimul* Ind2, short ttl1, short ttl2,
 			//Synchronisation MT
 			CSema_post(T.m_acces);
 
-			//Il y a de la consanguinit� et on la traite...							
+			//Il y a de la consanguinit et on la traite...							
 			double *retour = T.PileCosan.top(); //Valeur de retour
 
 			//Ce calcul est correct
@@ -750,7 +750,7 @@ void FASTCALL Kinship4(CIndSimul* Ind1, CIndSimul* Ind2, short ttl1, short ttl2,
 			if (Ind1->pGen)			
 				for(short niv=niveauMax,sim=0;niv>=Niv_min_touchable;niv--,sim--)
 				{								
-					const short post= (max-1)+sim; //manque peut-�tre une legere correction...
+					const short post= (max-1)+sim; //manque peut-tre une legere correction...
 					if (post>=0)
 					{
 						assert(Ind1->pGen[post]!=-1);
@@ -766,9 +766,9 @@ void FASTCALL Kinship4(CIndSimul* Ind1, CIndSimul* Ind2, short ttl1, short ttl2,
 		}//fin if end1 == end2
 		
 		//Inversion pour la priorite	
-		//Trie improvis�: Toujours le plus bas de la h�rarchie en premiers
+		//Trie improvis: Toujours le plus bas de la hrarchie en premiers
 
-		if (Ind2->noind > Ind1->noind) //Pour v�rifier....
+		if (Ind2->noind > Ind1->noind) //Pour vrifier....
 		{
 			//ON SWAP
 			//si on remonte pas plus loin
