@@ -14,8 +14,8 @@
 \item{simulNo}{Number of simulations to run. Defaults to 1. Results from all simulations are contained in the same output text file}
 \item{model}{model=1 is Poisson model, model=2 is zero-truncated Poisson, model=3 is Gamma model}
 \item{model_params}{Numeric vector of length 2. Specifies sex-specific parameters for the model of meiosis. Should be in order of male, female}
-\item{cM_len}{Length of chromosome (or subregion) to be simulated}
-\item{BP_len}{Length of chromosome (or subregion) to be simulated. Integer vector of length 2, sex-specific length in order male, female}
+\item{cM_len}{Length of chromosome (or subregion) to be simulated in centiMorgans. Integer vector of length 2, first element is cM length for males, second for females}
+\item{BP_len}{Length of chromosome (or subregion) to be simulated in Base pairs. Single integer value (male and female chromosome have same BP length)}
 \item{physical_map_Mo}{Optional map for females (Mother) that specifies relationship between genetic length and physical length.
     A dataframe with a column named "BP" and another named "cM". The map is the linear piecewise function specified by the points.
     The order of the pairs should be strictly ascending, the first row should be (0,0) and the last row should be (BP_len, cM_len)
@@ -31,8 +31,8 @@ Will generate output files "Proband_Haplotypes.txt" and "All_nodes_haplotypes.tx
 }
 \seealso{
 \code{\link{gen.genealogy}}
-\code{\link{gen.simuSample}}
-\code{\link{gen.simuSet}}
+\code{\link{gen.simuHaplo_traceback}}
+\code{\link{gen.simuHaplo_IBD_compare}}
 \code{\link{gen.simuSampleFreq}}
 }
 \examples{

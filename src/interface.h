@@ -72,6 +72,8 @@ GENLIBDLL_DLL_API(SEXP) SPLUSSimulHaplo(SEXP sGenealogy, SEXP sProbands, SEXP sL
 											SEXP sMorgan_Len, SEXP smodel, SEXP s_convert, SEXP sBP, SEXP s_bp_map_FA, SEXP s_cm_map_FA, SEXP s_bp_map_MO, SEXP s_cm_map_MO, 
 											SEXP sWD, SEXP sAll_node, SEXP sSeed);
 											
+GENLIBDLL_DLL_API(SEXP) SPLUSSimulHaplo_traceback(SEXP s_proID, SEXP s_ancestorID, SEXP s_indVec, SEXP s_fatherVec, SEXP s_motherVec, SEXP path_ANH, SEXP path_PH);
+											
 //GENLIBDLL_DLL_API(SEXP) SPLUSSimul(SEXP Genealogie, SEXP proposant, SEXP etatproposant,SEXP nproposant, SEXP ancetre, SEXP etatancetre, SEXP nancetre,
 GENLIBDLL_DLL_API(SEXP) SPLUSSimul(SEXP Genealogie, SEXP proposant, SEXP etatproposant,SEXP nproposant, SEXP ancetre, SEXP etatancetre, SEXP nancetre,
 							SEXP nSimul, SEXP pdRetConj, SEXP pdRetSimul, SEXP pdRetProp, SEXP sprobRecomb, SEXP sprobSurvieHomo,

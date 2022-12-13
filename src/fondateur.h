@@ -22,6 +22,11 @@ void simulhaplo(int* Genealogie, int* plProposant, int lNProposant, int* plAncet
 						double* cm_map_FA, double* cm_map_MO, int* bp_map_FA, int* bp_map_MO, 
 						std::unordered_map<int,haplotype*> *hapRef, std::string WD, int write_all_node, int seed);
 
+int simulhaplo_traceback(std::string& path_ANH, std::string& path_PH, int& myPro, int& myAnc, 
+				std::vector<int>& indVec, std::vector<int>& mererVec, std::vector<int>& pereVec,
+				std::vector<int>& resultvec1, std::vector<int>& resultvec2, std::vector<int>& resultvec3);
+
+void simulhaplo_compare_IBD (const int& pro1_ID, const int& pro2_ID, const int& BP_len, std::string& file_path, std::vector<int>& rvec1, std::vector<int>& rvec2, std::vector<double>& rvec3, std::vector<int>& rvec4);
 // int getNumberRec(double* probRecomb, int sex);
 // double getRandomNumber(int exponential);
 //int descendreHaplotypes(CIndSimul* Ordre_tmp, double probHap); //, /**/std::unordered_map<std::string, haplotype*>/* const std::unordered_map<std::string, haplotype*> &*/*hapRef);

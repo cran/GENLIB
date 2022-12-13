@@ -1,5 +1,8 @@
 # 1 - gen.prob					-> garde article
 # 2 - gen.simuProb				-> garde article
+#     gen.simuhaplo
+#     gen.simuhaplo_traceback
+#     gen.simuhaplo_compare
 # 3 - gen.simuSample			-> garde article
 # 4 - gen.simu2All				-> garde article
 # 5 - gen.simuSampleFreq			-> garde article
@@ -158,20 +161,38 @@ gen.simuHaplo = function (gen, pro=NULL, ancestors=NULL, simulNo = 1, model =1, 
 			stop("last element of BP and cM columns should be BP_len, and cM_len, respectively")
 	}
 	
-	message("seed: ", seed)
+	message("seed: ", seed, "\n")
 
 	.Call("SPLUSSimulHaplo", gen@.Data, pro, length(pro), ancestors, length(ancestors), as.integer(simulNo), model_params, cM_len/100, as.integer(model), 
 			as.integer(convert), as.integer(BP_len), as.integer(bp_map_FA), cm_map_FA, as.integer(bp_map_MO), cm_map_MO, 
 			outDir, as.integer(all_nodes), as.integer(seed), package="GENLIB")
 
 	if(all_nodes == 0)
-		message("output file:\n", outDir, "/Proband_Haplotypes.txt\n")
+		message("output file:  ", outDir, "/Proband_Haplotypes.txt\n")
 	else
 		message("output files:\n", outDir, "/All_nodes_haplotypes.txt\n", outDir, "/Proband_Haplotypes.txt\n")
 
 }
 
+gen.simuHaplo_traceback = function(gen, proID, ancestorID, all_nodes_path, proband_haplotypes_path)
+{
+	t <- gen.genout(gen)
+	indVec <- t$ind
+	fatherVec <- t$father
+	motherVec <- t$mother
 
+	message("input file paths:\n", all_nodes_path, "\n", proband_haplotypes_path, "\n")
+
+	x = .Call("SPLUSSimulHaplo_traceback", as.integer(proID), as.integer(ancestorID), indVec, fatherVec, motherVec, all_nodes_path, proband_haplotypes_path, package="GENLIB")
+	#need to pass in the vectors that will hold the results
+	return(x)
+}
+
+gen.simuHaplo_IBD_compare = function (proID_1, proID_2, BP_len, proband_haplotypes_path)
+{
+	x = .Call("SPLUSSimulHaplo_IBD_compare", as.integer(proID_1), as.integer(proID_2), as.integer(BP_len), proband_haplotypes_path)
+	return(x)
+}
 gen.simuSample = function(gen, pro, ancestors, stateAncestors, simulNo = 5000)#, named = T)
 {
 	if(!is(gen, "GLgen"))
