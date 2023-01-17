@@ -518,7 +518,7 @@ void simulhaplo(int* Genealogie, int* plProposant, int lNProposant, int* plAncet
 			for(i=0;i<lNProposant;i++){
 				haplotype* tmp = (*hapRef).find(NoeudPro[i]->clesHaplo_1)->second;
 				double pos = tmp->pos;
-				if(pos == -1) pos = 1;
+				if(pos == -1) pos = BP_len;
 
 				outHaplo <<"{"<< csimul+1 <<";"<< NoeudPro[i]->nom << ";0}";
 
@@ -591,7 +591,7 @@ void simulhaplo(int* Genealogie, int* plProposant, int lNProposant, int* plAncet
 			for(i=0;i<lNProposant;i++){
 				haplotype* tmp = (*hapRef).find(NoeudPro[i]->clesHaplo_1)->second;
 				double pos = tmp->pos;
-				if(pos == -1) pos = 1;
+				if(pos == -1) pos = BP_len;
 
 				outHaplo <<"{"<< csimul+1 <<";"<< NoeudPro[i]->nom << ";0}";
 
@@ -933,165 +933,6 @@ void recombine(haplotype* hapBegin, haplotype* hapEnd, haplotype* hapChild, int 
 //   Ordre_tmp->clesHaplo_2 = cle;
 //   (*hapRef)[cle++] = hapChild_2;
   
-// }
-
-// These commented out functions: reconstruct, readSNPpos, ancestralseq, were for converting the results of simulhaplo into sequence data.
-// This funcitonality is removed for now, we just provide the perl script to do the same thing. 
-
-// bool reconstruct(std::string WD, const std::string &simufilename,const std::string &hapfilename, const std::string &SNPposfilename,const int &BPsize){
-
-// 	try{
-
-//     std::ifstream in (simufilename.c_str());
-//     if(!in)
-//     {
-//         Rcpp::stop ("Cannot open the proband_haplotypes file ");
-//     }
-
-// 	WD += "/reconstructed_haplotypes.txt";
-//     std::ofstream reconstructed(WD.c_str());
-//     if(!reconstructed.is_open()){
-//         Rcpp::stop("Can't open output file to write to. Check permissions of output directory");
-//     }
-
-//     std::vector<int> SNPpos = readSNPpos(SNPposfilename);
-//     int numSNPs = SNPpos.size();
-
-//     std::unordered_map <float, std::string> haploseqs;
-//     ancestralseq(hapfilename, haploseqs);
-
-//     std::string line;
-//     std::getline(in,line); //waste first line
-//     while (std::getline(in, line))
-//     {
-//         std::size_t tokenPos, tokenPos1; 
-//         tokenPos=line.find(";");
-//         tokenPos1=line.find(";", tokenPos+1);
-//         reconstructed << line.substr(1,tokenPos-1) << " " << line.substr(tokenPos+1,tokenPos1-tokenPos-1) << " ";
-
-        
-//         tokenPos= line.find("}");   
-//         tokenPos1= line.find("}",tokenPos+1);
-//         std::string hap1(line.substr(tokenPos+2,tokenPos1-tokenPos-2));
-//         tokenPos=line.find("}",tokenPos1+1);
-//         std::string hap2(line.substr(tokenPos1+2,tokenPos-tokenPos1-2));
-//         //reconstructing haplotype1
-//         tokenPos=hap1.find(";");
-//         tokenPos1=hap1.find(";",tokenPos+1);
-
-//         int SNPpos_ind =0; 
-//         float ancID;
-//         int seg_end =0;
-
-//         ancID = std::stof(hap1.substr(tokenPos+1,tokenPos1-tokenPos-1));
-//         tokenPos1 = hap1.find(";", tokenPos1 +1);
-
-//         while (tokenPos1 != std::string::npos){
-//             tokenPos = hap1.find(";",tokenPos+1);
-//             seg_end = std::stof(hap1.substr(tokenPos+1,tokenPos1-tokenPos-1))*BPsize;
-//             tokenPos1=hap1.find(";",tokenPos1+1);
-
-//             while(SNPpos[SNPpos_ind]<seg_end && SNPpos_ind < numSNPs){
-//                 reconstructed << haploseqs[ancID].at(SNPpos_ind);
-//                 SNPpos_ind++;
-//             }
-//             tokenPos = hap1.find(";", tokenPos +1);
-//             ancID = std::stof(hap1.substr(tokenPos+1,tokenPos1-tokenPos-1));
-//             tokenPos1 = hap1.find(";", tokenPos1+1);
-//         }
-        
-//         if (seg_end == 0){
-//             reconstructed << haploseqs[ancID] << std::endl;
-//         }
-//         else{
-//             reconstructed << haploseqs[ancID].substr(SNPpos_ind, std::string::npos) <<std::endl;
-//         } 
-        
-//         //reconstructing haplotype2
-//         tokenPos=line.find(";");
-//         tokenPos1=line.find(";", tokenPos+1);
-//         reconstructed << line.substr(1,tokenPos-1) << " " << line.substr(tokenPos+1,tokenPos1-tokenPos-1) << " ";
-
-//         tokenPos=hap2.find(";");
-//         tokenPos1=hap2.find(";",tokenPos+1);
-
-//         SNPpos_ind =0; 
-//         seg_end =0;
-
-//         ancID = std::stof(hap2.substr(tokenPos+1,tokenPos1-tokenPos-1));
-//         tokenPos1 = hap2.find(";", tokenPos1 +1);
-        
-//         while (tokenPos1 != std::string::npos){
-//             tokenPos = hap2.find(";",tokenPos+1);
-//             seg_end = std::stof(hap2.substr(tokenPos+1,tokenPos1-tokenPos-1))*BPsize;
-//             tokenPos1=hap2.find(";",tokenPos1+1);
-
-//             while(SNPpos[ SNPpos_ind]<seg_end && SNPpos_ind < numSNPs){
-//                 reconstructed << haploseqs[ancID].at(SNPpos_ind);
-//                 SNPpos_ind++;
-//             }
-
-//             tokenPos = hap2.find(";", tokenPos +1);
-//             ancID = std::stof(hap2.substr(tokenPos+1,tokenPos1-tokenPos-1));
-//             tokenPos1 = hap2.find(";", tokenPos1+1);
-//         }
-        
-//         if (seg_end == 0){
-//             reconstructed << haploseqs[ancID] << std::endl;
-//         }
-//         else{
-//             reconstructed << haploseqs[ancID].substr(SNPpos_ind, std::string::npos) << std::endl;
-//         } 
-//     }
-    
-
-//     in.close();
-//     reconstructed.close();
-//     return true;
-
-// 	} catch(std::exception &ex) {
-//  	forward_exception_to_r(ex);
-//  	} catch(...){
-//  	::Rf_error("c++ exception (unknown reason)"); 
-//  	}
-// 	return false; 
-// }
-
-// bool ancestralseq(const std::string &fileName, std::unordered_map<float, std::string> &haploseqs)
-// {
-//     std::ifstream in(fileName.c_str());
-
-//     if(!in)
-//     {
-//         Rcpp::stop("Cannot open the hapfile");
-//         return false;
-//     }
-
-//     float anc_id;
-//     std::string anc_haplo;
-
-//     while (in>>anc_id>>anc_haplo)
-//     {
-//         haploseqs[anc_id]=anc_haplo;
-//     }
-
-//     in.close();
-//     return true;
-// }
-
-// std::vector<int> readSNPpos(const std::string &fileName){
-    
-// 	std::ifstream in(fileName.c_str());
-    
-//     if(!in)
-//     {
-//         Rcpp::stop("Cannot open the mapfile");
-//     }
-
-//     std::vector<int> vec(std::istream_iterator<int>(in), {});
-
-//     in.close();
-//     return vec;
 // }
 
 //functions to analyze the output of simulhaplo
@@ -1697,6 +1538,167 @@ void simulhaplo_compare_IBD(const int& pro1_ID, const int& pro2_ID, const int& B
  	} catch(...){
  	::Rf_error("c++ exception (unknown reason)"); 
  	};
+}
+
+// Convert Proband_Haplotypes.txt into sequence data: reconstruct, readSNPpos, ancestralseq. 
+ 
+bool reconstruct(const std::string &WD){
+
+	std::string simufilename   = WD + std::string("/Proband_Haplotypes.txt");
+	std::string SNPposfilename = WD + std::string("/founders.map");
+	std::string hapfilename    = WD + std::string("/founders.hap");
+	try{
+
+    std::ifstream in (simufilename.c_str());
+    if(!in)
+    {
+        Rcpp::stop ("Cannot open the proband_haplotypes file ");
+    }
+
+    std::ofstream reconstructed(WD + std::string("/Proband_Genotypes.txt"));
+    if(!reconstructed.is_open()){
+        Rcpp::stop("Can't open output file to write to. Check permissions of output directory");
+    }
+
+    std::vector<int> SNPpos = readSNPpos(SNPposfilename); 
+    int numSNPs = SNPpos.size();
+
+    std::unordered_map <float, std::string> haploseqs;
+    ancestralseq(hapfilename, haploseqs);
+
+    std::string line;
+    std::getline(in,line); //waste first line
+    while (std::getline(in, line))
+    {
+        std::size_t tokenPos, tokenPos1; 
+        tokenPos=line.find(";");
+        tokenPos1=line.find(";", tokenPos+1);
+        reconstructed << line.substr(1,tokenPos-1) << " " << line.substr(tokenPos+1,tokenPos1-tokenPos-1) << " ";
+
+        
+        tokenPos= line.find("}");   
+        tokenPos1= line.find("}",tokenPos+1);
+        std::string hap1(line.substr(tokenPos+2,tokenPos1-tokenPos-2));
+        tokenPos=line.find("}",tokenPos1+1);
+        std::string hap2(line.substr(tokenPos1+2,tokenPos-tokenPos1-2));
+
+        //reconstructing haplotype1
+        tokenPos=hap1.find(";");
+        tokenPos1=hap1.find(";",tokenPos+1);
+
+        int SNPpos_ind =0; 
+        float ancID;
+        int seg_end =0;
+
+        ancID = std::stof(hap1.substr(tokenPos+1,tokenPos1-tokenPos-1));
+        tokenPos1 = hap1.find(";", tokenPos1 +1);
+
+        while (tokenPos1 != std::string::npos){
+            tokenPos = hap1.find(";",tokenPos+1);
+            seg_end = std::stoi(hap1.substr(tokenPos+1,tokenPos1-tokenPos-1));
+            tokenPos1=hap1.find(";",tokenPos1+1);
+
+            while(SNPpos[SNPpos_ind]<seg_end && SNPpos_ind < numSNPs){
+                reconstructed << haploseqs[ancID].at(SNPpos_ind);
+                SNPpos_ind++;
+            }
+            tokenPos = hap1.find(";", tokenPos +1);
+            ancID = std::stof(hap1.substr(tokenPos+1,tokenPos1-tokenPos-1));
+            tokenPos1 = hap1.find(";", tokenPos1+1);
+        }
+        
+        if (seg_end == 0){
+            reconstructed << haploseqs[ancID] << std::endl;
+        }
+        else{
+            reconstructed << haploseqs[ancID].substr(SNPpos_ind, std::string::npos) <<std::endl;
+        } 
+        
+        //reconstructing haplotype2
+        tokenPos=line.find(";");
+        tokenPos1=line.find(";", tokenPos+1);
+        reconstructed << line.substr(1,tokenPos-1) << " " << line.substr(tokenPos+1,tokenPos1-tokenPos-1) << " ";
+
+        tokenPos=hap2.find(";");
+        tokenPos1=hap2.find(";",tokenPos+1);
+
+        SNPpos_ind =0; 
+        seg_end =0;
+
+        ancID = std::stof(hap2.substr(tokenPos+1,tokenPos1-tokenPos-1));
+        tokenPos1 = hap2.find(";", tokenPos1 +1);
+        
+        while (tokenPos1 != std::string::npos){
+            tokenPos = hap2.find(";",tokenPos+1);
+            seg_end = std::stoi(hap2.substr(tokenPos+1,tokenPos1-tokenPos-1));
+            tokenPos1=hap2.find(";",tokenPos1+1);
+
+            while(SNPpos[ SNPpos_ind]<seg_end && SNPpos_ind < numSNPs){
+                reconstructed << haploseqs[ancID].at(SNPpos_ind);
+                SNPpos_ind++;
+            }
+
+            tokenPos = hap2.find(";", tokenPos +1);
+            ancID = std::stof(hap2.substr(tokenPos+1,tokenPos1-tokenPos-1));
+            tokenPos1 = hap2.find(";", tokenPos1+1);
+        }
+        
+        if (seg_end == 0){
+            reconstructed << haploseqs[ancID] << std::endl;
+        }
+        else{
+            reconstructed << haploseqs[ancID].substr(SNPpos_ind, std::string::npos) << std::endl;
+        } 
+    }
+    
+
+    in.close();
+    reconstructed.close();
+    return true;
+
+	} catch(std::exception &ex) {
+ 	forward_exception_to_r(ex);
+ 	} catch(...){
+ 	::Rf_error("c++ exception (unknown reason)"); 
+ 	}
+	return false; 
+}
+
+bool ancestralseq(const std::string &fileName, std::unordered_map<float, std::string> &haploseqs)
+{
+    std::ifstream in(fileName.c_str());
+
+    if(!in)
+    {
+        Rcpp::stop("Cannot open the hapfile");
+        return false;
+    }
+
+    float anc_id;
+    std::string anc_haplo;
+
+    while (in>>anc_id>>anc_haplo)
+    {
+        haploseqs[anc_id]=anc_haplo;
+    }
+
+    in.close();
+    return true;
+}
+
+std::vector<int> readSNPpos(const std::string &fileName){
+    
+	std::ifstream in(fileName.c_str());
+    
+    if(!in)
+    {
+        Rcpp::stop("Cannot open the mapfile");
+    }
+
+    std::vector<int> vec(std::istream_iterator<int>(in), {});
+
+    in.close();
+    return vec;
 }
 
 /*! 

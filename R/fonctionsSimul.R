@@ -193,6 +193,11 @@ gen.simuHaplo_IBD_compare = function (proID_1, proID_2, BP_len, proband_haplotyp
 	x = .Call("SPLUSSimulHaplo_IBD_compare", as.integer(proID_1), as.integer(proID_2), as.integer(BP_len), proband_haplotypes_path)
 	return(x)
 }
+
+gen.simuHaplo_convert = function (dir = getwd())
+{
+	x = .Call("SPLUSSimulHaplo_convert", dir)
+}
 gen.simuSample = function(gen, pro, ancestors, stateAncestors, simulNo = 5000)#, named = T)
 {
 	if(!is(gen, "GLgen"))

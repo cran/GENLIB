@@ -39,11 +39,9 @@ void makeRecombF( CIndSimul* Ordre_tmp, std::unordered_map<int, haplotype*> *hap
 
 void recombine( haplotype* hapBegin, haplotype* hapEnd, haplotype* hapChild, int nbRecomb, int *posRecomb );
 
-// bool reconstruct(std::string WD, const std::string &hapfilename, const std::string &simufilename,const std::string &SNPposfilename,const int &BPsize);
-
-// bool ancestralseq(const std::string &fileName, std::unordered_map<float, std::string> &haploseqs);
-
-// std::vector<int> readSNPpos(const std::string &fileName);
+bool reconstruct(const std::string &WD);
+bool ancestralseq(const std::string &fileName, std::unordered_map<float, std::string> &haploseqs);
+std::vector<int> readSNPpos(const std::string &fileName);
 
 int simulsingle(int* Genealogie, int* plProposant, int lNProposant, int* plAncetre, int* plAncEtat, int lNAncetre,
 			 int lSimul, double* pdRetour,int printprogress);

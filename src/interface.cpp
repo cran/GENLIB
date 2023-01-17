@@ -707,6 +707,12 @@ RcppExport SEXP SPLUSSimulHaplo_IBD_compare (SEXP s_pro_id1, SEXP s_pro_id2, SEX
 	
 	return results;
 }
+
+RcppExport SEXP SPLUSSimulHaplo_convert (SEXP s_path1){
+	std::string path1 = Rcpp::as<std::string>(s_path1); //WD
+	reconstruct(path1);
+	return R_NilValue;
+}
 /*FONCTION D'INTERFACE POUR SPLUS*/
 
 /// Fonction d'interface Splus pour simul
