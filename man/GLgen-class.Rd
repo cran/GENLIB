@@ -18,8 +18,8 @@ Class \code{"\linkS4class{GLgroup}"}, directly.
 \section{Methods}{
   \describe{
     \item{initialize}{\code{signature(.Data="integer",Date="character")}: ... }
-    \item{depth}{\code{signature(x = "GLgen")}}{ Gives the depth of the genealogy. }
-    \item{length}{\code{signature(x = "GLgen")}}{ Gives the number of individuals in the genealogy. }
+    \item{depth}{\code{signature(x = "GLgen")}}Gives the depth of the genealogy.
+    \item{length}{\code{signature(x = "GLgen")}}Gives the number of individuals in the genealogy.
   }
 }
 

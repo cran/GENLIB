@@ -1,4 +1,4 @@
-3e6c75a19b1311ae8fe5fe651abaf9f4 *DESCRIPTION
+16798458927bd89047cd2b569a3941c1 *DESCRIPTION
 d4143371b80889e9dfe20c0e95812246 *NAMESPACE
 954729748b80c22026139746cf368acd *R/classes_methodes.R
 0769e58f0678f56356617c9332e3dd49 *R/fonctionsBase.R
@@ -7,16 +7,14 @@ c43bbb34a6415cef59e09dad9073aafc *R/fonctionsPAR.R
 d748c9d4e9008660ce8ae9869870715f *R/fonctionsPriv.R
 33fa2602474b0f2f372ddf910efe4d35 *R/fonctionsSimul.R
 764b47a50798e392be956ecbfc6be10a *R/fonctionsStat.R
-e12bf58ecc045a1ef9de0fe52e9532d4 *R/genlibDLL.R
 1ea0b9948189cbe52868ebafda743404 *data/genea140.rda
 7e43158f5e17c25bdda64ad04b69c28e *data/geneaJi.rda
 2628aa0a99d4874fc7b7151a390d1a90 *data/pop140.rda
 6db1e0660260c12a19aace6b4df38e02 *man/GLCGMatrixGroupSingle-class.Rd
-98db5620b7659cd3a834aaf238543f67 *man/GLgen-class.Rd
+c175e83d6289aac4c7d4b4d11ff413ed *man/GLgen-class.Rd
 17458714f30220a8f8402f503361b3a1 *man/GLgroupe-class.Rd
 37c56c05d111171fbed8bb4f68c03a5c *man/GLmultiList-class.Rd
 1aa7eb67b19740ee3020bc06741dc0d9 *man/GLmultiVector-class.Rd
-dad2ddec5423f9b59b7626d755e7381b *man/GenlibR-package.Rd
 af716df45beae8a1981ee10efd321ac1 *man/gen.branching.Rd
 54b443d59bf288dd8430bb9463f8f618 *man/gen.children.Rd
 9a168291996c04b67d783624fc4a4a59 *man/gen.climbPAR.Rd
@@ -69,8 +67,8 @@ d4cbf7a3e05d0e61d2be393c18f3a75d *man/gen.simuSample.Rd
 ba9b865663dd13dd1f2cb2f87b41a298 *man/genea140.Rd
 d52a544d16359356c5695b3140346e16 *man/geneaJi.Rd
 8b136e8bd648c263d5199315eed34cb4 *man/pop140.Rd
-928e3746d6290b3d8b989698b93c79ac *src/Makevars
-6ad5e7cf4076b7043b34e6dedf57790c *src/Makevars.win
+036cd02789d07f25b95b06f6eb5ee603 *src/Makevars
+745ec33db3d75863837f9a55bf86c132 *src/Makevars.win
 a577f3568a73899f22adde1cebae75a2 *src/apparentement.cpp
 9dbae1e6080c9633fcf1040af67e8b48 *src/apparentement.h
 f2b339373acc4084ede9702cf6cf06f3 *src/asa239.cpp

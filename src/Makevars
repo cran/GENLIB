@@ -2,7 +2,6 @@
 PKG_LIBS = `$(R_HOME)/bin/Rscript -e "Rcpp:::LdFlags()"` -rdynamic
 ##PKG_CPPFLAGS = -I libmpi   -lboost_random
 ##PKG_CPPFLAGS = -std=c++ 
-CXX_STD = CXX11 
 
 ## As an alternative, one can also add this code in a file 'configure'
 ##
